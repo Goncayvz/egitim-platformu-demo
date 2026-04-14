@@ -78,7 +78,7 @@ Veritabanı (schema.sql):
 ### CV İçin Linkler
 ```
 🔗 Live Demo: [Proje klasörü/PHP sunucu]
-🔗 GitHub: [repo linki]
+🔗 GitHub: [https://github.com/Goncayvz/egitim-platformu-demo]
 🔗 Schema: schema.sql (15+ tablo)
 🔗 API Docs: README.md + api/ klasörü
 ```
