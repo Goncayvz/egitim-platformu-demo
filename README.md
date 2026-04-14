@@ -51,4 +51,4 @@ DB’siz hızlı demo gerekiyorsa:
 - Logo/kurumsal varlıklar repodan çıkarılmıştır.
 
 ## CV
-- Detaylı proje anlatımı: `CV_PROJE_ANLATIMI.md`
+- Detaylı proje anlatımı: `docs/PROJE_OZETI.md`

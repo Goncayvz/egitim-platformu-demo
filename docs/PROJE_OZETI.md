@@ -75,17 +75,9 @@ Veritabanı (schema.sql):
 - **Production DB şeması** (indexler, foreign key, enum status)  
 - **Güvenlik** (.htaccess, SQL injection koruması, 3DS)  
 
-### CV İçin Linkler
-```
-🔗 Live Demo: [Proje klasörü/PHP sunucu]
-🔗 GitHub: [https://github.com/Goncayvz/egitim-platformu-demo]
-🔗 Schema: schema.sql (15+ tablo)
-🔗 API Docs: README.md + api/ klasörü
-```
-
-**Sonuç:** 50+ HTML sayfası, 20+ PHP API, 15+ JS modülü, tam production-ready ödeme sistemiyle **gerçek dünya eğitim platformu** klonu. Interview'larda \"Live demo göster + kodu walkthrough yap\" için ideal.
+**Sonuç:** Çok sayıda HTML sayfası, PHP API ucu ve JS modülü ile; 3DS ödeme akışı ve rol bazlı panelleri kapsayan uçtan uca bir eğitim platformu demo çalışması.
 
 ---
 
-**Kullanım Önerisi:** CV'nde \"Featured Projects\" bölümüne koy, QR kodla demo linki ekle. Tech stack badge'leri: `Tailwind | PHP | MySQL | Iyzico | Brevo`. Interview sorusu hazır: \"3DS callback nasıl çalışır?\" → `api/iyzico_3ds_callback.php` göster! 🚀
+**Kullanım Önerisi:** CV'nde "Featured Projects" bölümüne koy. Tech stack badge'leri: `Tailwind | PHP | MySQL | Iyzico | Brevo`. Interview sorusu hazır: "3DS callback nasıl çalışır?" → `api/iyzico_3ds_callback.php` göster.
 
