@@ -2,6 +2,8 @@
 
 Rol bazlı (Admin/Eğitmen/Öğrenci) panelleri olan eğitim platformu demo projesi. Statik HTML + Tailwind UI ve PHP/MySQL API katmanı ile hazırlanmıştır.
 
+**Teknolojiler:** PHP, MySQL, Tailwind CSS, Vanilla JavaScript, Apache
+
 > Public repo notu: Marka/logolar ve gerçek anahtarlar repo’da yoktur. Logo için `assets/img/logo-placeholder.svg` kullanılır; gerçek değerler `.env` dosyasında tutulur ve `.gitignore` ile dışarıda bırakılır.
 
 ## ⚙️ Proje Bağlamı
@@ -49,14 +51,6 @@ DB’siz hızlı demo gerekiyorsa:
 ## Güvenlik / paylaşım notları
 - `.env` repoya eklenmez (anahtar/şifre yok).
 - Logo/kurumsal varlıklar repodan çıkarılmıştır.
-
-## GitHub ayarları (opsiyonel)
-Repo sayfası → sağda **About** → dişli (**Edit**) → **Topics**:
-- `php`
-- `mysql`
-- `tailwindcss`
-- `vanilla-javascript`
-- `demo-project`
 
 ## Dokümantasyon
 - Detaylı proje anlatımı: `docs/PROJE_OZETI.md`
