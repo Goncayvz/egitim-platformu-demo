@@ -50,5 +50,13 @@ DB’siz hızlı demo gerekiyorsa:
 - `.env` repoya eklenmez (anahtar/şifre yok).
 - Logo/kurumsal varlıklar repodan çıkarılmıştır.
 
+## GitHub ayarları (opsiyonel)
+Repo sayfası → sağda **About** → dişli (**Edit**) → **Topics**:
+- `php`
+- `mysql`
+- `tailwindcss`
+- `vanilla-javascript`
+- `demo-project`
+
 ## Dokümantasyon
 - Detaylı proje anlatımı: `docs/PROJE_OZETI.md`
