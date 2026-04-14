@@ -2,8 +2,6 @@
 
 Statik HTML + Tailwind arayüzü ve PHP tabanlı API uçlarıyla hazırlanmış eğitim platformu demo projesi.
 
-> Not: Bu repo GitHub paylaşımı için marka/kurumsal varlıklardan arındırıldı. Şirket logosu repo’da yok; yerine `assets/img/logo-placeholder.svg` kullanılır. Gerçek anahtarlar `.env` içinde tutulur ve repoya eklenmez.
-
 ## Öne çıkan modüller
 - Rol bazlı paneller: **Admin / Eğitmen / Öğrenci**
 - Kurs yönetimi ve kurs satın alma akışı
