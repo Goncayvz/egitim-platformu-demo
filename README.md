@@ -4,6 +4,14 @@ Rol bazlı (Admin/Eğitmen/Öğrenci) panelleri olan eğitim platformu demo proj
 
 > Public repo notu: Marka/logolar ve gerçek anahtarlar repo’da yoktur. Logo için `assets/img/logo-placeholder.svg` kullanılır; gerçek değerler `.env` dosyasında tutulur ve `.gitignore` ile dışarıda bırakılır.
 
+## ⚙️ Proje Bağlamı
+
+Bu repo, portfolyo amacıyla hazırlanmış anonimleştirilmiş bir demo çalışmasıdır.  
+Marka/kurumsal varlıklar, müşteri verileri ve gizli bilgiler projeye dahil edilmemiştir; gerçek anahtarlar repo’da yer almaz.
+
+Proje, yapılandırılmış bir yazılım geliştirme eğitimi kapsamında geliştirilmiştir.  
+Frontend, backend ve veritabanı tasarımı tarafımdan gerçekleştirilmiştir.
+
 ## Neler var?
 - **Rol bazlı paneller:** Admin / Eğitmen / Öğrenci
 - **Kurs akışı:** listeleme → detay → sepete ekleme → ödeme sayfası
