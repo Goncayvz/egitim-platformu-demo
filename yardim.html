@@ -1,0 +1,38 @@
+﻿<!DOCTYPE html>
+<html class="dark" lang="tr">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>Yardım ve İletişim - EğitimDünyası</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: { primary: '#9c4fba', 'background-dark': '#181121', 'background-light': '#f7f6f8' },
+          fontFamily: { display: ['Lexend', 'sans-serif'] }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display min-h-screen">
+  <main class="max-w-4xl mx-auto px-4 py-10">
+    <h1 class="text-4xl font-black">Yardım ve İletişim</h1>
+    <p class="text-slate-500 mt-2">Herhangi bir sorun için aşağıdaki kanallardan bize ulaşabilirsiniz.</p>
+    <div class="grid md:grid-cols-2 gap-4 mt-8">
+      <div class="bg-white dark:bg-white/5 border border-primary/10 rounded-xl p-5">
+        <h2 class="font-bold">E-posta</h2>
+        <p class="text-sm mt-2">destek@egitimdunyasi.com</p>
+      </div>
+      <div class="bg-white dark:bg-white/5 border border-primary/10 rounded-xl p-5">
+        <h2 class="font-bold">Telefon</h2>
+        <p class="text-sm mt-2">+90 (212) 000 00 00</p>
+      </div>
+    </div>
+    <a href="index.html" class="inline-block mt-8 text-primary font-semibold">Ana sayfaya dön</a>
+  </main>
+</body>
+</html>

@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html class="dark" lang="tr">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Taleplerim - Eğitim Platformu</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              primary: "#9c4fba",
+              "background-light": "#f7f6f8",
+              "background-dark": "#0f0a15",
+            },
+            fontFamily: { display: ["Lexend", "sans-serif"] },
+            borderRadius: { DEFAULT: "0.75rem", lg: "0.75rem", xl: "1rem", full: "9999px" },
+          },
+        },
+      };
+    </script>
+    <style>
+      body { font-family: "Lexend", sans-serif; }
+      .material-symbols-outlined { font-variation-settings: "FILL" 0, "wght" 500, "GRAD" 0, "opsz" 24; }
+      /* Native select dropdown options should stay readable even in dark mode */
+      #req-filter option {
+        color: #0f172a !important;
+        background: #ffffff !important;
+      }
+    </style>
+  </head>
+  <body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display min-h-screen">
+    <script src="assets/js/auth.js"></script>
+    <script>
+      // Öğrencinin talepleri; admin debug için erişebilir.
+      window.AngelAuth?.guard({ allowRoles: ["student", "admin"] });
+    </script>
+
+    <header class="border-b border-primary/10 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur sticky top-0 z-10">
+      <div class="max-w-5xl mx-auto px-4 py-4 flex items-center justify-between gap-3">
+        <div class="min-w-0">
+          <a href="userpanel.html" class="inline-flex items-center gap-2 text-sm font-bold text-primary hover:underline">
+            <span class="material-symbols-outlined text-base">arrow_back</span>
+            Panel
+          </a>
+          <h1 class="text-2xl sm:text-3xl font-black tracking-tight mt-1 truncate">Taleplerim</h1>
+          <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Eğitmene gönderdiğin özel ders taleplerini buradan takip edebilirsin.</p>
+        </div>
+        <div class="flex items-center gap-2 flex-shrink-0">
+          <a href="talep_olustur.html" class="inline-flex items-center justify-center rounded-xl px-4 py-2.5 bg-primary text-white font-extrabold hover:opacity-95 transition text-sm">
+            <span class="material-symbols-outlined text-base">add_circle</span>
+            Yeni Talep
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <main class="max-w-5xl mx-auto px-4 py-8">
+      <div class="flex flex-col sm:flex-row gap-3 sm:items-end sm:justify-between">
+        <div class="flex items-center gap-2">
+          <label class="text-xs font-bold text-slate-500 uppercase tracking-wider" for="req-filter">Filtre</label>
+          <select id="req-filter" class="rounded-xl border border-primary/20 bg-white/80 dark:bg-white/5 text-sm font-bold px-3 py-2">
+            <option value="all">Tümü</option>
+            <option value="pending">Beklemede</option>
+            <option value="approved">Onaylandı</option>
+            <option value="postponed">Ertelendi</option>
+            <option value="rejected">Reddedildi</option>
+            <option value="cancelled">İptal</option>
+          </select>
+        </div>
+        <div class="relative w-full sm:w-72">
+          <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">search</span>
+          <input id="req-search" class="w-full pl-10 pr-4 py-2 rounded-xl border-none bg-white dark:bg-slate-900/40 shadow-sm focus:ring-2 focus:ring-primary/20 text-sm" placeholder="Konu / not ara..." type="text" />
+        </div>
+      </div>
+
+      <section id="req-empty" class="hidden mt-6 bg-white dark:bg-white/5 border border-primary/10 rounded-2xl p-8">
+        <h2 class="text-xl font-black">Henüz talebin yok</h2>
+        <p class="text-slate-500 dark:text-slate-400 mt-2">İstersen hemen yeni bir özel ders talebi oluştur.</p>
+        <p class="mt-5 text-sm text-slate-500 dark:text-slate-400">Yeni talep için sağ üstteki “Yeni Talep” butonunu kullan.</p>
+      </section>
+
+      <section class="mt-6">
+        <div id="req-list" class="space-y-4"></div>
+      </section>
+    </main>
+
+    <script>
+      (function () {
+        const SETTINGS_KEY = "demo_site_settings_v1";
+        const LESSON_REQUESTS_KEY = "demo_lesson_requests_v1";
+        const PROFILE_KEY = "demo_user_profile_v1";
+
+        const filterEl = document.getElementById("req-filter");
+        const searchEl = document.getElementById("req-search");
+        const emptyEl = document.getElementById("req-empty");
+        const listEl = document.getElementById("req-list");
+
+        const safeText = (v) => String(v ?? "").trim();
+        const normalize = (v) => safeText(v).toLowerCase();
+
+        const normalizeTheme = (value) => {
+          const v = String(value || "").trim().toLowerCase();
+          if (v === "light" || v === "aydınlık" || v === "acik" || v === "açık") return "light";
+          if (v === "dark" || v === "karanlık" || v === "koyu") return "dark";
+          return "dark";
+        };
+
+        const readSettings = () => {
+          try {
+            const raw = localStorage.getItem(SETTINGS_KEY);
+            const parsed = raw ? JSON.parse(raw) : {};
+            return parsed && typeof parsed === "object" ? parsed : {};
+          } catch (_e) {
+            return {};
+          }
+        };
+
+        const applyTheme = (theme) => {
+          const t = normalizeTheme(theme);
+          document.documentElement.classList.toggle("dark", t === "dark");
+          try {
+            document.documentElement.style.colorScheme = t === "dark" ? "dark" : "light";
+          } catch (_e) {}
+        };
+
+        const getCurrentUser = () => {
+          try {
+            return window.AngelAuth && typeof AngelAuth.getStoredUser === "function" ? AngelAuth.getStoredUser() : null;
+          } catch (_e) {
+            return null;
+          }
+        };
+
+        const getProfile = () => {
+          try {
+            const raw = localStorage.getItem(PROFILE_KEY);
+            const parsed = raw ? JSON.parse(raw) : {};
+            return parsed && typeof parsed === "object" ? parsed : {};
+          } catch (_e) {
+            return {};
+          }
+        };
+
+        const loadRequests = () => {
+          try {
+            const raw = localStorage.getItem(LESSON_REQUESTS_KEY);
+            const parsed = raw ? JSON.parse(raw) : [];
+            return Array.isArray(parsed) ? parsed : [];
+          } catch (_e) {
+            return [];
+          }
+        };
+
+        const saveRequests = (list) => {
+          try {
+            localStorage.setItem(LESSON_REQUESTS_KEY, JSON.stringify(Array.isArray(list) ? list.slice(0, 400) : []));
+          } catch (_e) {}
+        };
+
+        const formatDateTime = (value) => {
+          if (!value) return "-";
+          const d = new Date(value);
+          if (Number.isNaN(d.getTime())) return String(value);
+          try {
+            return new Intl.DateTimeFormat("tr-TR", { day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" }).format(d);
+          } catch (_e) {
+            return d.toISOString().replace("T", " ").slice(0, 16);
+          }
+        };
+
+        const statusLabel = (s) => {
+          const v = normalizeStatus(s);
+          if (v === "approved") return { text: "Onaylandı", tone: "emerald", icon: "verified_user" };
+          if (v === "rejected") return { text: "Reddedildi", tone: "rose", icon: "block" };
+          if (v === "postponed") return { text: "Ertelendi", tone: "amber", icon: "schedule" };
+          if (v === "cancelled") return { text: "İptal", tone: "slate", icon: "cancel" };
+          return { text: "Beklemede", tone: "slate", icon: "pending_actions" };
+        };
+
+        const normalizeStatus = (value) => {
+          const v = String(value || "").trim().toLowerCase();
+          if (!v) return "pending";
+          if (v === "pending" || v === "beklemede") return "pending";
+          if (v === "approved" || v === "onaylandı" || v === "onaylandi" || v === "aktif") return "approved";
+          if (v === "postponed" || v === "ertelendi") return "postponed";
+          if (v === "rejected" || v === "reddedildi") return "rejected";
+          if (v === "cancelled" || v === "iptal" || v === "iptal edildi" || v === "iptal edildi.") return "cancelled";
+          return v;
+        };
+
+        const toneClass = (tone) => {
+          if (tone === "emerald") return "border-emerald-500/20 bg-emerald-500/10 text-emerald-800 dark:text-emerald-200";
+          if (tone === "rose") return "border-rose-500/20 bg-rose-500/10 text-rose-800 dark:text-rose-200";
+          if (tone === "amber") return "border-amber-500/20 bg-amber-500/10 text-amber-900 dark:text-amber-200";
+          return "border-slate-200 dark:border-white/10 bg-white/70 dark:bg-white/5 text-slate-800 dark:text-slate-200";
+        };
+
+        const escapeHtml = (value) => String(value ?? "")
+          .replaceAll("&", "&amp;")
+          .replaceAll("<", "&lt;")
+          .replaceAll(">", "&gt;")
+          .replaceAll('"', "&quot;")
+          .replaceAll("'", "&#39;");
+
+        const isMine = (req, ctx) => {
+          if (!ctx) return true;
+          const myEmail = normalize(ctx.email);
+          const myName = normalize(ctx.name);
+          if (!myEmail && !myName) return true;
+          const re = normalize(req?.email);
+          const rn = normalize(req?.fullName);
+          return (myEmail && re === myEmail) || (myName && rn === myName);
+        };
+
+        const buildCtx = () => {
+          const u = getCurrentUser() || {};
+          const p = getProfile() || {};
+          const email = safeText(u.email) || "";
+          const name = safeText(p.displayName) || safeText(u.fullName) || "";
+          const role = safeText(u.role) || "";
+          return { email, name, role };
+        };
+
+        const render = () => {
+          if (!listEl) return;
+          const ctx = buildCtx();
+          const all = loadRequests().filter((x) => x && typeof x === "object");
+
+          const params = new URLSearchParams(window.location.search || "");
+          const adminAll = ctx.role === "admin" && params.get("all") === "1";
+          const mine = adminAll ? all : all.filter((x) => isMine(x, ctx));
+
+          const q = normalize(searchEl?.value || "");
+          const f = String(filterEl?.value || "all");
+
+          const filtered = mine
+            .filter((x) => (f === "all" ? true : normalizeStatus(x.status) === f))
+            .filter((x) => {
+              if (!q) return true;
+              const hay = normalize(`${x.topic || ""} ${x.notes || ""} ${x.preferredDate || ""} ${x.preferredTime || ""}`);
+              return hay.includes(q);
+            })
+            .sort((a, b) => new Date(b?.createdAt || 0).getTime() - new Date(a?.createdAt || 0).getTime());
+
+          if (!filtered.length) {
+            listEl.innerHTML = "";
+            emptyEl?.classList.remove("hidden");
+            return;
+          }
+          emptyEl?.classList.add("hidden");
+
+          listEl.innerHTML = filtered.map((x) => {
+            const st = statusLabel(x.status);
+            const canCancel = normalizeStatus(x.status) === "pending";
+            const meta = [
+              x.preferredDate ? `Tarih: ${escapeHtml(x.preferredDate)}` : "",
+              x.preferredTime ? `Saat: ${escapeHtml(x.preferredTime)}` : "",
+              x.dayPreference ? `Gün: ${escapeHtml(x.dayPreference)}` : "",
+            ].filter(Boolean).join(" • ");
+            return `
+              <article class="rounded-2xl border ${toneClass(st.tone)} p-5">
+                <div class="flex items-start justify-between gap-3">
+                  <div class="min-w-0">
+                    <div class="flex items-center gap-2 flex-wrap">
+                      <span class="material-symbols-outlined">${escapeHtml(st.icon)}</span>
+                      <h3 class="font-black text-base truncate">${escapeHtml(x.topic || "Özel Ders Talebi")}</h3>
+                      <span class="text-[10px] font-black px-2 py-1 rounded-full bg-black/5 dark:bg-white/10">${escapeHtml(st.text)}</span>
+                    </div>
+                    <div class="mt-1 text-[11px] opacity-80 truncate">${escapeHtml(formatDateTime(x.createdAt))}</div>
+                    ${meta ? `<div class="mt-2 text-[11px] opacity-90">${meta}</div>` : ""}
+                    ${x.notes ? `<div class="mt-3 text-sm opacity-95 break-words">${escapeHtml(x.notes)}</div>` : ""}
+                  </div>
+                  <div class="flex flex-col items-end gap-2 flex-shrink-0">
+                    ${canCancel ? `<button type="button" class="px-3 py-2 rounded-xl bg-rose-600 text-white text-xs font-black hover:bg-rose-700 transition" data-action="cancel" data-id="${escapeHtml(x.id)}">İptal</button>` : ""}
+                    <button type="button" class="px-3 py-2 rounded-xl border border-primary/20 text-xs font-black hover:bg-primary/10 transition" data-action="delete" data-id="${escapeHtml(x.id)}">Sil</button>
+                  </div>
+                </div>
+              </article>
+            `.trim();
+          }).join("\n");
+        };
+
+        const handleAction = (action, id) => {
+          const reqId = safeText(id);
+          if (!reqId) return;
+          const ctx = buildCtx();
+          const list = loadRequests().filter((x) => x && typeof x === "object");
+          const idx = list.findIndex((x) => String(x.id || "") === reqId);
+          if (idx < 0) return;
+          if (!isMine(list[idx], ctx) && !(ctx.role === "admin")) return;
+
+          if (action === "delete") {
+            if (!window.confirm("Bu talep silinsin mi?")) return;
+            list.splice(idx, 1);
+            saveRequests(list);
+            render();
+            return;
+          }
+
+          if (action === "cancel") {
+            if (!window.confirm("Bu talep iptal edilsin mi?")) return;
+            const cur = list[idx] || {};
+            list[idx] = { ...cur, status: "cancelled", cancelledAt: new Date().toISOString() };
+            saveRequests(list);
+            render();
+          }
+        };
+
+        try {
+          applyTheme(readSettings()?.theme || "dark");
+        } catch (_e) {}
+
+        filterEl?.addEventListener("change", render);
+        searchEl?.addEventListener("input", render);
+        listEl?.addEventListener("click", (e) => {
+          const btn = e.target?.closest?.("button[data-action][data-id]");
+          if (!btn) return;
+          handleAction(btn.getAttribute("data-action"), btn.getAttribute("data-id"));
+        });
+
+        window.addEventListener("storage", (e) => {
+          if (!e) return;
+          if (e.key === SETTINGS_KEY) {
+            try { applyTheme(readSettings()?.theme || "dark"); } catch (_e2) {}
+          }
+          if (e.key === LESSON_REQUESTS_KEY) render();
+        });
+
+        render();
+      })();
+    </script>
+  </body>
+</html>

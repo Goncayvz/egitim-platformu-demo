@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html class="dark" lang="tr">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>Giriş Yap - Eğitim Platformu</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: { primary: '#9c4fba', 'background-dark': '#181121', 'background-light': '#f7f6f8' },
+          fontFamily: { display: ['Lexend', 'sans-serif'] }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display min-h-screen">
+  <main class="min-h-screen grid place-items-center px-4">
+    <section class="w-full max-w-md bg-white dark:bg-white/5 border border-primary/10 rounded-2xl p-8 shadow-xl">
+      <a href="index.html" class="text-primary text-sm font-semibold">Ana sayfaya dön</a>
+      <h1 class="text-3xl font-black mt-3">Giriş Yap</h1>
+      <p class="text-slate-500 mt-2 text-sm">Hesabına giriş yap ve eğitimlerine devam et.</p>
+      <form id="login-form" class="space-y-4 mt-6" action="#">
+        <input id="login-identity" class="w-full rounded-xl border-primary/20 dark:bg-white/5" type="text" placeholder="E-posta veya kullanıcı adı" required/>
+        <input id="login-password" class="w-full rounded-xl border-primary/20 dark:bg-white/5" type="password" placeholder="Şifre" required/>
+        <label class="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-300 select-none">
+          <input id="login-remember" class="rounded border-primary/30 text-primary focus:ring-primary" type="checkbox" checked/>
+          <span>Beni hatırla</span>
+        </label>
+        <button class="w-full bg-primary text-white font-bold py-3 rounded-xl" type="submit">Giriş Yap</button>
+      </form>
+      <p id="login-feedback" class="text-xs mt-3 text-slate-500"></p>
+      <p class="text-sm text-slate-500 mt-5">Hesabın yok mu? <a href="kayit.html" class="text-primary font-semibold">Kayıt Ol</a></p>
+    </section>
+  </main>
+  <script>
+    (function () {
+      const USERS_KEY = "demo_users_v1";
+      const AUTH_KEY = "demo_current_user_v1";
+      const PROFILE_KEY = "demo_user_profile_v1";
+
+      const form = document.getElementById("login-form");
+      const identityInput = document.getElementById("login-identity");
+      const passwordInput = document.getElementById("login-password");
+      const rememberInput = document.getElementById("login-remember");
+      const feedback = document.getElementById("login-feedback");
+
+      const safeText = (v) => String(v ?? "").trim();
+      const normalize = (v) => safeText(v).toLowerCase();
+
+      const normalizeRole = (role) => {
+        const r = normalize(role);
+        if (r === "admin" || r === "yönetici" || r === "yonetici") return "admin";
+        if (r === "eğitmen" || r === "egitmen" || r === "instructor") return "instructor";
+        if (r === "öğrenci" || r === "ogrenci" || r === "student") return "student";
+        return "student";
+      };
+
+      const setFeedback = (message, ok) => {
+        if (!feedback) return;
+        feedback.textContent = message;
+        feedback.className = `text-xs mt-3 ${ok ? "text-green-500" : "text-red-500"}`;
+      };
+
+      const loadUsers = () => {
+        try {
+          const raw = localStorage.getItem(USERS_KEY);
+          const parsed = raw ? JSON.parse(raw) : [];
+          return Array.isArray(parsed) ? parsed : [];
+        } catch (_e) {
+          return [];
+        }
+      };
+
+      const upsertProfileName = (displayName) => {
+        try {
+          const raw = localStorage.getItem(PROFILE_KEY);
+          const parsed = raw ? JSON.parse(raw) : {};
+          if (!parsed.displayName && displayName) {
+            parsed.displayName = displayName;
+            localStorage.setItem(PROFILE_KEY, JSON.stringify(parsed));
+          }
+        } catch (_e) { }
+      };
+
+      const loginLocal = (identity, password) => {
+        const key = normalize(identity);
+        const remember = !!rememberInput?.checked;
+
+        const users = loadUsers();
+        const user = users.find((u) => normalize(u?.email) === key || normalize(u?.username) === key);
+        if (!user) return { ok: false, message: "Kullanıcı bulunamadı." };
+        if (String(user.password || "") !== String(password || "")) return { ok: false, message: "Şifre hatalı." };
+
+        const roleKey = normalizeRole(user.role);
+        const roleLabel = safeText(user.role) || (roleKey === "admin" ? "Admin" : roleKey === "instructor" ? "Eğitmen" : "Öğrenci");
+
+        const authUser = {
+          id: user.id,
+          role: roleKey,
+          roleLabel,
+          fullName: user.fullName || user.name || user.username || "Kullanıcı",
+          email: user.email || ""
+        };
+        try {
+          (remember ? localStorage : sessionStorage).setItem(AUTH_KEY, JSON.stringify(authUser));
+          (remember ? sessionStorage : localStorage).removeItem(AUTH_KEY);
+        } catch (_e) {
+          localStorage.setItem(AUTH_KEY, JSON.stringify(authUser));
+        }
+        upsertProfileName(authUser.fullName);
+
+        const redirect = roleKey === "admin"
+          ? "s.adminpanel.html"
+          : roleKey === "instructor"
+            ? "egitmenpanel.html"
+            : "userpanel.html";
+        return { ok: true, user: authUser, redirect };
+      };
+
+      const getSafeNext = () => {
+        try {
+          const params = new URLSearchParams(window.location.search || "");
+          const raw = safeText(params.get("next") || "");
+          if (!raw) return "";
+          const next = raw.split("?")[0].split("#")[0].trim();
+          if (!/^[A-Za-z0-9_.-]+\\.html$/i.test(next)) return "";
+          if (next.toLowerCase() === "giris.html" || next.toLowerCase() === "kayit.html") return "";
+          return next;
+        } catch (_e) {
+          return "";
+        }
+      };
+
+      const normalizeRoleKey = (role) => normalizeRole(role) || normalizeRole(String(role || "")) || "";
+
+      const isAdminPage = (path) => {
+        const p = normalize(String(path || ""));
+        return [
+          "s.adminpanel.html",
+          "kullanicimanage.html",
+          "kursadmin.html",
+          "epostaadmin.html",
+          "destekadmin.html",
+          "posentegrasyon.html",
+          "icerikdenetimi.html",
+          "footerdenetimi.html",
+          "htmlmodulyonetimi.html",
+          "sayfayonetimi.html",
+          "ayarlarpage.html",
+        ].includes(p);
+      };
+
+      const isInstructorPage = (path) => {
+        const p = normalize(String(path || ""));
+        return [
+          "egitmenpanel.html",
+          "egitmen-dersyonetimi.html",
+        ].includes(p);
+      };
+
+      const canAccess = (role, path) => {
+        const r = normalizeRoleKey(role);
+        const p = normalize(String(path || ""));
+        if (!p) return false;
+        if (isAdminPage(p)) return r === "admin";
+        if (isInstructorPage(p)) return r === "instructor" || r === "admin";
+        // default: student pages are accessible by student (and admin for preview/debug)
+        return r === "student" || r === "admin";
+      };
+
+      const resolveRedirect = ({ role, serverRedirect } = {}) => {
+        const r = normalizeRoleKey(role);
+        const next = getSafeNext();
+        if (next && canAccess(r, next)) return next;
+
+        const srv = safeText(serverRedirect);
+        if (srv && /^[A-Za-z0-9_.-]+\\.html$/i.test(srv) && canAccess(r, srv)) return srv;
+
+        return r === "admin" ? "s.adminpanel.html" : r === "instructor" ? "egitmenpanel.html" : "userpanel.html";
+      };
+
+      if (!form) return;
+      form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const identity = safeText(identityInput?.value);
+        const password = passwordInput?.value || "";
+        const remember = !!rememberInput?.checked;
+        if (!identity || !password) {
+          setFeedback("E-posta/kullanıcı adı ve şifre zorunludur.", false);
+          return;
+        }
+
+        setFeedback("Giriş kontrol ediliyor...", true);
+        try {
+          const resp = await fetch("./api/login.php", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ identity, password, remember })
+          });
+          const data = await resp.json().catch(() => ({}));
+          if (resp.ok && data && data.ok) {
+            const roleKey = normalizeRole(data.user?.role || data.user?.roleLabel || "");
+            const fixedUser = { ...(data.user || {}), role: roleKey || data.user?.role };
+            try {
+              (remember ? localStorage : sessionStorage).setItem(AUTH_KEY, JSON.stringify(fixedUser || {}));
+              (remember ? sessionStorage : localStorage).removeItem(AUTH_KEY);
+            } catch (_e) {
+              localStorage.setItem(AUTH_KEY, JSON.stringify(fixedUser || {}));
+            }
+            upsertProfileName(fixedUser?.fullName || "");
+            setFeedback("Giriş başarılı, yönlendiriliyorsunuz...", true);
+            window.location.href = resolveRedirect({ role: fixedUser?.role, serverRedirect: data.redirect });
+            return;
+          }
+
+          const local = loginLocal(identity, password);
+          if (local.ok) {
+            setFeedback("Giriş başarılı (demo), yönlendiriliyorsunuz...", true);
+            window.location.href = resolveRedirect({ role: local.user?.role, serverRedirect: local.redirect });
+            return;
+          }
+          setFeedback(data?.message || local.message || "Giriş başarısız.", false);
+        } catch (_error) {
+          const local = loginLocal(identity, password);
+          if (local.ok) {
+            setFeedback("Giriş başarılı (demo), yönlendiriliyorsunuz...", true);
+            window.location.href = resolveRedirect({ role: local.user?.role, serverRedirect: local.redirect });
+            return;
+          }
+          setFeedback("Giriş başarısız. (Sunucu yoksa önce kayıt olmayı deneyin.)", false);
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

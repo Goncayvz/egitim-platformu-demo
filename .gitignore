@@ -1,0 +1,11 @@
+.env
+.env.*
+!.env.example
+
+# Branding / proprietary assets (exclude)
+_tmp_logo/
+assets/img/angel-logo.jpg
+
+# OS/editor noise
+Thumbs.db
+.DS_Store

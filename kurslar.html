@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html class="dark" lang="tr">
+
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>Kurslar - Eğitim Platformu</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800;900&display=swap"
+    rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+  <style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 500, 'GRAD' 0, 'opsz' 24;
+      line-height: 1;
+      font-size: 20px;
+      vertical-align: middle;
+    }
+  </style>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: { primary: '#9c4fba', 'background-dark': '#181121', 'background-light': '#f7f6f8' },
+          fontFamily: { display: ['Lexend', 'sans-serif'] }
+        }
+      }
+    }
+  </script>
+</head>
+
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display min-h-screen">
+  <header id="site-header"
+    class="border-b border-primary/10 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur sticky top-0 z-10">
+    <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
+      <div class="flex items-center gap-3 min-w-0">
+        <img id="site-header-logo" src="assets/img/logo-placeholder.svg" alt="Site Logo"
+          class="w-10 h-10 rounded-full object-cover border border-primary/20" />
+        <a id="site-header-title" href="index.html" class="font-black text-xl truncate">Eğitim Platformu</a>
+      </div>
+      <nav id="site-header-nav" class="hidden md:flex items-center gap-5 text-sm font-semibold"></nav>
+      <div class="hidden sm:flex items-center gap-2">
+        <a id="site-cart-btn" href="odeme_page.html"
+          class="relative inline-flex items-center justify-center size-10 rounded-xl border border-primary/20 hover:bg-primary/10 transition"
+          title="Sepet">
+          <span class="material-symbols-outlined">shopping_cart</span>
+          <span id="site-cart-badge"
+            class="absolute -top-1 -right-1 hidden min-w-[18px] h-[18px] px-1 bg-primary text-white text-[10px] font-black rounded-full grid place-items-center">0</span>
+        </a>
+        <a id="site-header-login" href="giris.html"
+          class="px-3 py-2 rounded-xl text-sm font-bold hover:bg-primary/10 transition">Giriş</a>
+        <a id="site-header-signup" href="kayit.html"
+          class="px-3 py-2 rounded-xl bg-primary text-white text-sm font-extrabold hover:opacity-95 transition">Kayıt</a>
+      </div>
+    </div>
+  </header>
+  <main class="max-w-5xl mx-auto px-4 py-6 md:py-8">
+    <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-2 mb-6">
+      <h1 class="text-3xl md:text-4xl font-black">Tüm Kurslar</h1>
+      <a class="text-primary font-semibold text-sm" href="odeme_page.html">Satın alma sayfasına git</a>
+    </div>
+    <div id="courses-empty" class="hidden mt-4 p-6 rounded-2xl bg-white dark:bg-white/5 border border-primary/10">
+      <div class="font-black text-lg" data-empty-title>Kurs bulunamadı</div>
+      <div class="text-sm text-slate-500 mt-1" data-empty-desc>Henüz yayında kurs yok.</div>
+    </div>
+    <div id="courses-grid" class="grid md:grid-cols-3 gap-4"></div>
+
+    <section id="ozel-ders" class="mt-10">
+      <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+        <div>
+          <h2 class="text-2xl md:text-3xl font-black">Özel Ders (1:1)</h2>
+          <p class="text-slate-600 dark:text-slate-300 mt-2 max-w-2xl text-sm md:text-base">
+            Hedefine göre kişiselleştirilmiş program: konu anlatımı, proje/ödev değerlendirme ve mentorluk.
+          </p>
+        </div>
+        <div class="flex flex-wrap gap-3">
+          <a href="talep_olustur.html"
+            class="inline-flex items-center justify-center rounded-xl px-4 py-2.5 bg-primary text-white font-bold hover:opacity-95 transition text-sm">
+            Talep Oluştur
+          </a>
+          <a href="ozel_ders.html"
+            class="inline-flex items-center justify-center rounded-xl px-4 py-2.5 border border-primary/30 font-bold hover:bg-primary/10 transition text-sm">
+            Detaylar
+          </a>
+          <a href="mailto:destek@example.com?subject=%C3%96zel%20Ders%20Ba%C5%9Fvuru"
+            class="inline-flex items-center justify-center rounded-xl px-4 py-2.5 border border-primary/30 font-bold hover:bg-primary/10 transition hidden sm:inline-flex text-sm">
+            E-posta Gönder
+          </a>
+        </div>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-4 mt-5">
+        <article class="bg-white dark:bg-white/5 border border-primary/10 rounded-2xl p-4">
+          <h3 class="font-bold text-base md:text-lg">Konu Anlatımı</h3>
+          <p class="text-sm text-slate-500 mt-2">Seviyene uygun, eksiklerini hedefleyen hızlandırılmış ders planı.</p>
+        </article>
+        <article class="bg-white dark:bg-white/5 border border-primary/10 rounded-2xl p-4">
+          <h3 class="font-bold text-base md:text-lg">Proje & Ödev İnceleme</h3>
+          <p class="text-sm text-slate-500 mt-2">Kod review, mimari öneriler, performans ve best practice.</p>
+        </article>
+        <article class="bg-white dark:bg-white/5 border border-primary/10 rounded-2xl p-4">
+          <h3 class="font-bold text-base md:text-lg">Kariyer Mentorluğu</h3>
+          <p class="text-sm text-slate-500 mt-2">CV/GitHub düzenleme, mülakat hazırlığı ve yol haritası.</p>
+        </article>
+      </div>
+    </section>
+  </main>
+  <footer id="site-footer" class="border-t border-primary/10 bg-white/70 dark:bg-background-dark/70 mt-10">
+    <div class="max-w-5xl mx-auto px-4 py-6">
+      <div class="flex flex-col items-start">
+        <img src="assets/img/logo-placeholder.svg" alt="Site Logo" class="w-16 h-16 rounded-full object-cover" />
+        <div class="mt-4 space-y-2 text-sm">
+          <a id="site-footer-email" href="mailto:destek@example.com"
+             class="flex items-center gap-2 text-slate-700 dark:text-slate-300 hover:text-blue-900 dark:hover:text-blue-300 transition-colors">
+            <span>✉</span>
+            <span id="site-footer-email-text">destek@example.com</span>
+          </a>
+          <a id="site-footer-phone" href="tel:+902120000000"
+             class="flex items-center gap-2 text-slate-700 dark:text-slate-300 hover:text-blue-900 dark:hover:text-blue-300 transition-colors">
+            <span>☎</span>
+            <span id="site-footer-phone-text">+90 212 000 00 00</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/js/site-header-settings.js"></script>
+  <script src="assets/js/site-footer-settings.js"></script>
+  <script src="assets/js/site-cart.js"></script>
+  <script src="assets/js/site-courses.js"></script>
+</body>
+
+</html>

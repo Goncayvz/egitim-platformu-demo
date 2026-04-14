@@ -1,0 +1,1341 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>Student Dashboard - Education Platform</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800;900&amp;family=Inter:wght@400;500;600;700;800;900&amp;display=swap"
+    rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+    rel="stylesheet" />
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#9c4fba",
+            "background-light": "#f7f6f8",
+            "background-dark": "#0f0a15",
+          },
+          fontFamily: {
+            "display": ["Lexend", "sans-serif"]
+          },
+          borderRadius: { "DEFAULT": "0.75rem", "lg": "0.75rem", "xl": "1rem", "full": "9999px" },
+        },
+      },
+    }
+  </script>
+  <style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+
+    body {
+      font-family: 'Lexend', sans-serif;
+    }
+  </style>
+</head>
+
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 antialiased"
+  style="font-family: 'Lexend', sans-serif;">
+  <script src="assets/js/auth.js"></script>
+  <script>
+    // Öğrenci panelini admin de inceleyebilsin (debug/preview) ama eğitmen rolü bu sayfaya girmesin.
+    window.AngelAuth?.guard({ allowRoles: ["student", "admin"] });
+  </script>
+  <div class="flex h-screen overflow-hidden">
+    <!-- Sidebar -->
+    <aside id="user-sidebar"
+      class="w-64 flex-shrink-0 border-r border-primary/10 dark:bg-background-dark/50 flex flex-col dark:bg-slate-900/50">
+      <div class="p-6 flex items-center gap-3">
+        <div class="size-8 bg-primary rounded-lg flex items-center justify-center text-white overflow-hidden">
+          <img id="user-brand-logo" alt="Platform logosu" class="w-full h-full object-cover hidden" src="" />
+          <span id="user-brand-icon" class="material-symbols-outlined">school</span>
+        </div>
+        <h1 class="font-display font-bold text-xl tracking-tight">EğitimDünyası</h1>
+      </div>
+      <nav class="flex-1 px-4 space-y-1">
+        <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-primary text-white font-medium" href="kurslar.html">
+          <span class="material-symbols-outlined">video_library</span>
+          <span>Kurslarım</span>
+        </a>
+        <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-primary/10 hover:text-primary transition-colors font-medium"
+          href="canliders.html">
+          <span class="material-symbols-outlined">person_search</span>
+          <span>Canlı Dersler</span>
+        </a>
+        <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-primary/10 hover:text-primary transition-colors font-medium"
+          href="taleplerim.html">
+          <span class="material-symbols-outlined">description</span>
+          <span>Taleplerim</span>
+        </a>
+        <div class="pt-4 pb-2 px-3 text-xs font-semibold text-slate-400 uppercase tracking-wider">HESAP</div>
+        <button id="user-settings-open"
+          class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-primary/10 hover:text-primary transition-colors font-medium"
+          type="button">
+          <span class="material-symbols-outlined">settings</span>
+          <span>Ayarlar</span>
+        </button>
+      </nav>
+      <div class="p-4 border-t border-primary/10">
+        <div class="flex items-center gap-3 p-2 bg-primary/5 rounded-xl">
+          <input id="user-profile-file-input" class="hidden" type="file"
+            accept=".png,.jpg,.jpeg,.webp,image/png,image/jpeg,image/webp" />
+          <button id="user-profile-upload-btn"
+            class="size-10 rounded-full overflow-hidden relative ring-2 ring-primary/20 hover:ring-primary/40 transition-all"
+            type="button" title="Profil fotografinizi degistirin">
+            <img id="user-profile-avatar" alt="Kullanici profil fotografi" class="w-full h-full object-cover"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuC_L0Uvii6IVk_3061DNhuKqvM-fvSrsxpoCgOul1iNdhCUibBt-Zb7Fx2h-Adc5XVBjkq0TM0ujRzExvJiZG9sUmKIu9-n05yaASNFDcDT4uTp-LbFwaABOaP0nQ31V2thEh_XZ9GJ28bCB1e68rh8JBaF_hr_hkSw7MrPJ2oOikJnWf0-7nc-JDVF3eV8Mb79a867fMo-qMJNd_9YjIVrchh2CiW5P3YG4m-AZqG-nrwI3zGrq0e-PpylpWvW3nHuPCataZIocawn" />
+          </button>
+          <div class="flex-1 overflow-hidden">
+            <button id="user-profile-name-btn"
+              class="text-sm font-bold truncate text-left hover:text-primary transition-colors"
+              title="Kullanici adini degistir" type="button">Alex Thompson</button>
+            <p class="text-xs text-primary font-medium">Pro Öğrenci • Profil resmi/adi degistir</p>
+          </div>
+        </div>
+        <div class="mt-3 p-3 rounded-xl border border-primary/15 bg-white/60 dark:bg-slate-900/40 space-y-2">
+          <p class="text-[11px] font-bold uppercase tracking-wider text-slate-500">Ders Onay Bildirimi</p>
+          <label class="block">
+            <span class="text-[11px] text-slate-500">Bildirim Kanali</span>
+            <select id="notify-channel-select"
+              class="mt-1 w-full rounded-lg border-primary/20 dark:bg-slate-900/60 text-xs">
+              <option value="email">Sadece E-posta</option>
+              <option value="sms">Sadece SMS</option>
+              <option value="both">E-posta + SMS</option>
+              <option value="none">Bildirim istemiyorum</option>
+            </select>
+          </label>
+          <label class="block">
+            <span class="text-[11px] text-slate-500">Bildirim E-postasi</span>
+            <input id="notify-email-input" class="mt-1 w-full rounded-lg border-primary/20 dark:bg-slate-900/60 text-xs"
+              placeholder="ornek@mail.com" type="email" />
+          </label>
+          <label class="block">
+            <span class="text-[11px] text-slate-500">Bildirim Telefonu</span>
+            <input id="notify-phone-input" class="mt-1 w-full rounded-lg border-primary/20 dark:bg-slate-900/60 text-xs"
+              placeholder="+90 5xx xxx xx xx" type="tel" />
+          </label>
+          <button id="save-notify-pref-btn"
+            class="w-full py-2 rounded-lg bg-primary text-white text-xs font-semibold hover:bg-primary/90 transition-colors"
+            type="button">Bildirim Tercihini Kaydet</button>
+        </div>
+      </div>
+    </aside>
+    <!-- Main Content -->
+    <main id="user-main" class="flex-1 overflow-y-auto bg-background-light dark:bg-background-dark custom-scrollbar">
+      <!-- Top Navigation -->
+      <header id="user-top-header"
+        class="sticky top-0 z-10 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md border-b border-primary/5 px-8 py-4 flex items-center justify-between">
+        <div class="flex items-center flex-1 max-w-xl">
+          <div class="relative w-full">
+            <span
+              class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">search</span>
+            <input
+              id="user-top-search"
+              class="w-full pl-10 pr-4 py-2 rounded-xl border-none bg-white dark:bg-slate-800 shadow-sm focus:ring-2 focus:ring-primary/20 text-sm dark:bg-slate-900/40"
+              placeholder="Kurs, eğitmen veya konu ara..." type="text" autocomplete="off" />
+          </div>
+        </div>
+         <div class="flex items-center gap-4">
+          <a id="user-buy-courses"
+            class="hidden sm:inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-primary/25 bg-white/80 dark:bg-white/5 text-primary font-extrabold text-sm hover:bg-primary/10 transition"
+            href="kurslar.html" title="Kurs satın al">
+            <span class="material-symbols-outlined text-[20px]">shopping_bag</span>
+            Kurs Satın Al
+          </a>
+          <button id="user-notifications-open" type="button"
+            class="size-10 flex items-center justify-center rounded-xl bg-white dark:bg-slate-800 shadow-sm text-slate-600 dark:text-slate-400 dark:bg-slate-900/40 relative"
+            aria-label="Bildirimler" title="Bildirimler">
+            <span class="material-symbols-outlined">notifications</span>
+            <span id="user-notif-badge" class="absolute -top-1 -right-1 hidden min-w-[18px] h-[18px] px-1 bg-rose-500 text-white text-[10px] font-black rounded-full grid place-items-center">0</span>
+          </button>
+          <a class="bg-primary text-white px-5 py-2.5 rounded-xl font-bold text-sm flex items-center gap-2 hover:bg-primary/90 transition-all shadow-lg shadow-primary/25"
+            href="talep_olustur.html"><span class="material-symbols-outlined text-[20px]">add_circle</span> Özel Ders
+            Talebi Oluştur</a>
+        </div>
+      </header>
+      <div class="p-8 space-y-8">
+        <!-- Welcome Section -->
+        <section class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+          <div>
+            <h2 class="text-3xl font-black tracking-tight text-slate-900 dark:text-white">Tekrar hoş geldin, Alex! 👋
+            </h2>
+            <p class="text-slate-500 dark:text-slate-400 mt-1">Bu hafta planlanmış 3 özel dersin var. Böyle devam et!
+            </p>
+          </div>
+          <div class="flex gap-3">
+            <div
+              class="bg-white dark:bg-slate-800 p-4 rounded-xl shadow-sm border border-primary/5 flex items-center gap-4 min-w-[180px] dark:bg-slate-900/40">
+              <div class="size-12 rounded-lg bg-primary/10 text-primary flex items-center justify-center">
+                <span class="material-symbols-outlined">timer</span>
+              </div>
+              <div>
+                <p class="text-xs text-slate-500 font-medium">Çalışılan Saat</p>
+                <p class="text-xl font-bold text-slate-900 dark:text-white">42.5h</p>
+              </div>
+            </div>
+            <div
+              class="bg-white dark:bg-slate-800 p-4 rounded-xl shadow-sm border border-primary/5 flex items-center gap-4 min-w-[180px] dark:bg-slate-900/40">
+              <div class="size-12 rounded-lg bg-green-500/10 text-green-600 flex items-center justify-center">
+                <span class="material-symbols-outlined">task_alt</span>
+              </div>
+              <div>
+                <p class="text-xs text-slate-500 font-medium">Tamamlanan</p>
+                <p class="text-xl font-bold text-slate-900 dark:text-white">12</p>
+              </div>
+            </div>
+          </div>
+        </section>
+        <!-- Main Grid -->
+        <div class="grid grid-cols-1 xl:grid-cols-3 gap-8">
+          <!-- Courses List -->
+          <div class="xl:col-span-2 space-y-6">
+            <div class="flex items-center justify-between">
+              <h3 class="text-xl font-bold flex items-center gap-2"><span
+                  class="material-symbols-outlined text-primary">play_circle</span> Öğrenmeye Devam Et</h3>
+              <a class="text-primary text-sm font-semibold hover:underline" href="kurslar.html">Hepsini gör</a>
+            </div>
+            <div id="user-learning-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <!-- Course Card 1 -->
+              <div
+                data-user-course-card
+                class="bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-sm border border-primary/5 hover:shadow-md transition-shadow group dark:bg-slate-900/40">
+                <div class="relative aspect-video">
+                  <div
+                    class="absolute inset-0 bg-cover bg-center group-hover:scale-105 transition-transform duration-500"
+                    data-alt="Close-up of code on a computer screen"
+                    style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCA8i9CfLQ1XrloYQcpqXrDy_5LcNM9rBTR9TdDKG63e51EYC9Cler6eVENYxYiF0eTUqCjaLhQ7cLExuDbAxgd9oRuas9UTChKQa4Suyhd-12ubnqsDi1yMrR5mbEVzNwhfgW182yymPIrtmI7kakHs2BUtX3pQh-0YuvJXNWlIvsI2BUIY_HdFuTAqVupR82STEICJh8V0wPuarrRVakIaSHNtI6tFu9PwfIgLV6Dg6jlqTgG4oAqioCL_XPVWqb5IaAk9i8AX21E')">
+                  </div>
+                  <div class="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors"></div>
+                  <div
+                    class="absolute bottom-3 left-3 bg-white/90 dark:bg-slate-900/90 backdrop-blur px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider">
+                    HESAP</div>
+                </div>
+                <div class="p-5">
+                  <h4 class="font-bold text-slate-900 dark:text-white truncate">Mastering Next.js 14 &amp; Server
+                    Components</h4>
+                  <p class="text-xs text-slate-500 mt-1">Dr. Sarah Jenkins</p>
+                  <div class="mt-4 space-y-2">
+                    <div class="flex items-center justify-between text-xs font-medium">
+                      <span class="text-slate-600 dark:text-slate-400">İlerleme</span>
+                      <span class="text-primary">72%</span>
+                    </div>
+                    <div class="w-full h-2 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden">
+                      <div class="h-full bg-primary rounded-full w-[72%]"></div>
+                    </div>
+                  </div>
+                  <button
+                    class="mt-5 w-full py-2 bg-primary/10 hover:bg-primary hover:text-white text-primary rounded-lg text-sm font-bold transition-colors">Derse
+                    Devam Et</button>
+                </div>
+              </div>
+              <!-- Course Card 2 -->
+              <div
+                data-user-course-card
+                class="bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-sm border border-primary/5 hover:shadow-md transition-shadow group dark:bg-slate-900/40">
+                <div class="relative aspect-video">
+                  <div
+                    class="absolute inset-0 bg-cover bg-center group-hover:scale-105 transition-transform duration-500"
+                    data-alt="JavaScript code block on a monitor"
+                    style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAbRyeMZjGBFrIOutV_4w--11gzq4ztRASb452u8o1nyQGwaveBrnw0hLsT9NqTOULeCikpk43pQIGsLqwhFi5pw6A2KPll0MoHXzgjmd07iWpePb6a0rcNq4lXdolgbAii3chyKjfooxtJdUZXeHURHdFOt5sMs9CGyvNSaVnVY9aGp8m7P-cpAhHayk4Zjyx-sxIkMzOJ9ASMJu_zkM2GnAZoXmKc4NIgyhmK0DWyvoMRS1LJDazfu-p2uWVYor50fdjbZ7G0ayyq')">
+                  </div>
+                  <div class="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors"></div>
+                  <div
+                    class="absolute bottom-3 left-3 bg-white/90 dark:bg-slate-900/90 backdrop-blur px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider">
+                    HESAP</div>
+                </div>
+                <div class="p-5">
+                  <h4 class="font-bold text-slate-900 dark:text-white truncate">Advanced Tailwind CSS &amp; Motion</h4>
+                  <p class="text-xs text-slate-500 mt-1">Marcus Holloway</p>
+                  <div class="mt-4 space-y-2">
+                    <div class="flex items-center justify-between text-xs font-medium">
+                      <span class="text-slate-600 dark:text-slate-400">İlerleme</span>
+                      <span class="text-primary">28%</span>
+                    </div>
+                    <div class="w-full h-2 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden">
+                      <div class="h-full bg-primary rounded-full w-[28%]"></div>
+                    </div>
+                  </div>
+                  <button
+                    class="mt-5 w-full py-2 bg-primary/10 hover:bg-primary hover:text-white text-primary rounded-lg text-sm font-bold transition-colors">Derse
+                    Devam Et</button>
+                </div>
+              </div>
+              <!-- Course Card 3 -->
+              <div
+                data-user-course-card
+                class="bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-sm border border-primary/5 hover:shadow-md transition-shadow group dark:bg-slate-900/40">
+                <div class="relative aspect-video">
+                  <div
+                    class="absolute inset-0 bg-cover bg-center group-hover:scale-105 transition-transform duration-500"
+                    data-alt="Modern laptop on a clean wooden desk"
+                    style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAA-gzPO1zNue6nLOGESsEPlmbzPBimOavUDsFeWROcz4kZ7LzOm1WR3I5pyvfIN6Pq0F-onyQKYaP7FIHolgOkCRYdgptbucBTlo-9fkbZ2_JtETpckbeMZmyWDlvZHX7t-MPS-qB7WxXvb_eKrGd7rHpCopeoBtrwnp7lEO5q151vFA0ay-lmhCgFfd9FHgCKbyztcW5xFPynTn2pOPodSqr20S17YYc2_bNMR2-1hXsKwLQqWT0U3voFD9rGY4XJ2v-2nBmexrQx')">
+                  </div>
+                  <div class="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors"></div>
+                  <div
+                    class="absolute bottom-3 left-3 bg-white/90 dark:bg-slate-900/90 backdrop-blur px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider">
+                    HESAP</div>
+                </div>
+                <div class="p-5">
+                  <h4 class="font-bold text-slate-900 dark:text-white truncate">PostgreSQL for Modern Web Apps</h4>
+                  <p class="text-xs text-slate-500 mt-1">Elena Rodriguez</p>
+                  <div class="mt-4 space-y-2">
+                    <div class="flex items-center justify-between text-xs font-medium">
+                      <span class="text-slate-600 dark:text-slate-400">İlerleme</span>
+                      <span class="text-primary">45%</span>
+                    </div>
+                    <div class="w-full h-2 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden">
+                      <div class="h-full bg-primary rounded-full w-[45%]"></div>
+                    </div>
+                  </div>
+                  <button
+                    class="mt-5 w-full py-2 bg-primary/10 hover:bg-primary hover:text-white text-primary rounded-lg text-sm font-bold transition-colors">Derse
+                    Devam Et</button>
+                </div>
+              </div>
+              <!-- Course Card 4 -->
+              <div
+                data-user-course-card
+                class="bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-sm border border-primary/5 hover:shadow-md transition-shadow group dark:bg-slate-900/40">
+                <div class="relative aspect-video">
+                  <div
+                    class="absolute inset-0 bg-cover bg-center group-hover:scale-105 transition-transform duration-500"
+                    data-alt="Team collaborating around a laptop"
+                    style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBAo3jDPBGIrfTJ9OLNR_9eQ8OizbfSl35rO2X3tRbqFcysWVw6BHEgeNjRk5FMLnHyCRQCNSo237BLnVIWUK_8rqXnjdl6PIH62_luB7yXFuDwn1N_rTHRJ-oZz7W1DxquG43zWZ1jy3q8vMy_1ZgbHHECIKAtdASPi2gpZCaHxrI0qLdFSShcVTXK1NI8XykmQjycRYReQtE8BZjcnoZWA1h0EIv734qWFpjSvETKXaGiQL1FaZsd3GFr26qsV46bkJlGZx0b54jT')">
+                  </div>
+                  <div class="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors"></div>
+                  <div
+                    class="absolute bottom-3 left-3 bg-white/90 dark:bg-slate-900/90 backdrop-blur px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider">
+                    HESAP</div>
+                </div>
+                <div class="p-5">
+                  <h4 class="font-bold text-slate-900 dark:text-white truncate">System Design Foundations</h4>
+                  <p class="text-xs text-slate-500 mt-1">David Chen</p>
+                  <div class="mt-4 space-y-2">
+                    <div class="flex items-center justify-between text-xs font-medium">
+                      <span class="text-slate-600 dark:text-slate-400">İlerleme</span>
+                      <span class="text-primary">12%</span>
+                    </div>
+                    <div class="w-full h-2 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden">
+                      <div class="h-full bg-primary rounded-full w-[12%]"></div>
+                    </div>
+                  </div>
+                  <button
+                    class="mt-5 w-full py-2 bg-primary/10 hover:bg-primary hover:text-white text-primary rounded-lg text-sm font-bold transition-colors">Derse
+                    Devam Et</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Calendar View -->
+          <div class="space-y-6">
+            <h3 class="text-xl font-bold flex items-center gap-2"><span
+                class="material-symbols-outlined text-primary">calendar_month</span> Ders Programı</h3>
+            <div
+              class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-primary/5 p-5 dark:bg-slate-900/40">
+              <!-- Simple Calendar Header -->
+              <div class="flex items-center justify-between mb-6">
+                <span id="user-cal-label" class="font-bold">-</span>
+                <div class="flex gap-1">
+                  <button
+                    id="user-cal-prev"
+                    type="button"
+                    aria-label="Önceki ay"
+                    class="size-8 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center justify-center">
+                    <span class="material-symbols-outlined text-sm">chevron_left</span>
+                  </button>
+                  <button
+                    id="user-cal-next"
+                    type="button"
+                    aria-label="Sonraki ay"
+                    class="size-8 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center justify-center">
+                    <span class="material-symbols-outlined text-sm">chevron_right</span>
+                  </button>
+                </div>
+              </div>
+              <!-- Calendar Grid -->
+              <div class="grid grid-cols-7 gap-1 text-center text-xs mb-2">
+                <div class="text-slate-400 font-medium">Pz</div>
+                <div class="text-slate-400 font-medium">Pt</div>
+                <div class="text-slate-400 font-medium">S</div>
+                <div class="text-slate-400 font-medium">Ç</div>
+                <div class="text-slate-400 font-medium">P</div>
+                <div class="text-slate-400 font-medium">C</div>
+                <div class="text-slate-400 font-medium">Ct</div>
+              </div>
+              <div id="user-cal-grid" class="grid grid-cols-7 gap-1 text-center text-sm"></div>
+              <!-- Upcoming Sessions -->
+              <div id="user-cal-upcoming" class="mt-8 space-y-4">
+                <div class="flex items-center justify-between gap-3">
+                  <p class="text-xs font-bold text-slate-400 uppercase tracking-widest">Yaklaşan Dersler</p>
+                  <a href="taleplerim.html" class="text-[11px] font-extrabold text-primary hover:underline">Tümü</a>
+                </div>
+                <div id="user-cal-upcoming-list" class="space-y-3"></div>
+                <div id="user-cal-upcoming-empty" class="hidden p-3 rounded-xl bg-slate-50 dark:bg-slate-700/40 text-sm text-slate-500 dark:text-slate-300">
+                  Yaklaşan ders yok. <a href="talep_olustur.html" class="font-extrabold text-primary hover:underline">Yeni talep oluştur</a>
+                </div>
+                <div id="user-cal-upcoming-search-empty" class="hidden p-3 rounded-xl bg-slate-50 dark:bg-slate-700/40 text-sm text-slate-500 dark:text-slate-300">
+                  Arama sonucunda yaklaşan ders bulunamadı.
+                </div>
+              </div>
+            </div>
+            <!-- Quick Action Card -->
+            <div class="bg-primary rounded-2xl p-6 text-white relative overflow-hidden shadow-lg shadow-primary/30">
+              <div class="relative z-10">
+                <h4 class="font-bold text-lg leading-tight">Belirli bir konuda yardıma mı ihtiyacınız var?</h4>
+                <p class="text-primary-foreground/80 text-sm mt-2 opacity-90">Find the perfect tutor for your specific
+                  learning goals.</p>
+                <a
+                  id="user-find-tutor"
+                  href="ozel_ders.html"
+                  class="inline-flex items-center justify-center mt-4 bg-white text-primary px-4 py-2 rounded-lg text-sm font-black hover:bg-slate-50 transition-colors">
+                  Eğitmen Bul
+                </a>
+              </div>
+              <span
+                class="material-symbols-outlined absolute -bottom-4 -right-4 text-white/10 text-9xl">psychology</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+  <script>
+      (function () {
+        const boot = () => {
+        const SETTINGS_KEY = "demo_site_settings_v1";
+        const PROFILE_KEY = "demo_user_profile_v1";
+        const NOTIFY_PREF_KEY = "demo_user_notification_pref_v1";
+        const LESSON_REQUESTS_KEY = "demo_lesson_requests_v1";
+        const header = document.getElementById("user-top-header");
+        const main = document.getElementById("user-main");
+        const sidebar = document.getElementById("user-sidebar");
+        const userBrandLogo = document.getElementById("user-brand-logo");
+        const userBrandIcon = document.getElementById("user-brand-icon");
+        const userProfileUploadBtn = document.getElementById("user-profile-upload-btn");
+        const userProfileFileInput = document.getElementById("user-profile-file-input");
+        const userProfileAvatar = document.getElementById("user-profile-avatar");
+        const userProfileNameBtn = document.getElementById("user-profile-name-btn");
+        const userSettingsOpenBtn = document.getElementById("user-settings-open");
+        const userNotifOpenBtn = document.getElementById("user-notifications-open");
+        const userNotifBadgeEl = document.getElementById("user-notif-badge");
+        const notifyChannelSelect = document.getElementById("notify-channel-select");
+        const notifyEmailInput = document.getElementById("notify-email-input");
+        const notifyPhoneInput = document.getElementById("notify-phone-input");
+        const saveNotifyPrefBtn = document.getElementById("save-notify-pref-btn");
+
+        const settingsModalEl = document.getElementById("user-settings-modal");
+        const notifModalEl = document.getElementById("user-notifications-modal");
+        const settingsThemeSel = document.getElementById("user-settings-theme");
+        const settingsLogoutBtn = document.getElementById("user-settings-logout");
+        const settingsFeedbackEl = document.getElementById("user-settings-feedback");
+        const notifListEl = document.getElementById("user-notif-list");
+        const notifEmptyEl = document.getElementById("user-notif-empty");
+
+        const toRgba = (hex, alpha) => {
+          const clean = String(hex || "").trim().replace("#", "");
+          if (!/^[0-9a-fA-F]{6}$/.test(clean)) return "";
+          const r = parseInt(clean.slice(0, 2), 16);
+          const g = parseInt(clean.slice(2, 4), 16);
+          const b = parseInt(clean.slice(4, 6), 16);
+          return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+        };
+
+        const upsertFavicon = (href) => {
+          if (!href) return;
+          let icon = document.querySelector("link[rel='icon']");
+          if (!icon) {
+            icon = document.createElement("link");
+            icon.setAttribute("rel", "icon");
+            document.head.appendChild(icon);
+          }
+          icon.setAttribute("href", href);
+        };
+
+        const readFileAsDataUrl = (file) => new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(String(reader.result || ""));
+          reader.onerror = () => reject(new Error("Dosya okunamadi"));
+          reader.readAsDataURL(file);
+        });
+        const safeText = (v) => String(v ?? "").trim();
+        const isValidEmail = (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(v || "").trim());
+        const isValidPhone = (v) => /^\+?[0-9\s()\-]{8,20}$/.test(String(v || "").trim());
+
+        const applyProfileAvatar = (src) => {
+          if (!userProfileAvatar || !src) return;
+          userProfileAvatar.src = src;
+        };
+
+        const applyProfileName = (name) => {
+          if (!userProfileNameBtn || !name) return;
+          userProfileNameBtn.textContent = name;
+        };
+
+        const loadStoredProfile = () => {
+          try {
+            const raw = localStorage.getItem(PROFILE_KEY);
+            if (!raw) return;
+            const data = JSON.parse(raw);
+            if (data?.avatarDataUrl) applyProfileAvatar(data.avatarDataUrl);
+            if (data?.displayName) applyProfileName(data.displayName);
+          } catch (_e) { }
+        };
+
+        const getCurrentUser = () => {
+          try {
+            return window.AngelAuth && typeof AngelAuth.getStoredUser === "function" ? AngelAuth.getStoredUser() : null;
+          } catch (_e) {
+            return null;
+          }
+        };
+
+        const upsertProfile = (patch) => {
+          try {
+            const raw = localStorage.getItem(PROFILE_KEY);
+            const parsed = raw ? JSON.parse(raw) : {};
+            const next = { ...(parsed && typeof parsed === "object" ? parsed : {}), ...(patch || {}) };
+            localStorage.setItem(PROFILE_KEY, JSON.stringify(next));
+            return next;
+          } catch (_e) {
+            try {
+              localStorage.setItem(PROFILE_KEY, JSON.stringify(patch || {}));
+            } catch (_e2) { }
+            return patch || {};
+          }
+        };
+
+        const loadNotifyPreference = () => {
+          try {
+            const raw = localStorage.getItem(NOTIFY_PREF_KEY);
+            const parsed = raw ? JSON.parse(raw) : {};
+            return {
+              channel: ["email", "sms", "both", "none"].includes(parsed?.channel) ? parsed.channel : "email",
+              email: String(parsed?.email || "").trim(),
+              phone: String(parsed?.phone || "").trim()
+            };
+          } catch (_e) {
+            return { channel: "email", email: "", phone: "" };
+          }
+        };
+
+        const applyNotifyPreference = (pref) => {
+          if (notifyChannelSelect) notifyChannelSelect.value = pref.channel;
+          if (notifyEmailInput) notifyEmailInput.value = pref.email;
+          if (notifyPhoneInput) notifyPhoneInput.value = pref.phone;
+        };
+
+        const handleProfileUpload = async (file) => {
+          if (!file) return;
+          const allowed = ["image/png", "image/jpeg", "image/webp"];
+          if (file.type && !allowed.includes(file.type)) {
+            alert("Profil resmi icin PNG, JPG veya WEBP secin.");
+            return;
+          }
+          if (file.size > 2 * 1024 * 1024) {
+            alert("Profil resmi en fazla 2MB olabilir.");
+            return;
+          }
+          try {
+            const dataUrl = await readFileAsDataUrl(file);
+            applyProfileAvatar(dataUrl);
+            upsertProfile({ avatarDataUrl: dataUrl });
+          } catch (_e) {
+            alert("Profil resmi yuklenemedi.");
+          }
+        };
+
+        loadStoredProfile();
+        const user = getCurrentUser();
+        const storedPref = loadNotifyPreference();
+        const fallbackEmail = safeText(user?.email);
+        applyNotifyPreference({
+          ...storedPref,
+          email: storedPref.email || fallbackEmail,
+        });
+
+        // Ensure default display name from auth session if profile is empty.
+        try {
+          if (userProfileNameBtn) {
+            const current = safeText(userProfileNameBtn.textContent);
+            const profileRaw = localStorage.getItem(PROFILE_KEY);
+            const profile = profileRaw ? JSON.parse(profileRaw) : {};
+            const profileName = safeText(profile?.displayName);
+            const authName = safeText(user?.fullName);
+            const nextName = profileName || authName || current;
+            if (nextName && nextName !== current) applyProfileName(nextName);
+            if (nextName && !profileName) upsertProfile({ displayName: nextName });
+          }
+        } catch (_e) { }
+
+        if (userProfileUploadBtn && userProfileFileInput) {
+          userProfileUploadBtn.addEventListener("click", () => userProfileFileInput.click());
+        }
+        if (userProfileFileInput) {
+          userProfileFileInput.addEventListener("change", () => {
+            const file = userProfileFileInput.files && userProfileFileInput.files[0];
+            handleProfileUpload(file);
+          });
+        }
+        if (userProfileNameBtn) {
+          userProfileNameBtn.addEventListener("click", () => {
+            const current = userProfileNameBtn.textContent.trim();
+            const next = prompt("Yeni kullanici adini girin:", current);
+            if (!next) return;
+            const clean = next.trim();
+            if (!clean) return;
+            applyProfileName(clean);
+            upsertProfile({ displayName: clean });
+          });
+        }
+        if (saveNotifyPrefBtn) {
+          saveNotifyPrefBtn.addEventListener("click", () => {
+            const channel = notifyChannelSelect?.value || "email";
+            const email = notifyEmailInput?.value?.trim() || "";
+            const phone = notifyPhoneInput?.value?.trim() || "";
+
+            if ((channel === "email" || channel === "both") && !isValidEmail(email)) {
+              alert("Gecerli bir e-posta adresi girin.");
+              return;
+            }
+            if ((channel === "sms" || channel === "both") && !isValidPhone(phone)) {
+              alert("Gecerli bir telefon numarasi girin.");
+              return;
+            }
+
+            localStorage.setItem(NOTIFY_PREF_KEY, JSON.stringify({ channel, email, phone }));
+            alert("Bildirim tercihiniz kaydedildi.");
+          });
+        }
+
+        const openModal = (el) => {
+          if (!el) return;
+          el.classList.remove("hidden");
+          el.setAttribute("aria-hidden", "false");
+          document.body.classList.add("overflow-hidden");
+        };
+
+        const closeModal = (el) => {
+          if (!el) return;
+          el.classList.add("hidden");
+          el.setAttribute("aria-hidden", "true");
+          document.body.classList.remove("overflow-hidden");
+        };
+
+        const bindModal = (el) => {
+          if (!el) return;
+          el.querySelectorAll("[data-modal-close]").forEach((btn) => btn.addEventListener("click", () => closeModal(el)));
+          el.querySelectorAll("[data-modal-backdrop]").forEach((b) => b.addEventListener("click", () => closeModal(el)));
+        };
+
+        const normalizeTheme = (value) => {
+          const v = String(value || "").trim().toLowerCase();
+          if (v === "light" || v === "aydınlık" || v === "acik" || v === "açık") return "light";
+          if (v === "dark" || v === "karanlık" || v === "koyu") return "dark";
+          return "dark";
+        };
+
+        const readSettings = () => {
+          try {
+            const raw = localStorage.getItem(SETTINGS_KEY);
+            const parsed = raw ? JSON.parse(raw) : {};
+            return parsed && typeof parsed === "object" ? parsed : {};
+          } catch (_e) {
+            return {};
+          }
+        };
+
+        const writeSettings = (next) => {
+          try {
+            localStorage.setItem(SETTINGS_KEY, JSON.stringify(next || {}));
+          } catch (_e) { }
+        };
+
+        const applyTheme = (theme) => {
+          const t = normalizeTheme(theme);
+          document.documentElement.classList.toggle("dark", t === "dark");
+          try {
+            document.documentElement.style.colorScheme = t === "dark" ? "dark" : "light";
+          } catch (_e) { }
+        };
+
+        const loadLessonRequests = () => {
+          try {
+            const raw = localStorage.getItem(LESSON_REQUESTS_KEY);
+            const parsed = raw ? JSON.parse(raw) : [];
+            return Array.isArray(parsed) ? parsed : [];
+          } catch (_e) {
+            return [];
+          }
+        };
+
+        const normalize = (v) => safeText(v).toLowerCase();
+
+        const formatDateTime = (value) => {
+          if (!value) return "-";
+          const d = new Date(value);
+          if (Number.isNaN(d.getTime())) return String(value);
+          try {
+            return new Intl.DateTimeFormat("tr-TR", { day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" }).format(d);
+          } catch (_e) {
+            return d.toISOString().replace("T", " ").slice(0, 16);
+          }
+        };
+
+        const renderNotifications = () => {
+          if (!notifListEl) return;
+          const u = getCurrentUser();
+          const email = normalize(u?.email);
+          const name = normalize(u?.fullName);
+          const list = loadLessonRequests()
+            .filter((x) => x && typeof x === "object")
+            .filter((x) => {
+              if (!email && !name) return true;
+              const xe = normalize(x.email);
+              const xn = normalize(x.fullName);
+              return (email && xe === email) || (name && xn === name);
+            })
+            .slice()
+            .sort((a, b) => new Date(b?.createdAt || 0).getTime() - new Date(a?.createdAt || 0).getTime());
+
+          const badgeCount = list.filter((x) => x.status === "pending").length;
+          if (userNotifBadgeEl) {
+            userNotifBadgeEl.textContent = String(badgeCount);
+            userNotifBadgeEl.classList.toggle("hidden", badgeCount <= 0);
+          }
+
+          if (!list.length) {
+            notifListEl.innerHTML = "";
+            notifEmptyEl?.classList.remove("hidden");
+            return;
+          }
+          notifEmptyEl?.classList.add("hidden");
+
+          const statusLabel = (s) => {
+            const v = String(s || "").toLowerCase();
+            if (v === "approved") return { text: "Onaylandı", tone: "emerald" };
+            if (v === "rejected") return { text: "Reddedildi", tone: "rose" };
+            if (v === "postponed") return { text: "Ertelendi", tone: "amber" };
+            return { text: "Beklemede", tone: "slate" };
+          };
+
+          notifListEl.innerHTML = list.slice(0, 12).map((x) => {
+            const st = statusLabel(x.status);
+            const tone = st.tone === "emerald"
+              ? "border-emerald-500/20 bg-emerald-500/10 text-emerald-700 dark:text-emerald-200"
+              : st.tone === "rose"
+                ? "border-rose-500/20 bg-rose-500/10 text-rose-700 dark:text-rose-200"
+                : st.tone === "amber"
+                  ? "border-amber-500/20 bg-amber-500/10 text-amber-800 dark:text-amber-200"
+                  : "border-slate-200 dark:border-white/10 bg-white/70 dark:bg-white/5 text-slate-700 dark:text-slate-200";
+            return `
+              <div class="rounded-2xl border ${tone} p-4">
+                <div class="flex items-start justify-between gap-3">
+                  <div class="min-w-0">
+                    <div class="flex items-center gap-2 flex-wrap">
+                      <span class="material-symbols-outlined">schedule</span>
+                      <div class="font-extrabold text-sm truncate">${String(x.topic || "Özel Ders Talebi")}</div>
+                    </div>
+                    <div class="mt-1 text-[11px] opacity-80 truncate">${formatDateTime(x.createdAt)} • ${st.text}</div>
+                    ${x.notes ? `<div class="mt-2 text-sm opacity-90 break-words">${String(x.notes)}</div>` : ""}
+                  </div>
+                </div>
+              </div>
+            `.trim();
+          }).join("\n");
+        };
+
+        bindModal(settingsModalEl);
+        bindModal(notifModalEl);
+
+        document.addEventListener("keydown", (e) => {
+          if (e.key !== "Escape") return;
+          closeModal(settingsModalEl);
+          closeModal(notifModalEl);
+        });
+
+        userSettingsOpenBtn?.addEventListener("click", () => {
+          const s = readSettings();
+          if (settingsThemeSel) settingsThemeSel.value = normalizeTheme(s?.theme || (document.documentElement.classList.contains("dark") ? "dark" : "light"));
+          if (settingsFeedbackEl) settingsFeedbackEl.textContent = "";
+          openModal(settingsModalEl);
+        });
+
+        userNotifOpenBtn?.addEventListener("click", () => {
+          renderNotifications();
+          openModal(notifModalEl);
+        });
+
+        settingsThemeSel?.addEventListener("change", () => {
+          const nextTheme = normalizeTheme(settingsThemeSel.value);
+          const s = readSettings();
+          writeSettings({ ...s, theme: nextTheme });
+          applyTheme(nextTheme);
+          if (settingsFeedbackEl) settingsFeedbackEl.textContent = "Tema güncellendi.";
+        });
+
+        settingsLogoutBtn?.addEventListener("click", () => {
+          window.AngelAuth?.logout?.({ redirectTo: "giris.html" });
+        });
+
+        // Initial notification badge paint
+        try { renderNotifications(); } catch (_e) { }
+
+        // Calendar (Ders Programı) + Yaklaşan Dersler
+        const initLessonCalendar = () => {
+          const labelEl = document.getElementById("user-cal-label");
+          const prevBtn = document.getElementById("user-cal-prev");
+          const nextBtn = document.getElementById("user-cal-next");
+          const gridEl = document.getElementById("user-cal-grid");
+          const upcomingListEl = document.getElementById("user-cal-upcoming-list");
+          const upcomingEmptyEl = document.getElementById("user-cal-upcoming-empty");
+          if (!labelEl || !prevBtn || !nextBtn || !gridEl || !upcomingListEl || !upcomingEmptyEl) return;
+
+          const pad2 = (n) => String(n).padStart(2, "0");
+          const toYmd = (d) => `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`;
+          const isSameYmd = (a, b) => a && b && toYmd(a) === toYmd(b);
+
+          const titleCase = (s) => {
+            const v = String(s || "");
+            return v ? v.charAt(0).toUpperCase() + v.slice(1) : v;
+          };
+
+          const normalize = (v) => safeText(v).toLowerCase();
+
+          const readProfile = () => {
+            try {
+              const raw = localStorage.getItem(PROFILE_KEY);
+              const parsed = raw ? JSON.parse(raw) : {};
+              return parsed && typeof parsed === "object" ? parsed : {};
+            } catch (_e) {
+              return {};
+            }
+          };
+
+          const buildCtx = () => {
+            const u = getCurrentUser() || {};
+            const p = readProfile() || {};
+            const email = safeText(u?.email) || "";
+            const name = safeText(p?.displayName) || safeText(u?.fullName) || "";
+            const role = safeText(u?.role) || "";
+            return { email, name, role };
+          };
+
+          const isMine = (req, ctx) => {
+            if (!ctx) return true;
+            if (String(ctx.role || "").toLowerCase() === "admin") {
+              // Admin, user paneli inceleyebilmek için girebilir; e-mail/name yoksa her şeyi göster.
+              if (!ctx.email && !ctx.name) return true;
+            }
+            const myEmail = normalize(ctx.email);
+            const myName = normalize(ctx.name);
+            if (!myEmail && !myName) return true;
+            const re = normalize(req?.email);
+            const rn = normalize(req?.fullName);
+            return (myEmail && re === myEmail) || (myName && rn === myName);
+          };
+
+          const loadRequests = () => {
+            try {
+              const raw = localStorage.getItem(LESSON_REQUESTS_KEY);
+              const parsed = raw ? JSON.parse(raw) : [];
+              return Array.isArray(parsed) ? parsed : [];
+            } catch (_e) {
+              return [];
+            }
+          };
+
+          const statusMeta = (s) => {
+            const v = String(s || "").toLowerCase();
+            if (v === "approved") return { text: "Onaylandı", tone: "emerald", dot: "bg-emerald-500" };
+            if (v === "postponed") return { text: "Ertelendi", tone: "amber", dot: "bg-amber-500" };
+            if (v === "rejected") return { text: "Reddedildi", tone: "rose", dot: "bg-rose-500" };
+            if (v === "cancelled") return { text: "İptal", tone: "slate", dot: "bg-slate-400" };
+            return { text: "Beklemede", tone: "slate", dot: "bg-primary" };
+          };
+
+          const parseDateTime = (dateStr, timeStr) => {
+            const d = String(dateStr || "").trim();
+            if (!/^\d{4}-\d{2}-\d{2}$/.test(d)) return null;
+            const [y, m, day] = d.split("-").map((x) => Number(x));
+            if (!Number.isFinite(y) || !Number.isFinite(m) || !Number.isFinite(day)) return null;
+            let hh = 12;
+            let mm = 0;
+            const t = String(timeStr || "").trim();
+            if (/^\d{2}:\d{2}$/.test(t)) {
+              const [h1, m1] = t.split(":").map((x) => Number(x));
+              if (Number.isFinite(h1)) hh = Math.min(23, Math.max(0, h1));
+              if (Number.isFinite(m1)) mm = Math.min(59, Math.max(0, m1));
+            }
+            const dt = new Date(y, m - 1, day, hh, mm, 0, 0);
+            return Number.isNaN(dt.getTime()) ? null : dt;
+          };
+
+          const extractEventDate = (req) => {
+            const direct = req?.scheduledAt || req?.approvedAt || req?.dateTime;
+            if (direct) {
+              const d = new Date(direct);
+              if (!Number.isNaN(d.getTime())) return d;
+            }
+            if (req?.approvedSlot && typeof req.approvedSlot === "object") {
+              const d = parseDateTime(req.approvedSlot.date, req.approvedSlot.time);
+              if (d) return d;
+            }
+            const d2 = parseDateTime(req?.preferredDate, req?.preferredTime);
+            if (d2) return d2;
+            return null;
+          };
+
+          const formatShort = (d) => {
+            if (!d) return "-";
+            try {
+              return new Intl.DateTimeFormat("tr-TR", { day: "2-digit", month: "short" }).format(d);
+            } catch (_e) {
+              return `${pad2(d.getDate())}.${pad2(d.getMonth() + 1)}`;
+            }
+          };
+
+          const formatClock = (d) => {
+            if (!d) return "";
+            const hh = pad2(d.getHours());
+            const mm = pad2(d.getMinutes());
+            return `${hh}:${mm}`;
+          };
+
+          const buildEvents = () => {
+            const ctx = buildCtx();
+            const now = new Date();
+            return loadRequests()
+              .filter((x) => x && typeof x === "object")
+              .filter((x) => isMine(x, ctx))
+              .map((req) => {
+                const date = extractEventDate(req);
+                if (!date) return null;
+                return {
+                  id: String(req.id || ""),
+                  date,
+                  ymd: toYmd(date),
+                  topic: safeText(req.topic) || "Özel Ders",
+                  status: String(req.status || "pending"),
+                  meetingUrl: safeText(req.meetingUrl || req.zoomUrl || ""),
+                  createdAt: req.createdAt,
+                  _req: req,
+                };
+              })
+              .filter(Boolean)
+              .filter((e) => {
+                // Reddedilen / iptal edilenleri takvimde göstermeyelim.
+                const st = String(e.status || "").toLowerCase();
+                if (st === "rejected" || st === "cancelled") return false;
+                // Çok eski kayıtlar UI'ı kirletmesin (1 yıl geriye kadar).
+                const oneYearAgo = new Date(now.getTime() - 365 * 24 * 60 * 60 * 1000);
+                return e.date >= oneYearAgo;
+              })
+              .sort((a, b) => a.date.getTime() - b.date.getTime());
+          };
+
+          const monthLabel = (year, month) => {
+            try {
+              const raw = new Intl.DateTimeFormat("tr-TR", { month: "long", year: "numeric" }).format(new Date(year, month, 1));
+              return titleCase(raw);
+            } catch (_e) {
+              const months = ["Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"];
+              return `${months[month] || "-"} ${year}`;
+            }
+          };
+
+          const state = {
+            viewYear: new Date().getFullYear(),
+            viewMonth: new Date().getMonth(),
+            selectedYmd: toYmd(new Date()),
+          };
+
+          const setView = (year, month) => {
+            const y = Number(year);
+            const m = Number(month);
+            if (!Number.isFinite(y) || !Number.isFinite(m)) return;
+            state.viewYear = y;
+            state.viewMonth = (m + 1200) % 12;
+          };
+
+          const shiftMonth = (delta) => {
+            const d = new Date(state.viewYear, state.viewMonth + delta, 1);
+            state.viewYear = d.getFullYear();
+            state.viewMonth = d.getMonth();
+          };
+
+          const render = () => {
+            const events = buildEvents();
+            const byDay = new Map();
+            for (const e of events) {
+              const arr = byDay.get(e.ymd) || [];
+              arr.push(e);
+              byDay.set(e.ymd, arr);
+            }
+
+            labelEl.textContent = monthLabel(state.viewYear, state.viewMonth);
+
+            const firstDay = new Date(state.viewYear, state.viewMonth, 1);
+            const startOffset = firstDay.getDay(); // 0=Sunday (Pz)
+            const startDate = new Date(state.viewYear, state.viewMonth, 1 - startOffset);
+            const today = new Date();
+
+            gridEl.innerHTML = Array.from({ length: 42 }).map((_, i) => {
+              const d = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate() + i);
+              const inMonth = d.getMonth() === state.viewMonth;
+              const ymd = toYmd(d);
+              const isSelected = state.selectedYmd === ymd;
+              const isToday = isSameYmd(d, today);
+              const dayEvents = byDay.get(ymd) || [];
+              const dot = dayEvents.length ? statusMeta(dayEvents[0]?.status).dot : "";
+
+              const base =
+                "relative py-2 font-medium rounded-lg transition-colors select-none " +
+                (inMonth ? "hover:bg-primary/5 cursor-pointer " : "text-slate-300 dark:text-slate-600 hover:bg-slate-50 dark:hover:bg-slate-700/40 cursor-pointer ") +
+                (isSelected ? "bg-primary text-white hover:bg-primary " : "") +
+                (!isSelected && isToday ? "ring-2 ring-primary/35 " : "");
+
+              const dotHtml = dayEvents.length
+                ? `<span class="absolute bottom-1 left-1/2 -translate-x-1/2 size-1.5 rounded-full ${isSelected ? "bg-white/90" : dot}"></span>`
+                : "";
+
+              return `
+                <button type="button" class="${base}" data-cal-ymd="${ymd}" data-cal-inmonth="${inMonth ? "1" : "0"}">
+                  ${d.getDate()}
+                  ${dotHtml}
+                </button>
+              `.trim();
+            }).join("\n");
+
+            const selectedEvents = (byDay.get(state.selectedYmd) || []).slice().sort((a, b) => a.date.getTime() - b.date.getTime());
+            const now = new Date();
+            const upcoming = selectedEvents.length
+              ? selectedEvents
+              : events.filter((x) => x.date.getTime() >= now.getTime()).slice(0, 5);
+
+            if (!upcoming.length) {
+              upcomingListEl.innerHTML = "";
+              upcomingEmptyEl.classList.remove("hidden");
+              return;
+            }
+            upcomingEmptyEl.classList.add("hidden");
+
+            upcomingListEl.innerHTML = upcoming.map((e, idx) => {
+              const meta = statusMeta(e.status);
+              const primaryCard = idx === 0 && !selectedEvents.length;
+              const tone = meta.tone === "emerald"
+                ? "bg-emerald-500/10 border-emerald-500/15"
+                : meta.tone === "amber"
+                  ? "bg-amber-500/10 border-amber-500/15"
+                  : "bg-primary/5 border-primary/10";
+
+              const when = (() => {
+                const ymd = toYmd(e.date);
+                const todayYmd = toYmd(new Date());
+                if (ymd === todayYmd) return `Bugün • ${formatClock(e.date)}`;
+                return `${formatShort(e.date)} • ${formatClock(e.date)}`;
+              })();
+
+              const join = e.meetingUrl
+                ? `<a class="mt-2 inline-flex items-center gap-1 text-[10px] text-primary font-extrabold hover:underline" href="${e.meetingUrl}" target="_blank" rel="noopener noreferrer">
+                    <span class="material-symbols-outlined text-xs">video_call</span>
+                    Toplantıya Katıl
+                  </a>`
+                : `<div class="mt-2 text-[10px] text-slate-500 dark:text-slate-400 font-bold">${meta.text}</div>`;
+
+              return `
+                <div class="flex items-start gap-3 p-3 rounded-xl border ${tone} ${primaryCard ? "" : "hover:bg-slate-50 dark:hover:bg-slate-700/40"} transition-colors">
+                  <div class="size-10 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 text-primary">
+                    <span class="material-symbols-outlined">school</span>
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <p class="text-sm font-extrabold text-slate-900 dark:text-white truncate">${e.topic}</p>
+                    <p class="text-xs text-slate-500">${when}</p>
+                    ${join}
+                  </div>
+                </div>
+              `.trim();
+            }).join("\n");
+          };
+
+          const ensureSelectedInView = () => {
+            // Seçili gün, görünüm ayındaysa kalsın; değilse ayı seçili güne kaydır.
+            try {
+              const [y, m] = String(state.selectedYmd || "").split("-").map((x) => Number(x));
+              if (!Number.isFinite(y) || !Number.isFinite(m)) return;
+              if (y === state.viewYear && (m - 1) === state.viewMonth) return;
+              state.viewYear = y;
+              state.viewMonth = m - 1;
+            } catch (_e) {}
+          };
+
+          prevBtn.addEventListener("click", () => {
+            shiftMonth(-1);
+            render();
+          });
+          nextBtn.addEventListener("click", () => {
+            shiftMonth(1);
+            render();
+          });
+
+          gridEl.addEventListener("click", (ev) => {
+            const btn = ev.target?.closest?.("button[data-cal-ymd]");
+            if (!btn) return;
+            const ymd = btn.getAttribute("data-cal-ymd");
+            if (!ymd) return;
+            state.selectedYmd = ymd;
+
+            const inMonth = btn.getAttribute("data-cal-inmonth") === "1";
+            if (!inMonth) {
+              // Dış ay günü tıklandıysa o aya geç.
+              const parts = ymd.split("-").map((x) => Number(x));
+              if (parts.length === 3) {
+                state.viewYear = parts[0];
+                state.viewMonth = parts[1] - 1;
+              }
+            }
+            render();
+          });
+
+          window.addEventListener("storage", (e) => {
+            if (e && e.key === LESSON_REQUESTS_KEY) {
+              render();
+            }
+          });
+
+          ensureSelectedInView();
+          render();
+        };
+
+        try { initLessonCalendar(); } catch (_e) { }
+
+        // Top arama: kurs kartları + yaklaşan dersler
+        const initTopSearch = () => {
+          const input = document.getElementById("user-top-search");
+          if (!input) return;
+
+          const learningGrid = document.getElementById("user-learning-grid");
+          const learningEmpty = document.getElementById("user-learning-empty");
+          const upcomingList = document.getElementById("user-cal-upcoming-list");
+          const upcomingEmpty = document.getElementById("user-cal-upcoming-empty");
+          const upcomingSearchEmpty = document.getElementById("user-cal-upcoming-search-empty");
+
+          const norm = (v) => String(v ?? "").trim().toLowerCase();
+
+          const applyCourseFilter = (q) => {
+            if (!learningGrid) return;
+            const cards = Array.from(learningGrid.querySelectorAll("[data-user-course-card]"));
+            if (!cards.length) return;
+            let visible = 0;
+            cards.forEach((card) => {
+              const title = card.querySelector("h4")?.textContent || "";
+              const instructor = card.querySelector("p")?.textContent || "";
+              const hay = norm(`${title} ${instructor}`);
+              const show = !q || hay.includes(q);
+              card.classList.toggle("hidden", !show);
+              if (show) visible += 1;
+            });
+            learningEmpty?.classList.toggle("hidden", !(q && visible === 0));
+          };
+
+          const applyUpcomingFilter = (q) => {
+            if (!upcomingList) return;
+            const items = Array.from(upcomingList.children || []);
+            if (!items.length) {
+              upcomingSearchEmpty?.classList.add("hidden");
+              return;
+            }
+
+            let visible = 0;
+            items.forEach((el) => {
+              const hay = norm(el.textContent || "");
+              const show = !q || hay.includes(q);
+              el.classList.toggle("hidden", !show);
+              if (show) visible += 1;
+            });
+
+            // Eğer listede öğe varsa, "yaklaşan ders yok" sadece gerçekten boşken gösterilmeli.
+            // Arama sonucu yoksa ayrı mesaj göster.
+            upcomingEmpty?.classList.add("hidden");
+            upcomingSearchEmpty?.classList.toggle("hidden", !(q && visible === 0));
+          };
+
+          let t = null;
+          const run = () => {
+            const q = norm(input.value || "");
+            applyCourseFilter(q);
+            applyUpcomingFilter(q);
+          };
+
+          input.addEventListener("input", () => {
+            if (t) window.clearTimeout(t);
+            t = window.setTimeout(run, 120);
+          });
+
+          // Calendar render yeni öğeler basarsa aramayı yeniden uygula.
+          try {
+            if (upcomingList && typeof MutationObserver !== "undefined") {
+              const mo = new MutationObserver(() => applyUpcomingFilter(norm(input.value || "")));
+              mo.observe(upcomingList, { childList: true });
+            }
+          } catch (_e) { }
+
+          run();
+        };
+
+        try { initTopSearch(); } catch (_e) { }
+
+        try {
+          const raw = localStorage.getItem(SETTINGS_KEY);
+          const settings = raw ? JSON.parse(raw) : {};
+          const primary = settings?.primaryColor;
+          const secondary = settings?.secondaryColor;
+          const contentBg = settings?.contentBg;
+          const headerBg = settings?.headerBg;
+          const surfaceBg = settings?.surfaceBg;
+          const theme = settings?.theme;
+          const logoDataUrl = settings?.logoDataUrl;
+          const faviconDataUrl = settings?.faviconDataUrl;
+
+          if (userBrandLogo && typeof logoDataUrl === "string" && logoDataUrl) {
+            userBrandLogo.src = logoDataUrl;
+            userBrandLogo.classList.remove("hidden");
+            if (userBrandIcon) userBrandIcon.classList.add("hidden");
+          }
+          if (typeof faviconDataUrl === "string" && faviconDataUrl) {
+            upsertFavicon(faviconDataUrl);
+          }
+
+          if (theme === "light" || theme === "dark") {
+            document.documentElement.classList.toggle("dark", theme === "dark");
+          }
+          const isDark = document.documentElement.classList.contains("dark");
+
+          if (header && (headerBg || primary)) {
+            if (isDark) {
+              header.style.backgroundColor = "";
+            } else {
+              header.style.backgroundColor = headerBg
+                ? (toRgba(headerBg, 0.82) || `${headerBg}e6`)
+                : toRgba(primary, 0.16);
+            }
+            if (primary) header.style.borderColor = toRgba(primary, 0.35);
+          }
+
+          if (sidebar && primary && secondary) {
+            const sideTintA = toRgba(primary, isDark ? 0.2 : 0.12);
+            const sideTintB = toRgba(secondary, isDark ? 0.14 : 0.08);
+            if (sideTintA && sideTintB) sidebar.style.background = `linear-gradient(180deg, ${sideTintA}, ${sideTintB})`;
+          }
+
+          if (isDark) {
+            document.body.style.backgroundColor = "";
+            if (main) main.style.backgroundColor = "";
+            document.querySelectorAll("main div.bg-white.border, main section.bg-white.border").forEach((el) => {
+              if (el.closest("#user-top-header")) return;
+              el.style.backgroundColor = "";
+            });
+          } else {
+            if (contentBg) {
+              const pageTone = toRgba(contentBg, 0.12) || contentBg;
+              document.body.style.backgroundColor = pageTone;
+              if (main) main.style.backgroundColor = pageTone;
+            }
+
+            if (surfaceBg) {
+              const surfaceTone = toRgba(surfaceBg, 0.22) || surfaceBg;
+              document.querySelectorAll("main div.bg-white.border, main section.bg-white.border").forEach((el) => {
+                if (el.closest("#user-top-header")) return;
+                el.style.backgroundColor = surfaceTone;
+              });
+            }
+          }
+        } catch (_e) { }
+        };
+
+        if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot, { once: true });
+        else boot();
+      })();
+  </script>
+
+  <!-- Notifications Modal -->
+  <div id="user-notifications-modal" class="fixed inset-0 z-50 hidden" aria-hidden="true">
+    <div data-modal-backdrop class="absolute inset-0 bg-black/60"></div>
+    <div class="relative h-full w-full flex items-center justify-center p-4">
+      <div class="w-full max-w-xl rounded-2xl border border-primary/20 bg-background-light dark:bg-background-dark shadow-2xl overflow-hidden">
+        <div class="p-5 border-b border-primary/15 bg-primary/5 flex items-center justify-between gap-3">
+          <div class="min-w-0">
+            <p class="text-xs font-bold uppercase tracking-wider text-primary">Bildirimler</p>
+            <h2 class="text-xl font-black mt-1">Taleplerim</h2>
+          </div>
+          <button data-modal-close type="button" class="size-10 rounded-xl hover:bg-primary/10 transition text-slate-600 dark:text-slate-300" aria-label="Kapat">
+            <span class="material-symbols-outlined">close</span>
+          </button>
+        </div>
+        <div class="p-5">
+          <div id="user-notif-list" class="space-y-3"></div>
+          <p id="user-notif-empty" class="hidden text-sm text-slate-500 dark:text-slate-400">Henüz talebin yok.</p>
+          <div class="pt-4">
+            <div class="flex flex-wrap gap-2">
+              <a href="talep_olustur.html" class="inline-flex items-center justify-center rounded-xl px-4 py-2.5 bg-primary text-white font-bold hover:opacity-95 transition text-sm">
+                Yeni Talep Oluştur
+              </a>
+              <a href="taleplerim.html" class="inline-flex items-center justify-center rounded-xl px-4 py-2.5 border border-primary/20 font-bold hover:bg-primary/10 transition text-sm">
+                Tümünü Gör
+              </a>
+            </div>
+            <div id="user-learning-empty" class="hidden p-4 rounded-2xl bg-white dark:bg-white/5 border border-primary/10 text-sm text-slate-500 dark:text-slate-300">
+              Arama sonucunda kurs bulunamadı.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Settings Modal -->
+  <div id="user-settings-modal" class="fixed inset-0 z-50 hidden" aria-hidden="true">
+    <div data-modal-backdrop class="absolute inset-0 bg-black/60"></div>
+    <div class="relative h-full w-full flex items-center justify-center p-4">
+      <div class="w-full max-w-lg rounded-2xl border border-primary/20 bg-background-light dark:bg-background-dark shadow-2xl overflow-hidden">
+        <div class="p-5 border-b border-primary/15 bg-primary/5 flex items-center justify-between gap-3">
+          <div class="min-w-0">
+            <p class="text-xs font-bold uppercase tracking-wider text-primary">Ayarlar</p>
+            <h2 class="text-xl font-black mt-1">Hızlı ayarlar</h2>
+          </div>
+          <button data-modal-close type="button" class="size-10 rounded-xl hover:bg-primary/10 transition text-slate-600 dark:text-slate-300" aria-label="Kapat">
+            <span class="material-symbols-outlined">close</span>
+          </button>
+        </div>
+        <div class="p-5 space-y-4">
+          <div class="flex items-center justify-between gap-3 rounded-xl border border-primary/15 bg-white/70 dark:bg-white/5 px-4 py-3">
+            <div>
+              <div class="text-sm font-extrabold">Tema</div>
+              <div class="text-[11px] text-slate-500 dark:text-slate-400">Koyu / Açık</div>
+            </div>
+            <select id="user-settings-theme" class="rounded-xl border border-primary/20 bg-white dark:bg-white/5 text-sm font-bold px-3 py-2">
+              <option value="dark">Koyu</option>
+              <option value="light">Açık</option>
+            </select>
+          </div>
+
+          <div class="flex items-center justify-end gap-2 pt-1">
+            <button id="user-settings-logout" type="button" class="px-4 py-2.5 rounded-xl bg-rose-600 text-white text-sm font-extrabold hover:bg-rose-700 transition">
+              Çıkış Yap
+            </button>
+          </div>
+          <p id="user-settings-feedback" class="text-xs text-slate-500 dark:text-slate-400"></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

@@ -1,0 +1,1875 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="tr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta name="google" content="notranslate"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,500,0,0&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#741ce9",
+                        "background-light": "#f7f6f8",
+                        "background-dark": "#181121",
+                    },
+                    fontFamily: {
+                        "display": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+  html, body { overflow-x: hidden; }
+  img, video, canvas { max-width: 100%; }
+  .material-symbols-outlined {
+    font-family: "Material Symbols Outlined";
+    font-weight: normal;
+    font-style: normal;
+    font-size: inherit;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    display: inline-block;
+    white-space: nowrap;
+    word-wrap: normal;
+    direction: ltr;
+    -webkit-font-feature-settings: "liga";
+    font-feature-settings: "liga";
+    -webkit-font-smoothing: antialiased;
+    font-variation-settings: 'FILL' 0, 'wght' 500, 'GRAD' 0, 'opsz' 24;
+  }
+  /* Keep sidebar layout stable (no "bozulma") while allowing chat to collapse. */
+  #live-chat-panel.aa-chat-collapsed {
+    flex: 0 0 auto !important;
+  }
+  #live-chat-panel.aa-chat-collapsed #live-chat-body {
+    display: none !important;
+  }
+  #live-chat-panel,
+  #live-chat-body,
+  #live-chat-messages {
+    overflow-x: hidden;
+  }
+  #live-chat-panel,
+  #live-chat-body,
+  #live-chat-messages,
+  #live-chat-messages > div {
+    min-width: 0;
+    max-width: 100%;
+  }
+</style>
+<title>Canlı Ders Platformu - Ekran Paylaşımı</title>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen flex flex-col overflow-x-hidden">
+<script src="assets/js/auth.js"></script>
+<!-- Main Content Area -->
+<main class="flex-1 flex flex-col lg:flex-row min-h-0 min-w-0 overflow-y-auto overflow-x-hidden p-3 md:p-4 gap-4">
+<!-- Left: Shared Screen (Primary View) -->
+<div class="flex-1 min-w-0 flex flex-col gap-4 relative min-h-0">
+<div class="flex-1 min-w-0 min-h-[260px] bg-slate-900 rounded-xl border border-primary/30 overflow-hidden shadow-2xl relative group">
+<!-- Shared Screen (Real stream when available) -->
+<video id="live-share-video" class="absolute inset-0 hidden h-full w-full bg-black object-contain" autoplay playsinline muted></video>
+<div id="live-share-empty" class="absolute inset-0 hidden items-center justify-center bg-black/50">
+  <div class="mx-4 w-full max-w-lg rounded-2xl border border-white/10 bg-black/60 p-4 text-center">
+    <div class="mx-auto mb-2 flex size-11 items-center justify-center rounded-2xl bg-white/10 text-white">
+      <span class="material-symbols-outlined text-2xl">screen_share</span>
+    </div>
+    <h3 class="text-sm font-extrabold text-white">Ekran paylaşımı kapalı</h3>
+    <p id="live-share-empty-desc" class="mt-1 text-xs font-semibold text-white/70">Ders başladıktan sonra “Paylaşım” butonundan ekranını seçebilirsin.</p>
+  </div>
+</div>
+<!-- Shared Content Placeholder (Fallback UI) -->
+<div id="live-share-fallback" class="w-full h-full bg-black p-6 md:p-10 overflow-hidden flex items-center justify-center min-w-0">
+  <div class="w-full max-w-xl rounded-2xl border border-white/10 bg-white/5 p-6 text-center">
+    <div class="mx-auto mb-3 flex size-12 items-center justify-center rounded-2xl bg-primary/20 text-primary">
+      <span class="material-symbols-outlined text-2xl notranslate" translate="no">cast</span>
+    </div>
+    <h3 class="text-base md:text-lg font-black text-white">Canlı ders hazır</h3>
+    <p class="mt-2 text-sm text-white/70">Ders başladığında kamera/ekran paylaşımı burada görünecek.</p>
+    <p class="mt-2 text-xs text-white/50">Not: Bu demo sürümde ekran paylaşımı yalnızca kendi tarayıcında ön izleme olarak gösterilir.</p>
+  </div>
+</div>
+<!-- Screen Share Indicator -->
+<div id="live-share-indicator" class="absolute top-4 left-4 bg-red-600 text-white text-[10px] font-bold px-2 py-1 rounded flex items-center gap-1 uppercase tracking-wider animate-pulse">
+<span class="size-2 bg-white rounded-full"></span>
+                    Canlı Paylaşım
+                </div>
+<div id="live-share-paused" class="absolute inset-0 hidden items-center justify-center bg-black/35">
+  <div class="flex items-center gap-2 rounded-xl border border-white/10 bg-black/60 px-3 py-2 text-xs font-semibold text-white">
+    <span class="material-symbols-outlined text-base">pause_circle</span>
+    Paylaşım durduruldu
+  </div>
+</div>
+<div id="live-lesson-overlay" class="absolute inset-0 hidden items-center justify-center bg-black/45">
+  <div class="mx-4 w-full max-w-md rounded-2xl border border-white/10 bg-black/70 p-4 text-center shadow-2xl">
+    <div class="mx-auto mb-2 flex size-11 items-center justify-center rounded-2xl bg-white/10 text-white">
+      <span id="live-lesson-overlay-icon" class="material-symbols-outlined text-2xl">play_circle</span>
+    </div>
+    <h3 id="live-lesson-overlay-title" class="text-sm font-extrabold text-white">Ders henüz başlamadı</h3>
+    <p id="live-lesson-overlay-desc" class="mt-1 text-xs font-semibold text-white/70">Eğitmen dersi başlattığında ekran ve kontroller aktif olur.</p>
+  </div>
+</div>
+</div>
+<!-- Bottom Control Bar -->
+<div class="h-16 md:h-20 bg-background-light dark:bg-background-dark/90 backdrop-blur-md rounded-xl border border-primary/20 flex items-center justify-center gap-3 md:gap-4 px-3 md:px-6 shadow-lg min-w-0">
+<button id="btn-mic" class="group flex flex-col items-center gap-1" type="button" aria-pressed="true" title="Mikrofonu aç/kapat">
+<div class="size-10 md:size-11 rounded-full bg-slate-200 dark:bg-slate-800 flex items-center justify-center hover:bg-primary/20 transition-all text-slate-700 dark:text-slate-200">
+<span class="material-symbols-outlined" data-icon>mic</span>
+</div>
+<span class="text-[10px] font-medium opacity-60">Mikrofon</span>
+</button>
+<button id="btn-camera" class="group flex flex-col items-center gap-1" type="button" aria-pressed="true" title="Kamerayı aç/kapat">
+<div class="size-10 md:size-11 rounded-full bg-slate-200 dark:bg-slate-800 flex items-center justify-center hover:bg-primary/20 transition-all text-slate-700 dark:text-slate-200">
+<span class="material-symbols-outlined" data-icon>videocam</span>
+</div>
+<span class="text-[10px] font-medium opacity-60">Kamera</span>
+</button>
+<div class="w-[1px] h-8 bg-primary/20 mx-2"></div>
+<button id="btn-share" class="group flex flex-col items-center gap-1" type="button" aria-pressed="true" title="Paylaşımı durdur/başlat">
+<div data-surface class="size-10 md:size-11 rounded-full bg-red-500/10 text-red-500 flex items-center justify-center hover:bg-red-500 hover:text-white transition-all">
+<span class="material-symbols-outlined" data-icon>stop_screen_share</span>
+</div>
+<span class="text-[10px] font-medium text-red-500">Durdur</span>
+</button>
+<button id="btn-whiteboard" class="group flex flex-col items-center gap-1" type="button" title="Beyaz tahta">
+<div class="size-10 md:size-11 rounded-full bg-slate-200 dark:bg-slate-800 flex items-center justify-center hover:bg-primary/20 transition-all text-slate-700 dark:text-slate-200">
+<span class="material-symbols-outlined">draw</span>
+</div>
+<span class="text-[10px] font-medium opacity-60">Beyaz Tahta</span>
+</button>
+<button id="btn-hand" class="group flex flex-col items-center gap-1" type="button" aria-pressed="false" title="El kaldır/indir">
+<div data-surface class="size-10 md:size-11 rounded-full bg-slate-200 dark:bg-slate-800 flex items-center justify-center hover:bg-primary transition-all text-slate-700 dark:text-slate-200 group-hover:text-white">
+<span class="material-symbols-outlined" data-icon>front_hand</span>
+</div>
+<span class="text-[10px] font-medium opacity-60">El Kaldır</span>
+</button>
+<div class="w-[1px] h-8 bg-primary/20 mx-2"></div>
+<button id="btn-leave" class="group flex flex-col items-center gap-1" type="button" title="Dersten ayrıl">
+<div class="size-10 md:size-11 rounded-xl bg-red-600 text-white flex items-center justify-center hover:bg-red-700 transition-all shadow-lg shadow-red-600/20">
+<span class="material-symbols-outlined">call_end</span>
+</div>
+<span class="text-[10px] font-medium text-red-600">Ayrıl</span>
+</button>
+</div>
+</div>
+<!-- Right: Sidebar (Participants & Chat) -->
+<aside class="w-full lg:w-[360px] xl:w-[380px] lg:flex-none lg:shrink-0 flex flex-col gap-4 min-h-0 min-w-0 overflow-x-hidden">
+<!-- Participant Webcams -->
+<div class="bg-background-light dark:bg-background-dark/40 rounded-xl border border-primary/20 overflow-hidden flex flex-col min-h-0 max-h-60 lg:max-h-none lg:flex-1">
+<div class="px-4 py-2 bg-primary/5 border-b border-primary/20 flex justify-between items-center">
+<span class="text-xs font-bold uppercase tracking-wider text-primary">Katılımcılar</span>
+<span id="live-active-badge" class="text-[10px] bg-primary/20 text-primary px-2 py-0.5 rounded-full">Kamera Açık</span>
+</div>
+  <div id="live-participants-grid" class="flex-1 min-w-0 overflow-y-auto overflow-x-hidden p-3 grid grid-cols-2 gap-2 scrollbar-hide">
+<div id="self-video-tile" class="relative group cursor-pointer" title="Kamerayı aç/kapat">
+<div class="aspect-video bg-slate-800 rounded-lg overflow-hidden border border-white/5 flex items-center justify-center">
+  <video id="self-camera-video" class="absolute inset-0 hidden h-full w-full object-cover bg-black" autoplay playsinline muted></video>
+  <div id="self-video-placeholder" class="text-center">
+    <div class="mx-auto size-10 rounded-full bg-primary/20 text-primary flex items-center justify-center font-black">S</div>
+    <div class="mt-2 text-[10px] text-white/70">Sen</div>
+  </div>
+</div>
+<div id="self-video-overlay" class="absolute inset-0 hidden items-center justify-center bg-black/55">
+<div class="flex items-center gap-2 rounded-xl border border-white/10 bg-black/60 px-3 py-2 text-[11px] font-semibold text-white">
+<span class="material-symbols-outlined text-base">videocam_off</span>
+Kamera kapalı
+</div>
+</div>
+<div id="self-video-name" class="absolute bottom-1 left-1 bg-black/60 text-[10px] px-1.5 py-0.5 rounded text-white max-w-[85%] truncate">Sen</div>
+</div>
+
+<div id="live-participants-others" class="contents"></div>
+
+</div>
+</div>
+<!-- Chat Window -->
+<div id="live-chat-panel" class="flex-1 min-h-0 min-w-0 bg-background-light dark:bg-background-dark/40 rounded-xl border border-primary/20 overflow-hidden flex flex-col shadow-inner">
+<div class="px-4 py-3 bg-primary/5 border-b border-primary/20 flex items-center gap-2 justify-between">
+  <div class="flex items-center gap-2 min-w-0">
+    <span class="material-symbols-outlined text-primary text-lg notranslate" translate="no">chat_bubble</span>
+    <span class="text-xs font-bold uppercase tracking-wider text-primary truncate">Canlı Sohbet</span>
+  </div>
+  <button id="btn-chat-toggle" type="button" class="ml-2 inline-flex items-center justify-center size-9 rounded-lg hover:bg-primary/10 transition-colors text-slate-600 dark:text-slate-300" aria-expanded="true" aria-label="Sohbeti aç/kapat" title="Sohbeti aç/kapat">
+     <span id="chat-toggle-icon" class="material-symbols-outlined text-xl notranslate" translate="no">expand_less</span>
+  </button>
+</div>
+<div id="live-chat-body" class="flex flex-col flex-1 min-h-0">
+  <div id="live-chat-messages" class="flex-1 min-w-0 overflow-y-auto overflow-x-hidden p-4 space-y-4"></div>
+  <!-- Chat Input -->
+  <div class="p-3 bg-background-light dark:bg-background-dark border-t border-primary/20">
+    <div class="relative">
+      <input id="live-chat-input" class="w-full bg-slate-100 dark:bg-slate-900 border-primary/20 rounded-lg pl-4 pr-12 py-2.5 text-sm focus:ring-primary focus:border-primary transition-all" placeholder="Bir mesaj yazın..." type="text" autocomplete="off"/>
+      <button id="live-chat-send-btn" class="absolute right-2 top-1/2 -translate-y-1/2 text-primary hover:scale-110 transition-transform" type="button" title="Gönder">
+        <span class="material-symbols-outlined">send</span>
+      </button>
+    </div>
+  </div>
+</div>
+</div>
+</aside>
+</main>
+
+<!-- Bottom Header Bar -->
+<header
+  class="flex flex-wrap items-center justify-between gap-3 px-4 md:px-6 py-3 border-t border-primary/20 bg-background-light dark:bg-background-dark/80 backdrop-blur-md z-10 shrink-0">
+  <div class="flex items-center gap-3 md:gap-4 min-w-0">
+    <a class="text-xs font-semibold text-primary hover:underline" href="index.html">Ana Sayfa</a>
+    <a id="live-panel-link" class="text-xs font-semibold text-primary hover:underline" href="userpanel.html">Panel</a>
+    <div class="bg-primary p-2 rounded-lg text-white">
+      <span class="material-symbols-outlined block">present_to_all</span>
+    </div>
+  <div class="min-w-0">
+      <h1 id="live-session-title" class="text-base md:text-lg font-bold leading-tight tracking-tight truncate">React İleri Seviye - Ekran Paylaşımı</h1>
+      <div class="hidden sm:flex items-center gap-4 mt-0.5">
+        <span class="flex items-center gap-1.5 text-xs font-medium text-slate-500 dark:text-slate-400">
+          <span class="material-symbols-outlined text-sm">group</span>
+<span id="live-participant-count">1</span> Katılımcı
+        </span>
+        <span
+          class="flex items-center gap-1.5 text-xs font-medium text-slate-500 dark:text-slate-400 border-l border-slate-700 pl-4">
+          <span class="material-symbols-outlined text-sm">schedule</span>
+          <span id="live-session-timer">01:20:45</span>
+        </span>
+      </div>
+     </div>
+  </div>
+  <div class="flex items-center gap-3">
+    <span id="live-lesson-status" class="hidden sm:inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-[11px] font-black uppercase tracking-wider"></span>
+    <button id="btn-session-start" type="button" class="inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-3 py-2 text-xs font-extrabold text-white shadow-sm hover:bg-emerald-500 transition active:scale-[0.98]">
+      <span class="material-symbols-outlined text-base">play_arrow</span>
+      <span class="hidden sm:inline">Dersi Başlat</span>
+    </button>
+    <button id="btn-session-end" type="button" class="hidden inline-flex items-center gap-2 rounded-lg bg-rose-600 px-3 py-2 text-xs font-extrabold text-white shadow-sm hover:bg-rose-500 transition active:scale-[0.98]">
+      <span class="material-symbols-outlined text-base">stop_circle</span>
+      <span class="hidden sm:inline">Dersi Bitir</span>
+    </button>
+    <button id="btn-live-settings" type="button" class="p-2 hover:bg-primary/10 rounded-lg transition-colors text-slate-600 dark:text-slate-300" aria-label="Ayarlar" title="Ayarlar">
+      <span class="material-symbols-outlined notranslate" translate="no">settings</span>
+    </button>
+    <button id="btn-live-info" type="button" class="p-2 hover:bg-primary/10 rounded-lg transition-colors text-slate-600 dark:text-slate-300" aria-label="Bilgi" title="Bilgi">
+      <span class="material-symbols-outlined notranslate" translate="no">info</span>
+    </button>
+    <div class="h-8 w-[1px] bg-primary/20 mx-1"></div>
+    <div class="flex items-center gap-3 pl-2">
+      <div class="text-right hidden sm:block">
+        <p id="live-instructor-name" class="text-xs font-semibold max-w-[180px] truncate">Dr. Selin Yılmaz</p>
+        <p class="text-[10px] text-primary">Eğitmen</p>
+      </div>
+      <div class="size-10 rounded-full border-2 border-primary bg-cover bg-center" data-alt="Female instructor profile picture profile"
+        style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDAVADW03HrqyXqEhKvIipt2Vg_WK9Vt1kU2YbDMcVOy37ZcXPOrQOe_uiTOgKM0PPMTvKJb9_yC36RjyO6PdfBSI4zhfq_0cHEYj0UOTHhaDZuOeSaAvdJVZOyN3kodmI-ighCd1rwQYuK7bDZX4LF8UV3_IJJKw9jcw5XzSBkckSqTDeg3LpUK0YUp6-X3qQl1rJ1T6ZhNllSKrSuugJ9NoCQlglrknolxiXrWeZzfMYEwNMp8JuQ6rUoWdgwdto4cF101YugKK0i')">
+      </div>
+    </div>
+  </div>
+</header>
+
+<div id="live-join-modal" class="fixed inset-0 z-50 hidden" aria-hidden="true">
+  <div class="absolute inset-0 bg-black/60"></div>
+  <div class="relative h-full w-full flex items-center justify-center p-4">
+    <div class="w-full max-w-md rounded-2xl border border-primary/20 bg-background-light dark:bg-background-dark shadow-2xl overflow-hidden">
+      <div class="p-5 border-b border-primary/15 bg-primary/5">
+        <p class="text-xs font-bold uppercase tracking-wider text-primary">Canlı Derse Katıl</p>
+        <h2 class="text-xl font-black mt-1">Adını yaz ve sohbete katıl</h2>
+      </div>
+      <div class="p-5 space-y-4">
+        <label class="block">
+          <span class="text-xs font-semibold text-slate-600 dark:text-slate-300">Görünen ad</span>
+          <input id="live-display-name-input" class="mt-2 w-full rounded-xl border-primary/20 dark:bg-slate-900/60" placeholder="Örn: Ayşe Y." type="text" />
+        </label>
+        <div class="flex items-center justify-between gap-3">
+          <button id="live-join-skip-btn" class="px-4 py-2 rounded-xl border border-primary/20 font-semibold hover:bg-primary/10 transition" type="button">
+            Misafir devam
+          </button>
+          <button id="live-join-save-btn" class="px-4 py-2 rounded-xl bg-primary text-white font-bold hover:opacity-95 transition" type="button">
+            Katıl
+          </button>
+        </div>
+        <p class="text-[11px] text-slate-500 dark:text-slate-400">Not: Bu demo sürümde sohbet ve katılımcı sayısı aynı tarayıcıdaki sekmeler arasında senkronlanır.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="live-settings-modal" class="fixed inset-0 z-50 hidden" aria-hidden="true">
+  <div data-modal-backdrop class="absolute inset-0 bg-black/60"></div>
+  <div class="relative h-full w-full flex items-center justify-center p-4">
+    <div class="w-full max-w-lg rounded-2xl border border-primary/20 bg-background-light dark:bg-background-dark shadow-2xl overflow-hidden">
+      <div class="p-5 border-b border-primary/15 bg-primary/5 flex items-center justify-between gap-3">
+        <div class="min-w-0">
+          <p class="text-xs font-bold uppercase tracking-wider text-primary">Ayarlar</p>
+          <h2 class="text-xl font-black mt-1">Canlı Ders Ayarları</h2>
+        </div>
+        <button data-modal-close type="button" class="size-10 rounded-xl hover:bg-primary/10 transition text-slate-600 dark:text-slate-300" aria-label="Kapat">
+          <span class="material-symbols-outlined notranslate" translate="no">close</span>
+        </button>
+      </div>
+      <div class="p-5 space-y-5">
+        <label class="block">
+          <span class="text-xs font-semibold text-slate-600 dark:text-slate-300">Görünen ad</span>
+          <input id="live-settings-display-name" class="mt-2 w-full rounded-xl border-primary/20 bg-white dark:bg-white/5" placeholder="Örn: Ayşe Y." type="text" />
+          <p class="mt-1 text-[11px] text-slate-500 dark:text-slate-400">Sohbette ve katılımcı listesinde bu ad görünür.</p>
+        </label>
+
+        <div class="flex items-center justify-between gap-3 rounded-xl border border-primary/15 bg-white/70 dark:bg-white/5 px-4 py-3">
+          <div>
+            <div class="text-sm font-extrabold">Sohbet paneli</div>
+            <div class="text-[11px] text-slate-500 dark:text-slate-400">Başlangıçta kapalı/açık.</div>
+          </div>
+          <label class="relative inline-flex items-center cursor-pointer">
+            <input id="live-settings-chat-collapsed" class="sr-only peer" type="checkbox" />
+            <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none dark:bg-slate-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+          </label>
+        </div>
+
+        <div class="flex items-center justify-between gap-3 rounded-xl border border-primary/15 bg-white/70 dark:bg-white/5 px-4 py-3">
+          <div>
+            <div class="text-sm font-extrabold">Tema</div>
+            <div class="text-[11px] text-slate-500 dark:text-slate-400">Koyu / Açık</div>
+          </div>
+          <select id="live-settings-theme" class="rounded-xl border-primary/20 bg-white dark:bg-white/5 text-sm font-bold px-3 py-2">
+            <option value="dark">Koyu</option>
+            <option value="light">Açık</option>
+          </select>
+        </div>
+
+        <div class="flex items-center justify-end gap-2 pt-1">
+          <button id="live-settings-save" type="button" class="px-4 py-2.5 rounded-xl bg-primary text-white text-sm font-extrabold hover:opacity-95 transition">
+            Kaydet
+          </button>
+        </div>
+        <p id="live-settings-feedback" class="text-xs text-slate-500"></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="live-info-modal" class="fixed inset-0 z-50 hidden" aria-hidden="true">
+  <div data-modal-backdrop class="absolute inset-0 bg-black/60"></div>
+  <div class="relative h-full w-full flex items-center justify-center p-4">
+    <div class="w-full max-w-lg rounded-2xl border border-primary/20 bg-background-light dark:bg-background-dark shadow-2xl overflow-hidden">
+      <div class="p-5 border-b border-primary/15 bg-primary/5 flex items-center justify-between gap-3">
+        <div class="min-w-0">
+          <p class="text-xs font-bold uppercase tracking-wider text-primary">Bilgi</p>
+          <h2 class="text-xl font-black mt-1">Oturum Bilgileri</h2>
+        </div>
+        <button data-modal-close type="button" class="size-10 rounded-xl hover:bg-primary/10 transition text-slate-600 dark:text-slate-300" aria-label="Kapat">
+          <span class="material-symbols-outlined notranslate" translate="no">close</span>
+        </button>
+      </div>
+      <div class="p-5 space-y-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div class="rounded-xl border border-primary/15 bg-white/70 dark:bg-white/5 p-4">
+            <div class="text-[11px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider">Oturum</div>
+            <div id="live-info-session" class="mt-1 font-mono text-sm font-black break-all">—</div>
+          </div>
+          <div class="rounded-xl border border-primary/15 bg-white/70 dark:bg-white/5 p-4">
+            <div class="text-[11px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider">Durum</div>
+            <div id="live-info-status" class="mt-1 text-sm font-black">—</div>
+          </div>
+        </div>
+        <div class="rounded-xl border border-primary/15 bg-white/70 dark:bg-white/5 p-4">
+          <div class="text-[11px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider">Ders Başlığı</div>
+          <div id="live-info-title" class="mt-1 text-sm font-extrabold break-words">—</div>
+        </div>
+        <div class="rounded-xl border border-primary/15 bg-white/70 dark:bg-white/5 p-4">
+          <div class="text-[11px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider">Eğitmen</div>
+          <div id="live-info-instructor" class="mt-1 text-sm font-extrabold break-words">—</div>
+        </div>
+        <div class="rounded-xl border border-primary/15 bg-white/70 dark:bg-white/5 p-4">
+          <div class="text-[11px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider">Kısayollar</div>
+          <ul class="mt-2 text-sm text-slate-700 dark:text-slate-200 space-y-1">
+            <li><span class="font-bold">Enter</span>: Sohbete mesaj gönder</li>
+            <li><span class="font-bold">Esc</span>: Açık pencereyi kapat</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="whiteboard-modal" class="fixed inset-0 z-50 hidden" aria-hidden="true">
+  <div id="whiteboard-backdrop" class="absolute inset-0 bg-black/70"></div>
+  <div class="relative h-full w-full flex items-center justify-center p-3 md:p-6">
+    <div class="w-full max-w-5xl h-[78vh] md:h-[80vh] rounded-2xl border border-primary/20 bg-background-light dark:bg-background-dark shadow-2xl overflow-hidden flex flex-col">
+      <div class="p-3 md:p-4 border-b border-primary/15 bg-primary/5 flex items-center justify-between gap-3">
+        <div class="min-w-0">
+          <p class="text-xs font-bold uppercase tracking-wider text-primary">Beyaz Tahta</p>
+          <p class="text-xs text-slate-500 dark:text-slate-400 truncate">Kalemle çiz, temizle veya kapat.</p>
+        </div>
+        <div class="flex flex-wrap items-center justify-end gap-2">
+          <label class="flex items-center gap-2 px-2 py-2 rounded-xl border border-primary/15 bg-white/50 dark:bg-slate-950/20">
+            <span class="text-[11px] font-bold text-slate-600 dark:text-slate-300">Renk</span>
+            <input id="whiteboard-color" type="color" value="#741ce9"
+              class="h-8 w-10 rounded-lg border border-primary/20 bg-transparent p-0 cursor-pointer" />
+          </label>
+          <label class="flex items-center gap-2 px-2 py-2 rounded-xl border border-primary/15 bg-white/50 dark:bg-slate-950/20">
+            <span class="text-[11px] font-bold text-slate-600 dark:text-slate-300">Punto</span>
+            <input id="whiteboard-size" type="range" min="2" max="18" value="4"
+              class="w-24 md:w-28 accent-primary" />
+            <span id="whiteboard-size-label"
+              class="text-[11px] font-bold text-slate-600 dark:text-slate-300 w-5 text-right">4</span>
+          </label>
+          <button id="whiteboard-pen-btn" class="px-3 py-2 rounded-xl bg-primary text-white text-xs font-bold hover:opacity-95 transition" type="button">Kalem</button>
+          <button id="whiteboard-eraser-btn" class="px-3 py-2 rounded-xl border border-primary/25 text-xs font-bold hover:bg-primary/10 transition" type="button">Silgi</button>
+          <button id="whiteboard-clear-btn" class="px-3 py-2 rounded-xl border border-primary/25 text-xs font-bold hover:bg-primary/10 transition" type="button">Temizle</button>
+          <button id="whiteboard-close-btn" class="px-3 py-2 rounded-xl bg-slate-900/80 text-white text-xs font-bold hover:bg-slate-900 transition" type="button">Kapat</button>
+        </div>
+      </div>
+      <div class="flex-1 p-2 md:p-4">
+        <div class="h-full w-full rounded-xl border border-primary/15 bg-white dark:bg-slate-950 overflow-hidden">
+          <canvas id="whiteboard-canvas" class="w-full h-full touch-none"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="live-toast" class="fixed bottom-4 left-1/2 -translate-x-1/2 z-[60] hidden">
+  <div id="live-toast-inner" class="rounded-xl border border-primary/20 bg-background-light dark:bg-background-dark px-4 py-2 text-sm shadow-2xl"></div>
+</div>
+
+<script>
+  (function () {
+    // Prevent browser/extension translation from breaking Material Symbols ligatures (e.g. "send" -> "GÖNDER").
+    try {
+      document.documentElement.classList.add("notranslate");
+      document.documentElement.setAttribute("translate", "no");
+      document.querySelectorAll(".material-symbols-outlined").forEach((el) => {
+        el.classList.add("notranslate");
+        el.setAttribute("translate", "no");
+      });
+    } catch (_e) {}
+
+    const PROFILE_KEY = "demo_live_profile_v1";
+    const SESSION_DEFAULT_ID = "default";
+
+    const getParams = () => {
+      try {
+        return new URLSearchParams(window.location.search);
+      } catch (_e) {
+        return new URLSearchParams();
+      }
+    };
+
+    const params = getParams();
+    const sessionId = (params.get("session") || SESSION_DEFAULT_ID).trim() || SESSION_DEFAULT_ID;
+    const storagePrefix = `demo_live_session_v1_${sessionId}`;
+    const CHAT_KEY = `${storagePrefix}_chat`;
+    const META_KEY = `${storagePrefix}_meta`;
+    const TAB_ID_KEY = `${storagePrefix}_tab_id`;
+
+    const titleEl = document.getElementById("live-session-title");
+    const instructorEl = document.getElementById("live-instructor-name");
+    const timerEl = document.getElementById("live-session-timer");
+    const participantCountEl = document.getElementById("live-participant-count");
+
+    const chatListEl = document.getElementById("live-chat-messages");
+    const chatInputEl = document.getElementById("live-chat-input");
+    const chatSendBtn = document.getElementById("live-chat-send-btn");
+    const chatPanelEl = document.getElementById("live-chat-panel");
+    const chatBodyEl = document.getElementById("live-chat-body");
+    const chatToggleBtn = document.getElementById("btn-chat-toggle");
+    const chatToggleIconEl = document.getElementById("chat-toggle-icon");
+
+    const btnMic = document.getElementById("btn-mic");
+    const btnCamera = document.getElementById("btn-camera");
+    const btnShare = document.getElementById("btn-share");
+    const btnWhiteboard = document.getElementById("btn-whiteboard");
+    const btnHand = document.getElementById("btn-hand");
+    const btnLeave = document.getElementById("btn-leave");
+
+    const shareVideoEl = document.getElementById("live-share-video");
+    const shareEmptyEl = document.getElementById("live-share-empty");
+    const shareFallbackEl = document.getElementById("live-share-fallback");
+
+    const btnSessionStart = document.getElementById("btn-session-start");
+    const btnSessionEnd = document.getElementById("btn-session-end");
+    const lessonStatusEl = document.getElementById("live-lesson-status");
+    const lessonOverlayEl = document.getElementById("live-lesson-overlay");
+    const lessonOverlayIconEl = document.getElementById("live-lesson-overlay-icon");
+    const lessonOverlayTitleEl = document.getElementById("live-lesson-overlay-title");
+    const lessonOverlayDescEl = document.getElementById("live-lesson-overlay-desc");
+
+    const shareIndicatorEl = document.getElementById("live-share-indicator");
+    const sharePausedEl = document.getElementById("live-share-paused");
+
+    const whiteboardModalEl = document.getElementById("whiteboard-modal");
+    const whiteboardBackdropEl = document.getElementById("whiteboard-backdrop");
+    const whiteboardCanvasEl = document.getElementById("whiteboard-canvas");
+    const whiteboardPenBtn = document.getElementById("whiteboard-pen-btn");
+    const whiteboardEraserBtn = document.getElementById("whiteboard-eraser-btn");
+    const whiteboardClearBtn = document.getElementById("whiteboard-clear-btn");
+    const whiteboardCloseBtn = document.getElementById("whiteboard-close-btn");
+    const whiteboardColorInputEl = document.getElementById("whiteboard-color");
+    const whiteboardSizeInputEl = document.getElementById("whiteboard-size");
+    const whiteboardSizeLabelEl = document.getElementById("whiteboard-size-label");
+
+    const toastEl = document.getElementById("live-toast");
+    const toastInnerEl = document.getElementById("live-toast-inner");
+
+    const activeBadgeEl = document.getElementById("live-active-badge");
+    const selfVideoNameEl = document.getElementById("self-video-name");
+    const selfVideoOverlayEl = document.getElementById("self-video-overlay");
+    const selfVideoTileEl = document.getElementById("self-video-tile");
+    const selfCameraVideoEl = document.getElementById("self-camera-video");
+    const selfVideoPlaceholderEl = document.getElementById("self-video-placeholder");
+
+    const joinModalEl = document.getElementById("live-join-modal");
+    const displayNameInputEl = document.getElementById("live-display-name-input");
+    const joinSaveBtn = document.getElementById("live-join-save-btn");
+    const joinSkipBtn = document.getElementById("live-join-skip-btn");
+
+    const nowIso = () => new Date().toISOString();
+
+    const UI_KEY = `${storagePrefix}_ui`;
+
+    const state = {
+      micOn: true,
+      cameraOn: false,
+      sharingOn: false,
+      handRaised: false,
+      whiteboardTool: "pen",
+      penColor: "#741ce9",
+      penSize: 4,
+      eraserSize: 18
+    };
+
+    const LESSON_STATUSES = new Set(["idle", "live", "ended"]);
+    let lessonStatus = "idle";
+    let screenStream = null;
+    let cameraStream = null;
+
+    const loadJson = (key, fallback) => {
+      try {
+        const raw = localStorage.getItem(key);
+        if (!raw) return fallback;
+        const parsed = JSON.parse(raw);
+        return parsed ?? fallback;
+      } catch (_e) {
+        return fallback;
+      }
+    };
+
+    const saveJson = (key, value) => {
+      try {
+        localStorage.setItem(key, JSON.stringify(value));
+      } catch (_e) {
+        // ignore
+      }
+    };
+
+    const safeText = (value) => String(value ?? "").replace(/\s+/g, " ").trim();
+    const normalize = (value) => safeText(value).toLowerCase();
+    const normalizeRole = (role) => {
+      const r = normalize(role);
+      if (r === "admin" || r === "yönetici" || r === "yonetici") return "admin";
+      if (r === "eğitmen" || r === "egitmen" || r === "instructor") return "instructor";
+      if (r === "öğrenci" || r === "ogrenci" || r === "student") return "student";
+      return "";
+    };
+
+    const currentUser = (() => {
+      try {
+        return window.AngelAuth && typeof AngelAuth.getStoredUser === "function" ? AngelAuth.getStoredUser() : null;
+      } catch (_e) {
+        return null;
+      }
+    })();
+
+    const viewerRole = normalizeRole(currentUser?.role) || "student";
+    const canControlLesson = viewerRole === "instructor" || viewerRole === "admin";
+
+    const loadUi = () => {
+      const ui = loadJson(UI_KEY, {}) || {};
+      return {
+        chatCollapsed: ui?.chatCollapsed === true,
+        theme: ui?.theme === "light" ? "light" : "dark",
+      };
+    };
+
+    const saveUi = (patch) => {
+      const current = loadUi();
+      saveJson(UI_KEY, { ...current, ...(patch || {}) });
+    };
+
+    const applyTheme = (mode) => {
+      const m = mode === "light" ? "light" : "dark";
+      document.documentElement.classList.toggle("dark", m !== "light");
+    };
+
+    const applyChatCollapsed = (collapsed) => {
+      const isCollapsed = !!collapsed;
+      if (chatBodyEl) {
+        chatBodyEl.classList.toggle("hidden", isCollapsed);
+        // Hard fallback (some browsers/layouts end up stuck if only class-based toggling is used).
+        chatBodyEl.style.display = isCollapsed ? "none" : "flex";
+      }
+      if (chatToggleBtn) chatToggleBtn.setAttribute("aria-expanded", isCollapsed ? "false" : "true");
+      if (chatToggleIconEl) chatToggleIconEl.textContent = isCollapsed ? "expand_more" : "expand_less";
+      if (chatPanelEl) {
+        // Defensive: force a stable layout so the chat can't get "stuck" collapsed.
+        chatPanelEl.style.flex = isCollapsed ? "0 0 auto" : "1 1 0%";
+        chatPanelEl.style.minHeight = isCollapsed ? "" : "260px";
+        chatPanelEl.classList.toggle("aa-chat-collapsed", isCollapsed);
+      }
+    };
+
+    const showToast = (message, tone = "info") => {
+      if (!toastEl || !toastInnerEl) return;
+      const text = safeText(message);
+      if (!text) return;
+      const toneClass = tone === "danger"
+        ? "border-red-500/30 bg-red-500/10 text-red-200"
+        : tone === "success"
+          ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-100"
+          : "border-primary/20 bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100";
+      toastInnerEl.className = `rounded-xl border px-4 py-2 text-sm shadow-2xl ${toneClass}`;
+      toastInnerEl.textContent = text;
+      toastEl.classList.remove("hidden");
+      window.clearTimeout(showToast._t);
+      showToast._t = window.setTimeout(() => toastEl.classList.add("hidden"), 2200);
+    };
+
+    const updateActiveBadge = () => {
+      if (!activeBadgeEl) return;
+      activeBadgeEl.textContent = state.cameraOn ? "Kamera Açık" : "Kamera Kapalı";
+    };
+
+    const updateSelfVideoName = (name) => {
+      const label = safeText(name) || "Sen";
+      if (selfVideoNameEl) selfVideoNameEl.textContent = label;
+      if (selfVideoTileEl) {
+        const initialsEl = selfVideoTileEl.querySelector(".font-black");
+        if (initialsEl) {
+          const parts = label.split(" ").filter(Boolean);
+          const initials = (parts[0]?.[0] || "S") + (parts[1]?.[0] || "");
+          initialsEl.textContent = initials.toUpperCase();
+        }
+      }
+    };
+
+    const updateSelfCameraOverlay = () => {
+      const hasCamera = Boolean(cameraStream) && state.cameraOn;
+      if (selfVideoOverlayEl) {
+        selfVideoOverlayEl.classList.toggle("hidden", hasCamera);
+        selfVideoOverlayEl.classList.toggle("flex", !hasCamera);
+      }
+      if (selfCameraVideoEl) selfCameraVideoEl.classList.toggle("hidden", !hasCamera);
+      if (selfVideoPlaceholderEl) selfVideoPlaceholderEl.classList.toggle("hidden", hasCamera);
+      updateActiveBadge();
+    };
+
+    const setCameraVideo = (stream) => {
+      if (!selfCameraVideoEl) return;
+      if (!stream) {
+        try { selfCameraVideoEl.srcObject = null; } catch (_e) {}
+        selfCameraVideoEl.classList.add("hidden");
+        return;
+      }
+      try { selfCameraVideoEl.srcObject = stream; } catch (_e) {}
+      selfCameraVideoEl.classList.remove("hidden");
+      try { selfCameraVideoEl.play?.(); } catch (_e) {}
+    };
+
+    const stopCamera = (reason = "") => {
+      if (cameraStream) {
+        try {
+          cameraStream.getTracks().forEach((t) => {
+            try { t.stop(); } catch (_e) {}
+          });
+        } catch (_e) {}
+      }
+      cameraStream = null;
+      setCameraVideo(null);
+      state.cameraOn = false;
+      updateCameraUi();
+      if (reason) showToast(reason, "danger");
+    };
+
+    const startCamera = async () => {
+      if (lessonStatus !== "live") {
+        showToast("Ders aktif değil.", "danger");
+        return false;
+      }
+      if (!navigator.mediaDevices || typeof navigator.mediaDevices.getUserMedia !== "function") {
+        showToast("Tarayıcınız kamera erişimini desteklemiyor.", "danger");
+        return false;
+      }
+      try {
+        showToast("Kamera izni isteniyor…", "info");
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: "user", width: { ideal: 1280 }, height: { ideal: 720 } },
+          audio: false
+        });
+        cameraStream = stream;
+        state.cameraOn = true;
+        setCameraVideo(stream);
+        updateCameraUi();
+        showToast("Kamera açıldı", "success");
+        return true;
+      } catch (e) {
+        const name = String(e?.name || "");
+        if (name === "NotAllowedError" || name === "SecurityError") {
+          showToast("Kamera izni verilmedi. Tarayıcıdan izin verip tekrar dene.", "danger");
+        } else if (name === "NotFoundError" || name === "OverconstrainedError") {
+          showToast("Kamera bulunamadı veya kullanılamıyor.", "danger");
+        } else {
+          showToast("Kamera açılamadı.", "danger");
+        }
+        state.cameraOn = false;
+        updateCameraUi();
+        return false;
+      }
+    };
+
+    const ensureMeta = () => {
+      const meta = loadJson(META_KEY, null) || {};
+      if (!meta.participants) meta.participants = {};
+      meta.lessonStatus = LESSON_STATUSES.has(meta.lessonStatus) ? meta.lessonStatus : (meta.startedAt ? "live" : "idle");
+      if (meta.lessonStatus === "live" && !meta.startedAt) meta.startedAt = nowIso();
+      if (!meta.title) meta.title = safeText(params.get("title") || (titleEl ? titleEl.textContent : "")) || "Canlı Ders";
+      if (!meta.instructor) meta.instructor = safeText(params.get("instructor") || (instructorEl ? instructorEl.textContent : "")) || "Eğitmen";
+      if (canControlLesson) {
+        const preferredName = safeText(currentUser?.fullName || currentUser?.name || currentUser?.email || "");
+        const currentName = safeText(meta.instructor);
+        if (preferredName && (!currentName || currentName === "Eğitmen" || currentName === "Instructor")) {
+          meta.instructor = preferredName;
+        }
+      }
+      saveJson(META_KEY, meta);
+      return meta;
+    };
+
+    const ensureSeedChat = () => {
+      const existing = loadJson(CHAT_KEY, null);
+      if (Array.isArray(existing) && existing.length) return existing;
+      const seed = [
+        { id: `m_${Date.now()}_1`, role: "student", author: "Merve K.", text: "Kodun o kısmını tekrar anlatabilir misiniz? useMemo kullanımı neden gerekli oldu?", at: nowIso() },
+        { id: `m_${Date.now()}_2`, role: "student", author: "Can S.", text: "Ben de aynı konuyu merak ediyordum, teşekkürler Merve.", at: nowIso() },
+        { id: `m_${Date.now()}_3`, role: "instructor", author: "Eğitmen", text: "Tabii ki. Render performansını optimize etmek için burada dependency array'e dikkat etmeliyiz. Hemen örneği güncelliyorum.", at: nowIso() }
+      ];
+      saveJson(CHAT_KEY, seed);
+      return seed;
+    };
+
+    const getProfile = () => {
+      const profile = loadJson(PROFILE_KEY, {}) || {};
+      const fallbackName = safeText(currentUser?.fullName || "");
+      const displayName = safeText(profile.displayName) || fallbackName;
+      let tabId = "";
+      try {
+        tabId = safeText(sessionStorage.getItem(TAB_ID_KEY));
+        if (!tabId) {
+          tabId = `t_${Math.random().toString(16).slice(2)}_${Date.now()}`;
+          sessionStorage.setItem(TAB_ID_KEY, tabId);
+        }
+      } catch (_e) {
+        tabId = `t_${Math.random().toString(16).slice(2)}_${Date.now()}`;
+      }
+      return { userId: tabId, displayName: displayName || "" };
+    };
+
+    const setProfile = (next) => {
+      const displayName = safeText(next?.displayName);
+      const current = getProfile();
+      saveJson(PROFILE_KEY, { displayName });
+      return { userId: current.userId, displayName };
+    };
+
+    const formatClock = (date) => {
+      try {
+        return new Intl.DateTimeFormat("tr-TR", { hour: "2-digit", minute: "2-digit" }).format(date);
+      } catch (_e) {
+        const hh = String(date.getHours()).padStart(2, "0");
+        const mm = String(date.getMinutes()).padStart(2, "0");
+        return `${hh}:${mm}`;
+      }
+    };
+
+    const renderMessage = (message) => {
+      if (!chatListEl) return;
+      const role = message.role === "instructor" ? "instructor" : "student";
+      const author = safeText(message.author) || (role === "instructor" ? "Eğitmen" : "Öğrenci");
+      const text = safeText(message.text);
+      const at = message.at ? new Date(message.at) : new Date();
+      const timeLabel = formatClock(at);
+
+      const wrapper = document.createElement("div");
+      const isInstructor = role === "instructor";
+      wrapper.className = isInstructor ? "flex gap-3 flex-row-reverse items-start min-w-0" : "flex gap-3 items-start min-w-0";
+      wrapper.style.minWidth = "0";
+      wrapper.style.maxWidth = "100%";
+
+      const avatar = document.createElement("div");
+      avatar.className = `size-8 rounded-full bg-primary/10 shrink-0 border ${isInstructor ? "border-primary" : "border-primary/20"} flex items-center justify-center`;
+      const avatarIcon = document.createElement("span");
+      avatarIcon.className = "material-symbols-outlined text-primary text-[18px] notranslate";
+      avatarIcon.setAttribute("translate", "no");
+      avatarIcon.textContent = isInstructor ? "school" : "person";
+      avatar.appendChild(avatarIcon);
+
+      const body = document.createElement("div");
+      body.className = isInstructor ? "flex flex-col items-end min-w-0 flex-1" : "flex flex-col min-w-0 flex-1";
+      body.style.minWidth = "0";
+
+      const meta = document.createElement("div");
+      meta.className = "flex items-center gap-2 mb-1 max-w-full min-w-0 flex-wrap";
+      meta.style.minWidth = "0";
+      const timeSpan = document.createElement("span");
+      timeSpan.className = "text-[10px] opacity-40 shrink-0";
+      timeSpan.textContent = timeLabel;
+      const authorSpan = document.createElement("span");
+      authorSpan.className = "text-xs font-bold text-primary truncate max-w-[180px] min-w-0";
+      authorSpan.textContent = author;
+      if (isInstructor) {
+        meta.appendChild(timeSpan);
+        meta.appendChild(authorSpan);
+      } else {
+        meta.appendChild(authorSpan);
+        meta.appendChild(timeSpan);
+      }
+
+      const bubble = document.createElement("div");
+      bubble.className = isInstructor
+        ? "bg-primary text-white p-3 rounded-tl-xl rounded-b-xl text-sm shadow-md max-w-full break-words whitespace-pre-wrap"
+        : "bg-primary/10 dark:bg-primary/20 p-3 rounded-tr-xl rounded-b-xl text-sm border border-primary/10 max-w-full break-words whitespace-pre-wrap";
+      bubble.style.overflowWrap = "anywhere";
+      bubble.style.wordBreak = "break-word";
+      bubble.textContent = text;
+
+      body.appendChild(meta);
+      body.appendChild(bubble);
+
+      wrapper.appendChild(avatar);
+      wrapper.appendChild(body);
+
+      chatListEl.appendChild(wrapper);
+    };
+
+    const renderChat = (messages) => {
+      if (!chatListEl) return;
+      chatListEl.innerHTML = "";
+      (messages || []).forEach(renderMessage);
+      chatListEl.scrollTop = chatListEl.scrollHeight;
+    };
+
+    const updateHeader = (meta) => {
+      if (titleEl && meta?.title) titleEl.textContent = meta.title;
+      if (instructorEl && meta?.instructor) instructorEl.textContent = meta.instructor;
+    };
+
+    const updateParticipantCount = (meta) => {
+      if (!participantCountEl) return;
+      const count = meta?.participants ? Object.keys(meta.participants).length : 0;
+      participantCountEl.textContent = String(Math.max(count, 1));
+    };
+
+    const participantsGridEl = document.getElementById("live-participants-grid");
+    const participantsOthersEl = document.getElementById("live-participants-others");
+
+    const escapeHtml = (value) => String(value ?? "")
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#39;");
+
+    const initials = (name) => {
+      const n = safeText(name);
+      if (!n) return "U";
+      const parts = n.split(" ").filter(Boolean);
+      const a = parts[0]?.[0] || "U";
+      const b = parts.length > 1 ? parts[parts.length - 1]?.[0] : "";
+      return (a + b).toUpperCase();
+    };
+
+    const renderParticipants = (meta) => {
+      if (!participantsGridEl) return;
+      const self = getProfile();
+      const participants = meta?.participants && typeof meta.participants === "object" ? meta.participants : {};
+
+      // Self tile is static in HTML (so camera video element references stay valid).
+      // Only render "other participants" into a separate container inside the grid.
+      const selfId = safeText(self?.userId);
+      const ids = Object.keys(participants)
+        .filter((id) => !(selfId && id === selfId))
+        .sort((a, b) => {
+          const pa = participants[a] || {};
+          const pb = participants[b] || {};
+          const ta = new Date(pa.joinedAt || pa.lastSeenAt || 0).getTime() || 0;
+          const tb = new Date(pb.joinedAt || pb.lastSeenAt || 0).getTime() || 0;
+          return tb - ta;
+        });
+
+      const rows = ids.map((id) => {
+        const p = participants[id] || {};
+        const displayName = safeText(p.displayName) || "Misafir";
+        const hand = p.handRaised ? " • ✋" : "";
+        return `
+          <div class="relative group min-w-0">
+            <div class="aspect-video bg-slate-800 rounded-lg overflow-hidden border border-white/5 flex items-center justify-center min-w-0">
+              <div class="text-center px-2">
+                <div class="mx-auto size-10 rounded-full bg-primary/20 text-primary flex items-center justify-center font-black">${escapeHtml(initials(displayName))}</div>
+                <div class="mt-2 text-[10px] text-white/70 truncate">${escapeHtml(displayName + hand)}</div>
+              </div>
+            </div>
+            <div class="absolute bottom-1 left-1 bg-black/60 text-[10px] px-1.5 py-0.5 rounded text-white max-w-[85%] truncate">${escapeHtml(displayName)}</div>
+          </div>
+        `;
+      });
+
+      if (participantsOthersEl) {
+        participantsOthersEl.innerHTML = rows.join("");
+        return;
+      }
+
+      // Fallback: remove non-self tiles and append others.
+      try {
+        Array.from(participantsGridEl.children || []).forEach((child) => {
+          if (!child || child.id === "self-video-tile") return;
+          child.remove();
+        });
+        const tmp = document.createElement("div");
+        tmp.innerHTML = rows.join("");
+        while (tmp.firstElementChild) {
+          participantsGridEl.appendChild(tmp.firstElementChild);
+        }
+      } catch (_e) {}
+    };
+
+    const PRESENCE_TTL_MS = 30_000;
+    const HEARTBEAT_MS = 5_000;
+
+    const parseDateMs = (value) => {
+      if (!value) return NaN;
+      const t = new Date(value).getTime();
+      return Number.isFinite(t) ? t : NaN;
+    };
+
+    const pruneParticipants = (meta) => {
+      const m = meta && typeof meta === "object" ? meta : {};
+      const participants = m.participants && typeof m.participants === "object" ? m.participants : {};
+      const now = Date.now();
+      let changed = false;
+
+      Object.keys(participants).forEach((id) => {
+        const p = participants[id] || {};
+        const lastSeenMs = parseDateMs(p.lastSeenAt) || parseDateMs(p.joinedAt);
+        // Eğer lastSeen yoksa veya çok eskiyse temizle (sekme kapandı / crash).
+        if (!Number.isFinite(lastSeenMs) || (now - lastSeenMs) > PRESENCE_TTL_MS) {
+          delete participants[id];
+          changed = true;
+        }
+      });
+
+      if (!m.participants) m.participants = {};
+      m.participants = participants;
+      return { meta: m, changed };
+    };
+
+    const formatHms = (totalSeconds) => {
+      const t = Math.max(0, Math.floor(Number(totalSeconds) || 0));
+      const hh = String(Math.floor(t / 3600)).padStart(2, "0");
+      const mm = String(Math.floor((t % 3600) / 60)).padStart(2, "0");
+      const ss = String(t % 60).padStart(2, "0");
+      return `${hh}:${mm}:${ss}`;
+    };
+
+    const setDisabled = (el, disabled) => {
+      if (!el) return;
+      try {
+        el.disabled = !!disabled;
+      } catch (_e) {}
+      el.classList.toggle("opacity-40", !!disabled);
+      el.classList.toggle("pointer-events-none", !!disabled);
+      el.classList.toggle("select-none", !!disabled);
+    };
+
+    const setControlsEnabled = (enabled) => {
+      const disabled = !enabled;
+      [btnMic, btnCamera, btnShare, btnWhiteboard, btnHand].forEach((x) => setDisabled(x, disabled));
+      setDisabled(chatInputEl, disabled);
+      setDisabled(chatSendBtn, disabled);
+      if (chatInputEl) {
+        chatInputEl.placeholder = disabled ? "Ders aktif değil." : "Bir mesaj yazın...";
+      }
+    };
+
+    const setShareVideo = (stream) => {
+      if (!shareVideoEl) return;
+      if (!stream) {
+        try { shareVideoEl.srcObject = null; } catch (_e) {}
+        shareVideoEl.classList.add("hidden");
+        return;
+      }
+      try {
+        shareVideoEl.srcObject = stream;
+      } catch (_e) {}
+      shareVideoEl.classList.remove("hidden");
+      try { shareVideoEl.play?.(); } catch (_e) {}
+    };
+
+    const stopScreenShare = (reason = "") => {
+      if (screenStream) {
+        try {
+          screenStream.getTracks().forEach((t) => {
+            try { t.stop(); } catch (_e) {}
+          });
+        } catch (_e) {}
+      }
+      screenStream = null;
+      setShareVideo(null);
+      state.sharingOn = false;
+      updateShareUi();
+      if (reason) showToast(reason, "danger");
+    };
+
+    const startScreenShare = async () => {
+      if (lessonStatus !== "live") {
+        showToast("Ders aktif değil.", "danger");
+        return false;
+      }
+      if (!navigator.mediaDevices || typeof navigator.mediaDevices.getDisplayMedia !== "function") {
+        showToast("Tarayıcınız ekran paylaşımını desteklemiyor.", "danger");
+        return false;
+      }
+      try {
+        const stream = await navigator.mediaDevices.getDisplayMedia({
+          video: { frameRate: 30 },
+          audio: false
+        });
+        screenStream = stream;
+        state.sharingOn = true;
+        setShareVideo(stream);
+        const track = stream.getVideoTracks?.()[0];
+        if (track) {
+          track.addEventListener("ended", () => {
+            stopScreenShare("Paylaşım bitti");
+          });
+        }
+        updateShareUi();
+        showToast("Paylaşım başlatıldı", "success");
+        return true;
+      } catch (e) {
+        // user canceled or permission denied
+        showToast("Paylaşım başlatılamadı.", "danger");
+        return false;
+      }
+    };
+
+    const applyLessonUi = (meta) => {
+      const status = LESSON_STATUSES.has(meta?.lessonStatus) ? meta.lessonStatus : (meta?.startedAt ? "live" : "idle");
+      lessonStatus = status;
+
+      if (lessonStatusEl) {
+        lessonStatusEl.className = "hidden sm:inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-[11px] font-black uppercase tracking-wider";
+        if (status === "live") {
+          lessonStatusEl.classList.add("border-emerald-500/30", "bg-emerald-500/10", "text-emerald-400");
+          lessonStatusEl.innerHTML = '<span class="size-1.5 rounded-full bg-emerald-400"></span> CANLI';
+        } else if (status === "ended") {
+          lessonStatusEl.classList.add("border-rose-500/30", "bg-rose-500/10", "text-rose-300");
+          lessonStatusEl.innerHTML = '<span class="size-1.5 rounded-full bg-rose-400"></span> BİTTİ';
+        } else {
+          lessonStatusEl.classList.add("border-slate-500/30", "bg-slate-500/10", "text-slate-300");
+          lessonStatusEl.innerHTML = '<span class="size-1.5 rounded-full bg-slate-300"></span> BEKLEMEDE';
+        }
+      }
+
+      if (btnSessionStart) btnSessionStart.classList.toggle("hidden", !canControlLesson || status === "live");
+      if (btnSessionEnd) btnSessionEnd.classList.toggle("hidden", !canControlLesson || status !== "live");
+
+      setControlsEnabled(status === "live");
+      if (status !== "live") stopScreenShare("");
+      if (status !== "live") stopCamera("");
+
+      if (lessonOverlayEl) {
+        const show = status !== "live";
+        lessonOverlayEl.classList.toggle("hidden", !show);
+        lessonOverlayEl.classList.toggle("flex", show);
+        if (show) {
+          if (status === "ended") {
+            if (lessonOverlayIconEl) lessonOverlayIconEl.textContent = "stop_circle";
+            if (lessonOverlayTitleEl) lessonOverlayTitleEl.textContent = "Ders sona erdi";
+            if (lessonOverlayDescEl) {
+              lessonOverlayDescEl.textContent = canControlLesson
+                ? "Bu oturum kapatıldı. Yeni bir ders başlatmak için \"Dersi Başlat\"a tıklayın."
+                : "Bu oturum kapatıldı. Eğitmen yeni bir ders başlatana kadar bekleyin.";
+            }
+          } else {
+            if (lessonOverlayIconEl) lessonOverlayIconEl.textContent = "play_circle";
+            if (lessonOverlayTitleEl) lessonOverlayTitleEl.textContent = "Ders henüz başlamadı";
+            if (lessonOverlayDescEl) {
+              lessonOverlayDescEl.textContent = canControlLesson
+                ? "Dersi başlatmak için \"Dersi Başlat\"a tıklayın."
+                : "Eğitmen dersi başlattığında ekran ve kontroller aktif olur.";
+            }
+          }
+        }
+      }
+
+      updateShareUi();
+    };
+
+    const startTimer = (meta) => {
+      if (!timerEl) return;
+      let last = { lessonStatus: meta?.lessonStatus, startedAt: meta?.startedAt, endedAt: meta?.endedAt, elapsedSeconds: meta?.elapsedSeconds };
+      const tick = () => {
+        const m = loadJson(META_KEY, null) || meta || {};
+        const status = LESSON_STATUSES.has(m.lessonStatus) ? m.lessonStatus : (m.startedAt ? "live" : "idle");
+        if (
+          m.lessonStatus !== last.lessonStatus ||
+          m.startedAt !== last.startedAt ||
+          m.endedAt !== last.endedAt ||
+          m.elapsedSeconds !== last.elapsedSeconds
+        ) {
+          last = { lessonStatus: m.lessonStatus, startedAt: m.startedAt, endedAt: m.endedAt, elapsedSeconds: m.elapsedSeconds };
+          applyLessonUi(m);
+        }
+
+        if (status === "live") {
+          const startedAtMs = m.startedAt ? new Date(m.startedAt).getTime() : Date.now();
+          const diff = Math.max(0, Date.now() - (Number.isFinite(startedAtMs) ? startedAtMs : Date.now()));
+          timerEl.textContent = formatHms(diff / 1000);
+          return;
+        }
+
+        if (status === "ended") {
+          const saved = Number(m.elapsedSeconds);
+          if (Number.isFinite(saved)) {
+            timerEl.textContent = formatHms(saved);
+            return;
+          }
+          const startedAtMs = m.startedAt ? new Date(m.startedAt).getTime() : NaN;
+          const endedAtMs = m.endedAt ? new Date(m.endedAt).getTime() : NaN;
+          if (Number.isFinite(startedAtMs) && Number.isFinite(endedAtMs)) {
+            timerEl.textContent = formatHms((endedAtMs - startedAtMs) / 1000);
+            return;
+          }
+          timerEl.textContent = "00:00:00";
+          return;
+        }
+
+        timerEl.textContent = "00:00:00";
+      };
+      tick();
+      window.setInterval(tick, 1000);
+    };
+
+    const channel = (() => {
+      try {
+        return typeof BroadcastChannel !== "undefined" ? new BroadcastChannel(`demo_live_channel_${sessionId}`) : null;
+      } catch (_e) {
+        return null;
+      }
+    })();
+
+    const broadcast = (type, payload) => {
+      if (!channel) return;
+      try {
+        channel.postMessage({ type, payload });
+      } catch (_e) {
+        // ignore
+      }
+    };
+
+    const joinSession = (profile) => {
+      const meta = ensureMeta();
+      meta.participants = meta.participants || {};
+      meta.participants[profile.userId] = { displayName: profile.displayName || "Misafir", joinedAt: nowIso(), lastSeenAt: nowIso(), handRaised: false };
+      saveJson(META_KEY, meta);
+      updateParticipantCount(meta);
+      renderParticipants(meta);
+      broadcast("meta", meta);
+      updateSelfVideoName(profile.displayName || "Sen");
+    };
+
+    const updateSelfParticipant = (patch) => {
+      const profile = getProfile();
+      const meta = loadJson(META_KEY, null) || ensureMeta();
+      meta.participants = meta.participants || {};
+      const existing = meta.participants[profile.userId] || { displayName: profile.displayName || "Misafir", joinedAt: nowIso() };
+      meta.participants[profile.userId] = { ...existing, ...patch, lastSeenAt: nowIso() };
+      saveJson(META_KEY, meta);
+      broadcast("meta", meta);
+      updateParticipantCount(meta);
+    };
+
+    const addMessage = (message) => {
+      const list = loadJson(CHAT_KEY, []);
+      const next = Array.isArray(list) ? list.slice(0, 200) : [];
+      next.push(message);
+      saveJson(CHAT_KEY, next);
+      renderChat(next);
+      broadcast("chat", next);
+    };
+
+    const sendChat = () => {
+      if (!chatInputEl) return;
+      const text = safeText(chatInputEl.value);
+      if (!text) return;
+      const profile = getProfile();
+      const author = profile.displayName || "Misafir";
+      const role = canControlLesson ? "instructor" : "student";
+      addMessage({ id: `m_${Date.now()}_${Math.random().toString(16).slice(2)}`, role, author, text, at: nowIso() });
+      chatInputEl.value = "";
+      chatInputEl.focus();
+    };
+
+    const setToggleUi = (buttonEl, enabled, { iconOn, iconOff, surfaceOn, surfaceOff, labelOn, labelOff, labelSelector } = {}) => {
+      if (!buttonEl) return;
+      buttonEl.setAttribute("aria-pressed", enabled ? "true" : "false");
+      const surface = buttonEl.querySelector("[data-surface]") || buttonEl.querySelector("div");
+      const icon = buttonEl.querySelector("[data-icon]") || buttonEl.querySelector(".material-symbols-outlined");
+      const label = labelSelector ? buttonEl.querySelector(labelSelector) : null;
+
+      if (iconOn && iconOff && icon) icon.textContent = enabled ? iconOn : iconOff;
+      if (label && labelOn && labelOff) label.textContent = enabled ? labelOn : labelOff;
+
+      if (surface && surfaceOn && surfaceOff) {
+        surface.className = enabled ? surfaceOn : surfaceOff;
+      }
+    };
+
+    const updateMicUi = () => {
+      setToggleUi(btnMic, state.micOn, {
+        iconOn: "mic",
+        iconOff: "mic_off",
+        surfaceOn: "size-10 md:size-11 rounded-full bg-slate-200 dark:bg-slate-800 flex items-center justify-center hover:bg-primary/20 transition-all text-slate-700 dark:text-slate-200",
+        surfaceOff: "size-10 md:size-11 rounded-full bg-red-500/10 text-red-500 flex items-center justify-center hover:bg-red-500 hover:text-white transition-all"
+      });
+    };
+
+    const updateCameraUi = () => {
+      setToggleUi(btnCamera, state.cameraOn, {
+        iconOn: "videocam",
+        iconOff: "videocam_off",
+        surfaceOn: "size-10 md:size-11 rounded-full bg-slate-200 dark:bg-slate-800 flex items-center justify-center hover:bg-primary/20 transition-all text-slate-700 dark:text-slate-200",
+        surfaceOff: "size-10 md:size-11 rounded-full bg-red-500/10 text-red-500 flex items-center justify-center hover:bg-red-500 hover:text-white transition-all"
+      });
+      updateSelfCameraOverlay();
+    };
+
+    const updateShareUi = () => {
+      const isLive = lessonStatus === "live";
+      const isSharing = Boolean(screenStream) && state.sharingOn;
+      if (shareIndicatorEl) shareIndicatorEl.classList.toggle("hidden", !(isLive && isSharing));
+      if (sharePausedEl) {
+        const showPaused = isLive && !isSharing;
+        sharePausedEl.classList.toggle("hidden", !showPaused);
+        sharePausedEl.classList.toggle("flex", showPaused);
+      }
+      if (shareEmptyEl) {
+        const showEmpty = isLive && !isSharing;
+        shareEmptyEl.classList.toggle("hidden", !showEmpty);
+        shareEmptyEl.classList.toggle("flex", showEmpty);
+      }
+      if (shareFallbackEl) {
+        // Fallback UI shows when not sharing
+        shareFallbackEl.classList.toggle("hidden", isLive && isSharing);
+      }
+      if (!btnShare) return;
+      const labelEl = btnShare.querySelector("span.text-\\[10px\\]");
+      setToggleUi(btnShare, isSharing, {
+        iconOn: "stop_screen_share",
+        iconOff: "screen_share",
+        surfaceOn: "size-10 md:size-11 rounded-full bg-red-500/10 text-red-500 flex items-center justify-center hover:bg-red-500 hover:text-white transition-all",
+        surfaceOff: "size-10 md:size-11 rounded-full bg-primary/10 text-primary flex items-center justify-center hover:bg-primary hover:text-white transition-all",
+        labelOn: "Durdur",
+        labelOff: "Başlat",
+        labelSelector: "span.text-\\[10px\\]"
+      });
+      if (labelEl) labelEl.classList.toggle("text-red-500", isSharing);
+      if (labelEl) labelEl.classList.toggle("text-primary", !isSharing);
+    };
+
+    const updateHandUi = () => {
+      if (!btnHand) return;
+      const surface = btnHand.querySelector("[data-surface]") || btnHand.querySelector("div");
+      if (surface) {
+        surface.className = state.handRaised
+          ? "size-10 md:size-11 rounded-full bg-primary text-white flex items-center justify-center hover:opacity-95 transition-all"
+          : "size-10 md:size-11 rounded-full bg-slate-200 dark:bg-slate-800 flex items-center justify-center hover:bg-primary transition-all text-slate-700 dark:text-slate-200 group-hover:text-white";
+      }
+      btnHand.setAttribute("aria-pressed", state.handRaised ? "true" : "false");
+    };
+
+    const openWhiteboard = () => {
+      if (!whiteboardModalEl) return;
+      whiteboardModalEl.classList.remove("hidden");
+      whiteboardModalEl.setAttribute("aria-hidden", "false");
+      fitWhiteboardCanvas();
+      showToast("Beyaz tahta açıldı", "success");
+    };
+
+    const closeWhiteboard = () => {
+      if (!whiteboardModalEl) return;
+      whiteboardModalEl.classList.add("hidden");
+      whiteboardModalEl.setAttribute("aria-hidden", "true");
+      showToast("Beyaz tahta kapandı");
+    };
+
+    const getCanvasCtx = () => {
+      if (!whiteboardCanvasEl) return null;
+      try {
+        return whiteboardCanvasEl.getContext("2d");
+      } catch (_e) {
+        return null;
+      }
+    };
+
+    const fitWhiteboardCanvas = () => {
+      if (!whiteboardCanvasEl) return;
+      const container = whiteboardCanvasEl.parentElement;
+      if (!container) return;
+      const rect = container.getBoundingClientRect();
+      const dpr = Math.max(1, window.devicePixelRatio || 1);
+      const targetW = Math.max(1, Math.floor(rect.width * dpr));
+      const targetH = Math.max(1, Math.floor(rect.height * dpr));
+      if (whiteboardCanvasEl.width === targetW && whiteboardCanvasEl.height === targetH) return;
+
+      const ctx = getCanvasCtx();
+      if (!ctx) return;
+      const snapshot = ctx.getImageData(0, 0, whiteboardCanvasEl.width || 1, whiteboardCanvasEl.height || 1);
+
+      whiteboardCanvasEl.width = targetW;
+      whiteboardCanvasEl.height = targetH;
+
+      ctx.putImageData(snapshot, 0, 0);
+      ctx.lineCap = "round";
+      ctx.lineJoin = "round";
+    };
+
+    const setWhiteboardTool = (tool) => {
+      state.whiteboardTool = tool === "eraser" ? "eraser" : "pen";
+      if (whiteboardPenBtn) {
+        whiteboardPenBtn.className = state.whiteboardTool === "pen"
+          ? "px-3 py-2 rounded-xl bg-primary text-white text-xs font-bold hover:opacity-95 transition"
+          : "px-3 py-2 rounded-xl border border-primary/25 text-xs font-bold hover:bg-primary/10 transition";
+      }
+      if (whiteboardEraserBtn) {
+        whiteboardEraserBtn.className = state.whiteboardTool === "eraser"
+          ? "px-3 py-2 rounded-xl bg-primary text-white text-xs font-bold hover:opacity-95 transition"
+          : "px-3 py-2 rounded-xl border border-primary/25 text-xs font-bold hover:bg-primary/10 transition";
+      }
+    };
+
+    const clearWhiteboard = () => {
+      const ctx = getCanvasCtx();
+      if (!ctx || !whiteboardCanvasEl) return;
+      ctx.clearRect(0, 0, whiteboardCanvasEl.width, whiteboardCanvasEl.height);
+      showToast("Tahta temizlendi", "success");
+    };
+
+    const clampNumber = (value, min, max, fallback) => {
+      const num = Number(value);
+      if (!Number.isFinite(num)) return fallback;
+      return Math.min(max, Math.max(min, num));
+    };
+
+    const updateWhiteboardSizeUi = () => {
+      if (whiteboardSizeLabelEl) whiteboardSizeLabelEl.textContent = String(state.penSize);
+      if (whiteboardSizeInputEl) whiteboardSizeInputEl.value = String(state.penSize);
+    };
+
+    const initWhiteboardDrawing = () => {
+      if (!whiteboardCanvasEl) return;
+      const ctx = getCanvasCtx();
+      if (!ctx) return;
+
+      let drawing = false;
+      let lastX = 0;
+      let lastY = 0;
+
+      const getPoint = (ev) => {
+        const rect = whiteboardCanvasEl.getBoundingClientRect();
+        const dpr = Math.max(1, window.devicePixelRatio || 1);
+        const x = (ev.clientX - rect.left) * dpr;
+        const y = (ev.clientY - rect.top) * dpr;
+        return { x, y };
+      };
+
+      const begin = (ev) => {
+        drawing = true;
+        const p = getPoint(ev);
+        lastX = p.x;
+        lastY = p.y;
+      };
+
+      const move = (ev) => {
+        if (!drawing) return;
+        const p = getPoint(ev);
+        ctx.lineWidth = state.whiteboardTool === "eraser" ? state.eraserSize : state.penSize;
+        ctx.strokeStyle = state.whiteboardTool === "eraser" ? "rgba(0,0,0,1)" : state.penColor;
+        ctx.globalCompositeOperation = state.whiteboardTool === "eraser" ? "destination-out" : "source-over";
+        ctx.beginPath();
+        ctx.moveTo(lastX, lastY);
+        ctx.lineTo(p.x, p.y);
+        ctx.stroke();
+        lastX = p.x;
+        lastY = p.y;
+      };
+
+      const end = () => {
+        drawing = false;
+      };
+
+      whiteboardCanvasEl.addEventListener("pointerdown", (ev) => {
+        whiteboardCanvasEl.setPointerCapture?.(ev.pointerId);
+        begin(ev);
+      });
+      whiteboardCanvasEl.addEventListener("pointermove", move);
+      whiteboardCanvasEl.addEventListener("pointerup", end);
+      whiteboardCanvasEl.addEventListener("pointercancel", end);
+      whiteboardCanvasEl.addEventListener("pointerleave", end);
+
+      setWhiteboardTool("pen");
+      updateWhiteboardSizeUi();
+    };
+
+    const openJoinModal = () => {
+      if (!joinModalEl) return;
+      joinModalEl.classList.remove("hidden");
+      joinModalEl.setAttribute("aria-hidden", "false");
+      if (displayNameInputEl) displayNameInputEl.focus();
+    };
+
+    const closeJoinModal = () => {
+      if (!joinModalEl) return;
+      joinModalEl.classList.add("hidden");
+      joinModalEl.setAttribute("aria-hidden", "true");
+    };
+
+    const init = () => {
+      try {
+        const panelLink = document.getElementById("live-panel-link");
+        if (panelLink) {
+          const from = normalize(params.get("from") || "");
+          const forceInstructor = from === "instructor" || from === "egitmen" || from === "egitmenpanel";
+          panelLink.href = forceInstructor
+            ? "egitmenpanel.html"
+            : viewerRole === "admin"
+              ? "s.adminpanel.html"
+              : viewerRole === "instructor"
+                ? "egitmenpanel.html"
+                : "userpanel.html";
+        }
+        const emptyDesc = document.getElementById("live-share-empty-desc");
+        if (emptyDesc) {
+          emptyDesc.textContent = canControlLesson
+            ? "Dersi başlatıp “Paylaşım” butonundan ekranını seçebilirsin."
+            : "Ders başladıktan sonra “Paylaşım” butonundan ekranını seçebilirsin.";
+        }
+      } catch (_e) {}
+
+      try {
+        const ui = loadUi();
+        applyTheme(ui.theme);
+      } catch (_e) {}
+
+      const settingsModalEl = document.getElementById("live-settings-modal");
+      const infoModalEl = document.getElementById("live-info-modal");
+      const btnSettings = document.getElementById("btn-live-settings");
+      const btnInfo = document.getElementById("btn-live-info");
+
+      const openModal = (el) => {
+        if (!el) return;
+        el.classList.remove("hidden");
+        el.setAttribute("aria-hidden", "false");
+      };
+
+      const closeModal = (el) => {
+        if (!el) return;
+        el.classList.add("hidden");
+        el.setAttribute("aria-hidden", "true");
+      };
+
+      const bindModal = (el) => {
+        if (!el) return;
+        el.querySelectorAll("[data-modal-close]").forEach((btn) => btn.addEventListener("click", () => closeModal(el)));
+        el.querySelectorAll("[data-modal-backdrop]").forEach((bd) =>
+          bd.addEventListener("click", () => closeModal(el))
+        );
+      };
+
+      bindModal(settingsModalEl);
+      bindModal(infoModalEl);
+
+      document.addEventListener("keydown", (e) => {
+        if (e.key !== "Escape") return;
+        closeModal(settingsModalEl);
+        closeModal(infoModalEl);
+      });
+
+      btnSettings?.addEventListener("click", () => {
+        try {
+          const ui = loadUi();
+          document.getElementById("live-settings-display-name").value = getProfile().displayName || "";
+          document.getElementById("live-settings-chat-collapsed").checked = ui.chatCollapsed === true;
+          document.getElementById("live-settings-theme").value = ui.theme || "dark";
+          document.getElementById("live-settings-feedback").textContent = "";
+        } catch (_e) {}
+        openModal(settingsModalEl);
+      });
+
+      btnInfo?.addEventListener("click", () => {
+        try {
+          const meta = loadJson(META_KEY, null) || ensureMeta();
+          const status = LESSON_STATUSES.has(meta?.lessonStatus) ? meta.lessonStatus : (meta?.startedAt ? "live" : "idle");
+          document.getElementById("live-info-session").textContent = sessionId;
+          document.getElementById("live-info-status").textContent = status === "live" ? "CANLI" : status === "ended" ? "BİTTİ" : "BEKLEMEDE";
+          document.getElementById("live-info-title").textContent = safeText(meta?.title) || "Canlı Ders";
+          document.getElementById("live-info-instructor").textContent = safeText(meta?.instructor) || "Eğitmen";
+        } catch (_e) {}
+        openModal(infoModalEl);
+      });
+
+      document.getElementById("live-settings-save")?.addEventListener("click", () => {
+        try {
+          const name = safeText(document.getElementById("live-settings-display-name")?.value);
+          const chatCollapsed = !!document.getElementById("live-settings-chat-collapsed")?.checked;
+          const theme = String(document.getElementById("live-settings-theme")?.value || "dark");
+
+          setProfile({ ...getProfile(), displayName: name });
+          updateSelfVideoName(name || "Sen");
+          updateSelfParticipant({ displayName: name || "Misafir" });
+
+          saveUi({ chatCollapsed, theme: theme === "light" ? "light" : "dark" });
+          applyChatCollapsed(chatCollapsed);
+          applyTheme(theme);
+
+          const fb = document.getElementById("live-settings-feedback");
+          if (fb) fb.textContent = "Kaydedildi.";
+        } catch (_e) {
+          const fb = document.getElementById("live-settings-feedback");
+          if (fb) fb.textContent = "Kaydedilemedi.";
+        }
+      });
+      const meta = ensureMeta();
+      updateHeader(meta);
+      // İlk yüklemede stale katılımcıları temizle.
+      try {
+        const pruned = pruneParticipants(meta);
+        if (pruned.changed) {
+          saveJson(META_KEY, pruned.meta);
+          broadcast("meta", pruned.meta);
+        }
+        updateParticipantCount(pruned.meta);
+        renderParticipants(pruned.meta);
+      } catch (_e) {
+        updateParticipantCount(meta);
+        renderParticipants(meta);
+      }
+      applyLessonUi(meta);
+      startTimer(meta);
+
+      const messages = ensureSeedChat();
+      renderChat(messages);
+
+      try {
+        const ui = loadUi();
+        applyChatCollapsed(ui.chatCollapsed);
+        applyTheme(ui.theme);
+      } catch (_e) {}
+
+      if (chatToggleBtn) {
+        chatToggleBtn.addEventListener("click", () => {
+          const ui = loadUi();
+          const next = !ui.chatCollapsed;
+          saveUi({ chatCollapsed: next });
+          applyChatCollapsed(next);
+        });
+      }
+
+      const profile = getProfile();
+      updateSelfVideoName(profile.displayName || "Sen");
+      updateSelfCameraOverlay();
+      if (!profile.displayName) {
+        openJoinModal();
+      } else {
+        joinSession(profile);
+      }
+
+      // Presence heartbeat: açık sekmeler gerçek zamanlı katılımcı sayısını güncel tutsun.
+      window.setInterval(() => {
+        try {
+          const p = getProfile();
+          if (!p?.userId) return;
+          // Kendini güncelle (lastSeenAt).
+          updateSelfParticipant({ displayName: p.displayName || "Misafir" });
+          // Ayrıca stale temizliği yap.
+          const m = loadJson(META_KEY, null) || ensureMeta();
+          const pruned = pruneParticipants(m);
+          if (pruned.changed) {
+            saveJson(META_KEY, pruned.meta);
+            broadcast("meta", pruned.meta);
+          }
+          updateParticipantCount(pruned.meta);
+          renderParticipants(pruned.meta);
+        } catch (_e) {}
+      }, HEARTBEAT_MS);
+
+      if (chatSendBtn) chatSendBtn.addEventListener("click", sendChat);
+      if (chatInputEl) {
+        chatInputEl.addEventListener("keydown", (e) => {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            sendChat();
+          }
+        });
+      }
+
+      if (joinSaveBtn) {
+        joinSaveBtn.addEventListener("click", () => {
+          const name = safeText(displayNameInputEl ? displayNameInputEl.value : "");
+          const nextProfile = setProfile({ ...getProfile(), displayName: name || `Misafir ${Math.floor(Math.random() * 900 + 100)}` });
+          joinSession(nextProfile);
+          closeJoinModal();
+        });
+      }
+
+      if (joinSkipBtn) {
+        joinSkipBtn.addEventListener("click", () => {
+          const nextProfile = setProfile({ ...getProfile(), displayName: `Misafir ${Math.floor(Math.random() * 900 + 100)}` });
+          joinSession(nextProfile);
+          closeJoinModal();
+        });
+      }
+
+      updateMicUi();
+      updateCameraUi();
+      updateShareUi();
+      updateHandUi();
+      initWhiteboardDrawing();
+
+      if (btnSessionStart) {
+        btnSessionStart.addEventListener("click", () => {
+          if (!canControlLesson) {
+            showToast("Bu işlem sadece eğitmene açık.", "danger");
+            return;
+          }
+          const next = loadJson(META_KEY, null) || ensureMeta();
+          next.lessonStatus = "live";
+          next.startedAt = nowIso();
+          next.endedAt = "";
+          next.elapsedSeconds = 0;
+          saveJson(META_KEY, next);
+          broadcast("meta", next);
+          state.sharingOn = false;
+          applyLessonUi(next);
+          showToast("Ders başlatıldı", "success");
+        });
+      }
+
+      if (btnSessionEnd) {
+        btnSessionEnd.addEventListener("click", () => {
+          if (!canControlLesson) {
+            showToast("Bu işlem sadece eğitmene açık.", "danger");
+            return;
+          }
+          const ok = window.confirm("Dersi bitirmek istiyor musunuz?");
+          if (!ok) return;
+          const next = loadJson(META_KEY, null) || ensureMeta();
+          if (next.lessonStatus !== "live") return;
+          const startedAtMs = next.startedAt ? new Date(next.startedAt).getTime() : Date.now();
+          const elapsedSeconds = Math.max(0, Math.floor((Date.now() - (Number.isFinite(startedAtMs) ? startedAtMs : Date.now())) / 1000));
+          next.lessonStatus = "ended";
+          next.endedAt = nowIso();
+          next.elapsedSeconds = elapsedSeconds;
+          saveJson(META_KEY, next);
+          broadcast("meta", next);
+          state.sharingOn = false;
+          applyLessonUi(next);
+          showToast("Ders bitirildi", "danger");
+        });
+      }
+
+      if (btnMic) {
+        btnMic.addEventListener("click", () => {
+          state.micOn = !state.micOn;
+          updateMicUi();
+          showToast(state.micOn ? "Mikrofon açıldı" : "Mikrofon kapatıldı", state.micOn ? "success" : "danger");
+        });
+      }
+
+      if (btnCamera) {
+        btnCamera.addEventListener("click", () => {
+          if (lessonStatus !== "live") {
+            showToast("Ders aktif değil.", "danger");
+            return;
+          }
+          if (cameraStream) {
+            stopCamera("Kamera kapatıldı");
+            return;
+          }
+          startCamera();
+        });
+      }
+
+      // Self tile click should behave like the camera toggle (UX).
+      if (selfVideoTileEl) {
+        selfVideoTileEl.addEventListener("click", () => {
+          if (lessonStatus !== "live") {
+            showToast("Ders aktif değil.", "danger");
+            return;
+          }
+          if (cameraStream) {
+            stopCamera("Kamera kapatıldı");
+            return;
+          }
+          startCamera();
+        });
+      }
+
+      if (btnShare) {
+        btnShare.addEventListener("click", () => {
+          if (lessonStatus !== "live") {
+            showToast("Ders aktif değil.", "danger");
+            return;
+          }
+          if (screenStream) {
+            stopScreenShare("Paylaşım durduruldu");
+            return;
+          }
+          startScreenShare();
+        });
+      }
+
+      if (btnHand) {
+        btnHand.addEventListener("click", () => {
+          state.handRaised = !state.handRaised;
+          updateHandUi();
+          updateSelfParticipant({ handRaised: state.handRaised });
+          const profile = getProfile();
+          const name = profile.displayName || "Misafir";
+          addMessage({
+            id: `m_${Date.now()}_${Math.random().toString(16).slice(2)}`,
+            role: "instructor",
+            author: "Sistem",
+            text: state.handRaised ? `${name} el kaldırdı.` : `${name} elini indirdi.`,
+            at: nowIso()
+          });
+        });
+      }
+
+      if (btnWhiteboard) btnWhiteboard.addEventListener("click", openWhiteboard);
+      if (whiteboardCloseBtn) whiteboardCloseBtn.addEventListener("click", closeWhiteboard);
+      if (whiteboardPenBtn) whiteboardPenBtn.addEventListener("click", () => setWhiteboardTool("pen"));
+      if (whiteboardEraserBtn) whiteboardEraserBtn.addEventListener("click", () => setWhiteboardTool("eraser"));
+      if (whiteboardClearBtn) whiteboardClearBtn.addEventListener("click", clearWhiteboard);
+      if (whiteboardColorInputEl) {
+        whiteboardColorInputEl.value = state.penColor;
+        whiteboardColorInputEl.addEventListener("input", () => {
+          state.penColor = safeText(whiteboardColorInputEl.value) || "#741ce9";
+          showToast("Renk güncellendi", "success");
+        });
+      }
+      if (whiteboardSizeInputEl) {
+        whiteboardSizeInputEl.value = String(state.penSize);
+        whiteboardSizeInputEl.addEventListener("input", () => {
+          state.penSize = clampNumber(whiteboardSizeInputEl.value, 2, 18, 4);
+          updateWhiteboardSizeUi();
+        });
+        whiteboardSizeInputEl.addEventListener("change", () => {
+          showToast(`Punto: ${state.penSize}`, "success");
+        });
+      }
+      if (whiteboardModalEl) {
+        whiteboardModalEl.addEventListener("click", (e) => {
+          if (e.target === whiteboardModalEl || e.target === whiteboardBackdropEl) closeWhiteboard();
+        });
+      }
+
+      window.addEventListener("resize", () => {
+        if (!whiteboardModalEl) return;
+        if (!whiteboardModalEl.classList.contains("hidden")) fitWhiteboardCanvas();
+      });
+
+      if (btnLeave) {
+        btnLeave.addEventListener("click", () => {
+          const ok = window.confirm("Dersten ayrılmak istiyor musun?");
+          if (!ok) return;
+          const profile = getProfile();
+          const meta = loadJson(META_KEY, null) || ensureMeta();
+          if (meta?.participants && meta.participants[profile.userId]) {
+            delete meta.participants[profile.userId];
+            saveJson(META_KEY, meta);
+            broadcast("meta", meta);
+          }
+          window.location.href = "userpanel.html";
+        });
+      }
+
+      if (channel) {
+        channel.onmessage = (event) => {
+          const data = event?.data || {};
+          if (data.type === "chat") renderChat(data.payload || []);
+      if (data.type === "meta") {
+            try {
+              const pruned = pruneParticipants(data.payload || {});
+              if (pruned.changed) {
+                saveJson(META_KEY, pruned.meta);
+                broadcast("meta", pruned.meta);
+              }
+              updateParticipantCount(pruned.meta);
+              renderParticipants(pruned.meta);
+              applyLessonUi(pruned.meta);
+            } catch (_e) {
+              updateParticipantCount(data.payload || {});
+              renderParticipants(data.payload || {});
+              applyLessonUi(data.payload || {});
+            }
+          }
+        };
+      }
+
+      window.addEventListener("storage", (event) => {
+        if (!event) return;
+        if (event.key === CHAT_KEY) renderChat(loadJson(CHAT_KEY, []));
+        if (event.key === META_KEY) {
+          const meta = loadJson(META_KEY, ensureMeta());
+          try {
+            const pruned = pruneParticipants(meta);
+            if (pruned.changed) {
+              saveJson(META_KEY, pruned.meta);
+              broadcast("meta", pruned.meta);
+            }
+            updateParticipantCount(pruned.meta);
+            renderParticipants(pruned.meta);
+            applyLessonUi(pruned.meta);
+          } catch (_e) {
+            updateParticipantCount(meta);
+            renderParticipants(meta);
+            applyLessonUi(meta);
+          }
+        }
+        if (event.key === UI_KEY) {
+          const ui = loadUi();
+          applyChatCollapsed(ui.chatCollapsed);
+        }
+      });
+
+      window.addEventListener("beforeunload", () => {
+        stopScreenShare("");
+        stopCamera("");
+        const profile = getProfile();
+        const meta = loadJson(META_KEY, null) || ensureMeta();
+        if (meta?.participants && meta.participants[profile.userId]) {
+          delete meta.participants[profile.userId];
+          saveJson(META_KEY, meta);
+          broadcast("meta", meta);
+        }
+      });
+    };
+
+    init();
+  })();
+</script>
+
+</body></html>
+

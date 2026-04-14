@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html class="dark" lang="tr">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>Özel Ders Talebi Oluştur - Eğitim Platformu</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            primary: "#9c4fba",
+            "background-light": "#f7f6f8",
+            "background-dark": "#181121",
+          },
+          fontFamily: {
+            display: ["Lexend", "sans-serif"],
+          },
+          borderRadius: {
+            DEFAULT: "0.75rem",
+            lg: "0.75rem",
+            xl: "1rem",
+          },
+        },
+      },
+    };
+  </script>
+  <style>
+    body.aa-animated-gradient {
+      background: linear-gradient(90deg, rgba(145, 63, 251, 1) 0%, rgba(217, 70, 252, 1) 100%);
+      background-size: 420% 420%;
+      animation: aaGradientMove 7.5s ease-in-out infinite;
+    }
+
+    body.aa-animated-gradient::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(1200px 800px at 20% 10%, rgba(255, 255, 255, 0.18), transparent 60%),
+        radial-gradient(900px 700px at 90% 30%, rgba(0, 0, 0, 0.18), transparent 60%),
+        linear-gradient(180deg, rgba(15, 23, 42, 0.05), rgba(15, 23, 42, 0.25));
+      mix-blend-mode: overlay;
+      opacity: 0.95;
+      animation: aaGlowDrift 6.5s ease-in-out infinite;
+    }
+
+    body.aa-animated-gradient::after {
+      content: "";
+      position: fixed;
+      inset: -18%;
+      pointer-events: none;
+      background:
+        radial-gradient(600px 480px at 25% 60%, rgba(217, 70, 252, 0.35), transparent 65%),
+        radial-gradient(700px 520px at 80% 30%, rgba(145, 63, 251, 0.30), transparent 62%),
+        radial-gradient(560px 460px at 60% 85%, rgba(255, 255, 255, 0.12), transparent 66%);
+      filter: blur(18px);
+      opacity: 0.9;
+      transform: translate3d(0, 0, 0);
+      animation: aaBlobMove 9.5s ease-in-out infinite;
+    }
+
+    @keyframes aaGradientMove {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    @keyframes aaGlowDrift {
+      0% { transform: translate3d(0, 0, 0); opacity: 0.92; }
+      50% { transform: translate3d(10px, -8px, 0); opacity: 1; }
+      100% { transform: translate3d(0, 0, 0); opacity: 0.92; }
+    }
+
+    @keyframes aaBlobMove {
+      0% { transform: translate3d(-2%, -1%, 0) rotate(0deg) scale(1); }
+      33% { transform: translate3d(1.5%, 1%, 0) rotate(8deg) scale(1.02); }
+      66% { transform: translate3d(2.5%, -1.2%, 0) rotate(-6deg) scale(1.015); }
+      100% { transform: translate3d(-2%, -1%, 0) rotate(0deg) scale(1); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      body.aa-animated-gradient { animation: none; background-size: cover; }
+      body.aa-animated-gradient::before,
+      body.aa-animated-gradient::after { animation: none; }
+    }
+  </style>
+</head>
+<body class="aa-animated-gradient text-slate-900 dark:text-slate-100 font-display min-h-screen">
+  <script src="assets/js/auth.js"></script>
+  <header class="border-b border-white/15 bg-white/70 dark:bg-slate-950/50 backdrop-blur">
+    <div class="max-w-5xl mx-auto px-4 py-4 flex items-center justify-between">
+      <a class="font-black text-xl" href="index.html">Eğitim Platformu</a>
+      <nav class="flex gap-5 text-sm font-semibold">
+        <a class="hover:text-primary" href="index.html">Ana Sayfa</a>
+        <a class="hover:text-primary" href="canliders.html">Canlı Ders</a>
+        <a class="hover:text-primary" href="userpanel.html">Panel</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="max-w-5xl mx-auto px-4 py-10 relative">
+    <section class="mb-8">
+      <h1 class="text-3xl sm:text-4xl font-black tracking-tight text-white drop-shadow">Özel Ders Talebi Oluştur</h1>
+      <p class="mt-2 text-white/80 font-semibold drop-shadow">İhtiyacını yaz, uygun eğitmen ve saat seçeneklerini sana önerelim.</p>
+    </section>
+
+    <section class="grid lg:grid-cols-3 gap-6 items-start">
+      <div class="lg:col-span-2 bg-white/92 dark:bg-slate-950/55 backdrop-blur rounded-2xl border border-white/25 shadow-[0_18px_60px_rgba(2,6,23,0.25)] p-6 sm:p-8">
+        <form id="lesson-request-form" class="space-y-5" action="userpanel.html" novalidate>
+          <div class="grid sm:grid-cols-2 gap-4">
+            <div>
+              <label class="text-sm font-semibold">Ad Soyad</label>
+              <input id="request-fullname" class="mt-2 w-full rounded-xl border-primary/20 bg-white/90 dark:bg-slate-950/40" placeholder="Ad Soyad" required type="text"/>
+            </div>
+            <div>
+              <label class="text-sm font-semibold">E-posta</label>
+              <input id="request-email" class="mt-2 w-full rounded-xl border-primary/20 bg-white/90 dark:bg-slate-950/40" placeholder="ornek@mail.com" required type="email"/>
+              <p id="request-email-hint" class="mt-1 text-[11px] text-slate-500 dark:text-white/70 hidden"></p>
+            </div>
+          </div>
+          <div>
+            <label class="text-sm font-semibold">Telefon (SMS için)</label>
+            <input id="request-phone" class="mt-2 w-full rounded-xl border-primary/20 bg-white/90 dark:bg-slate-950/40" placeholder="+90 5xx xxx xx xx" type="tel"/>
+          </div>
+
+          <div class="grid sm:grid-cols-2 gap-4">
+            <div>
+              <label class="text-sm font-semibold">Ders Konusu</label>
+              <select id="request-topic" class="mt-2 w-full rounded-xl border-primary/20 bg-white/90 dark:bg-slate-950/40" required>
+                <option value="">Seçiniz</option>
+                <option>React / Frontend</option>
+                <option>İleri JavaScript</option>
+                <option>UI/UX (Figma)</option>
+                <option>Proje / Kod İnceleme</option>
+                <option>Kariyer Mentorluğu</option>
+                <option>Yapay Zeka</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="grid sm:grid-cols-2 gap-4">
+            <div>
+              <label class="text-sm font-semibold">Uygun Gün</label>
+              <select id="request-day" class="mt-2 w-full rounded-xl border-primary/20 bg-white/90 dark:bg-slate-950/40" required>
+                <option value="">Seçiniz</option>
+                <option>Hafta içi</option>
+                <option>Hafta sonu</option>
+                <option>Farketmez</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="grid sm:grid-cols-2 gap-4">
+            <div>
+              <label class="text-sm font-semibold">Tercih Edilen Tarih</label>
+              <input class="mt-2 w-full rounded-xl border-primary/20 bg-white/90 dark:bg-slate-950/40" id="preferred-date" required type="date"/>
+            </div>
+            <div>
+              <label class="text-sm font-semibold">Tercih Edilen Saat</label>
+              <input id="request-time" class="mt-2 w-full rounded-xl border-primary/20 bg-white/90 dark:bg-slate-950/40" required type="time"/>
+            </div>
+          </div>
+
+          <div>
+            <label class="text-sm font-semibold">Hedefin / Notların</label>
+            <textarea id="request-notes" class="mt-2 w-full rounded-xl border-primary/20 bg-white/90 dark:bg-slate-950/40 min-h-[120px]" placeholder="Örn: 6 hafta içinde React proje geliştirme pratiği yapmak istiyorum." required></textarea>
+          </div>
+
+          <div class="flex flex-col sm:flex-row gap-3 pt-2">
+            <button class="bg-primary text-white font-bold px-6 py-3 rounded-xl hover:bg-primary/90 transition-all" type="submit">Talebi Gönder</button>
+            <a class="border border-primary/30 font-semibold px-6 py-3 rounded-xl hover:bg-primary/5 transition-all text-center" href="canliders.html">Canlı Ders Sayfasına Git</a>
+          </div>
+        </form>
+      </div>
+
+      <aside class="h-fit bg-white/90 dark:bg-slate-950/55 backdrop-blur rounded-2xl border border-white/25 shadow-[0_18px_60px_rgba(2,6,23,0.22)] p-6 space-y-5">
+        <h2 class="font-black text-xl">Talep Süreci</h2>
+        <div class="space-y-4 text-sm">
+          <div class="flex gap-3">
+            <span class="material-symbols-outlined text-primary">task_alt</span>
+            <p>Talebini gönder, aynı gün içinde değerlendirelim.</p>
+          </div>
+        </div>
+      </aside>
+    </section>
+  </main>
+</body>
+<script>
+  const LESSON_REQUESTS_KEY = "demo_lesson_requests_v1";
+  const NOTIFY_PREF_KEY = "demo_user_notification_pref_v1";
+  const preferredDateInput = document.getElementById("preferred-date");
+  const requestForm = document.getElementById("lesson-request-form");
+  const topicSelect = document.getElementById("request-topic");
+  const emailInput = document.getElementById("request-email");
+  const fullNameInput = document.getElementById("request-fullname");
+  const emailHintEl = document.getElementById("request-email-hint");
+
+  const loadList = (key) => {
+    try {
+      const raw = localStorage.getItem(key);
+      const parsed = raw ? JSON.parse(raw) : [];
+      return Array.isArray(parsed) ? parsed : [];
+    } catch (_e) {
+      return [];
+    }
+  };
+
+  const safeText = (v) => String(v ?? "").trim();
+
+  const applyAutofillFromSession = () => {
+    try {
+      const user = window.AngelAuth && typeof AngelAuth.getStoredUser === "function" ? AngelAuth.getStoredUser() : null;
+      const email = safeText(user?.email);
+      const name = safeText(user?.fullName);
+
+      if (fullNameInput && name && !safeText(fullNameInput.value)) {
+        fullNameInput.value = name;
+      }
+
+      if (!emailInput) return;
+
+      if (email) {
+        if (!safeText(emailInput.value)) emailInput.value = email;
+        emailInput.readOnly = true;
+        emailInput.classList.add("cursor-not-allowed", "opacity-80");
+        if (emailHintEl) {
+          emailHintEl.textContent = "E-posta giriş yaptığın hesaptan alındı.";
+          emailHintEl.classList.remove("hidden");
+        }
+        return;
+      }
+
+      emailInput.readOnly = false;
+      emailInput.classList.remove("cursor-not-allowed", "opacity-80");
+      if (emailHintEl) emailHintEl.classList.add("hidden");
+    } catch (_e) {
+      // ignore
+    }
+  };
+
+  // Autofill (logged-in users): lock e-mail to account e-mail for consistency.
+  applyAutofillFromSession();
+
+  const loadNotifyPref = () => {
+    try {
+      const raw = localStorage.getItem(NOTIFY_PREF_KEY);
+      const parsed = raw ? JSON.parse(raw) : {};
+      return {
+        channel: ["email", "sms", "both", "none"].includes(parsed?.channel) ? parsed.channel : "email",
+        email: String(parsed?.email || "").trim(),
+        phone: String(parsed?.phone || "").trim()
+      };
+    } catch (_e) {
+      return { channel: "email", email: "", phone: "" };
+    }
+  };
+
+  if (preferredDateInput) {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, "0");
+    const day = String(today.getDate()).padStart(2, "0");
+    preferredDateInput.min = `${year}-${month}-${day}`;
+  }
+
+  if (topicSelect) {
+    const params = new URLSearchParams(window.location.search);
+    const topicFromQuery = (params.get("topic") || "").trim();
+    if (topicFromQuery) {
+      const hasOption = Array.from(topicSelect.options).some((opt) => opt.value === topicFromQuery || opt.text === topicFromQuery);
+      if (!hasOption) {
+        const dynamicOption = document.createElement("option");
+        dynamicOption.textContent = topicFromQuery;
+        dynamicOption.value = topicFromQuery;
+        topicSelect.appendChild(dynamicOption);
+      }
+      topicSelect.value = topicFromQuery;
+    }
+  }
+
+  if (requestForm) {
+    requestForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+      if (!requestForm.checkValidity()) {
+        requestForm.reportValidity();
+        return;
+      }
+      const request = {
+        id: `req_${Date.now()}`,
+        fullName: document.getElementById("request-fullname")?.value?.trim() || "",
+        email: document.getElementById("request-email")?.value?.trim() || "",
+        phone: document.getElementById("request-phone")?.value?.trim() || "",
+        topic: document.getElementById("request-topic")?.value || "",
+        dayPreference: document.getElementById("request-day")?.value || "",
+        preferredDate: document.getElementById("preferred-date")?.value || "",
+        preferredTime: document.getElementById("request-time")?.value || "",
+        notes: document.getElementById("request-notes")?.value?.trim() || "",
+        status: "pending",
+        createdAt: new Date().toISOString(),
+        notification: loadNotifyPref()
+      };
+
+      const list = loadList(LESSON_REQUESTS_KEY);
+      list.unshift(request);
+      localStorage.setItem(LESSON_REQUESTS_KEY, JSON.stringify(list.slice(0, 200)));
+      window.location.href = "userpanel.html";
+    });
+  }
+</script>
+</html>

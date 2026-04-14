@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+
+<html lang="tr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Eğitim Platformu</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#6d5bd0",
+                        "background-light": "#f8f7f4",
+                        "background-dark": "#121826",
+                    },
+                    fontFamily: {
+                        "display": ["Lexend", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.75rem",
+                        "lg": "0.75rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Lexend', sans-serif;
+        }
+        @keyframes floatHero {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        @keyframes softReveal {
+            0% { opacity: 0; transform: translateY(10px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        .hero-float {
+            animation: floatHero 6s ease-in-out infinite;
+        }
+        .hero-reveal {
+            animation: softReveal 700ms ease-out both;
+            animation-delay: 180ms;
+        }
+        .instructor-card {
+            position: relative;
+            overflow: hidden;
+            animation: softReveal 520ms ease-out both;
+        }
+        .instructor-card::after {
+            content: "";
+            position: absolute;
+            inset: -40% auto auto -120%;
+            width: 60%;
+            height: 180%;
+            transform: rotate(20deg);
+            background: linear-gradient(90deg, transparent, rgba(109, 91, 208, 0.14), transparent);
+            transition: left 550ms ease;
+            pointer-events: none;
+        }
+        .instructor-card:hover::after {
+            left: 140%;
+        }
+        .instructor-card:hover {
+            transform: translateY(-4px) scale(1.015);
+        }
+        .soft-lift {
+            transition: transform 260ms ease, box-shadow 260ms ease, border-color 260ms ease;
+        }
+        .soft-lift:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 28px rgba(38, 46, 78, 0.12);
+            border-color: rgba(109, 91, 208, 0.35);
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .hero-float, .hero-reveal, .instructor-card { animation: none; }
+            .instructor-card::after { display: none; }
+            .soft-lift { transition: none; }
+            .soft-lift:hover { transform: none; box-shadow: none; }
+        }
+
+        .aa-marquee {
+            --aa-marquee-duration: 34s;
+            overflow: hidden;
+            position: relative;
+            border-radius: 1.75rem;
+            padding: 0.6rem 0;
+            background: radial-gradient(1200px 300px at 50% -10%, rgba(109, 91, 208, 0.22), transparent 55%),
+                linear-gradient(to bottom, rgba(255, 255, 255, 0.78), rgba(248, 247, 244, 0.25));
+            border: 1px solid rgba(109, 91, 208, 0.16);
+            box-shadow: 0 18px 60px rgba(38, 46, 78, 0.10);
+            -webkit-mask-image: linear-gradient(to right, transparent, #000 10%, #000 90%, transparent);
+            mask-image: linear-gradient(to right, transparent, #000 10%, #000 90%, transparent);
+        }
+        .aa-marquee::before,
+        .aa-marquee::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 70px;
+            pointer-events: none;
+            z-index: 2;
+        }
+        .aa-marquee::before { left: 0; background: linear-gradient(to right, rgba(248, 247, 244, 1), rgba(248, 247, 244, 0)); }
+        .aa-marquee::after { right: 0; background: linear-gradient(to left, rgba(248, 247, 244, 1), rgba(248, 247, 244, 0)); }
+        .aa-marquee .aa-grain {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0.08;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='.35'/%3E%3C/svg%3E");
+            background-size: 220px 220px;
+        }
+        .aa-marquee-track {
+            display: flex;
+            width: max-content;
+            gap: 0;
+            will-change: transform;
+            animation: aa-marquee var(--aa-marquee-duration) linear infinite;
+            transform: translate3d(0,0,0);
+            position: relative;
+            z-index: 3;
+        }
+        .aa-marquee:hover .aa-marquee-track,
+        .aa-marquee:focus-within .aa-marquee-track { animation-play-state: paused; }
+        .aa-marquee.aa-paused .aa-marquee-track { animation-play-state: paused; }
+
+        .aa-ribbon {
+            display: inline-flex;
+            align-items: stretch;
+            padding: 0.75rem;
+            gap: 0;
+            border-radius: 1.5rem;
+            background: rgba(255, 255, 255, 0.55);
+            border: 1px solid rgba(109, 91, 208, 0.18);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.7);
+            backdrop-filter: blur(10px);
+        }
+        .aa-ribbon-item {
+            width: 320px;
+            flex: 0 0 auto;
+            padding: 1.1rem 1.1rem;
+            border-radius: 1.25rem;
+            background: linear-gradient(to bottom, rgba(255,255,255,0.98), rgba(246,242,255,0.65));
+            border: 1px solid rgba(109, 91, 208, 0.14);
+            box-shadow: 0 10px 22px rgba(38, 46, 78, 0.10);
+            transition: transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease;
+            position: relative;
+        }
+        .aa-ribbon-item:hover {
+            transform: translateY(-3px);
+            border-color: rgba(109, 91, 208, 0.32);
+            box-shadow: 0 18px 42px rgba(38, 46, 78, 0.14);
+        }
+        .aa-ribbon-sep {
+            width: 22px;
+            flex: 0 0 auto;
+            position: relative;
+        }
+        .aa-ribbon-sep::before {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 14px;
+            height: 14px;
+            transform: translate(-50%, -50%);
+            border-radius: 9999px;
+            background: rgba(109, 91, 208, 0.20);
+            border: 1px solid rgba(109, 91, 208, 0.22);
+            box-shadow: 0 6px 18px rgba(109, 91, 208, 0.14);
+        }
+        .aa-ribbon-sep::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 2px;
+            transform: translateY(-50%);
+            background: linear-gradient(to right, transparent, rgba(109, 91, 208, 0.20), transparent);
+        }
+        .aa-ribbon-quote {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            width: 34px;
+            height: 34px;
+            border-radius: 12px;
+            display: grid;
+            place-items: center;
+            background: rgba(109, 91, 208, 0.10);
+            color: rgb(109, 91, 208);
+        }
+        .aa-stars {
+            display: inline-flex;
+            gap: 2px;
+            align-items: center;
+            color: #f59e0b;
+        }
+        .aa-stars .material-symbols-outlined {
+            font-size: 18px;
+            font-variation-settings: 'FILL' 1, 'wght' 700, 'GRAD' 0, 'opsz' 24;
+        }
+        .aa-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 0.55rem 0.8rem;
+            border-radius: 9999px;
+            background: rgba(255, 255, 255, 0.75);
+            border: 1px solid rgba(109, 91, 208, 0.18);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.7);
+            backdrop-filter: blur(10px);
+            color: #140e1b;
+            font-weight: 900;
+            font-size: 12px;
+            letter-spacing: 0.02em;
+        }
+        .aa-chip .material-symbols-outlined { font-size: 16px; }
+        .aa-btn-ghost {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 0.55rem 0.85rem;
+            border-radius: 9999px;
+            background: rgba(255, 255, 255, 0.55);
+            border: 1px solid rgba(109, 91, 208, 0.18);
+            color: #140e1b;
+            font-weight: 900;
+            font-size: 12px;
+            transition: transform 200ms ease, background 200ms ease, border-color 200ms ease;
+        }
+        .aa-btn-ghost:hover { transform: translateY(-1px); background: rgba(255,255,255,0.8); border-color: rgba(109,91,208,0.28); }
+        .aa-btn-ghost:active { transform: translateY(0); }
+        .aa-clamp-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        @keyframes aa-marquee {
+            from { transform: translate3d(0,0,0); }
+            to { transform: translate3d(-50%,0,0); }
+        }
+        @media (max-width: 768px) {
+            .aa-marquee { --aa-marquee-duration: 42s; }
+            .aa-marquee::before, .aa-marquee::after { width: 44px; }
+            .aa-ribbon-item { width: 290px; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .aa-marquee-track { animation: none; }
+        }
+    </style>
+</head>
+<body class="bg-background-light text-slate-900 antialiased">
+<!-- Navigation Bar -->
+<header id="site-header" class="sticky top-0 z-50 w-full bg-[#32466F]/90 backdrop-blur-md border-b border-primary/10">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="flex h-20 items-center justify-between">
+<div class="flex items-center gap-8">
+<div class="flex items-center text-primary">
+<img id="site-header-logo" alt="Site Logo" class="h-12 w-12 object-cover rounded-full" src="assets/img/logo-placeholder.svg"/>
+<h1 id="site-header-title" class="text-xl font-black tracking-tight text-white">Eğitim Platformu</h1>
+</div>
+<nav id="site-header-nav" class="hidden md:flex items-center gap-6">
+<a class="text-sm font-semibold hover:text-primary transition-colors" href="kurslar.html">Kurslar</a>
+<a class="text-sm font-semibold hover:text-primary transition-colors" href="canliders.html">Özel Ders</a>
+<a class="text-sm font-semibold hover:text-primary transition-colors" href="iletisim.html">Kurumsal</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<div class="hidden lg:flex items-center bg-white/70 rounded-lg px-3 py-1.5 border border-slate-900/35 focus-within:border-slate-900/55 focus-within:ring-2 focus-within:ring-slate-900/10 transition-all">
+<span class="material-symbols-outlined text-slate-800 text-xl">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-sm w-48 text-slate-900 placeholder:text-slate-500" placeholder="Kurs ara..." type="text"/>
+</div>
+<a id="site-header-login" class="text-sm font-bold px-4 py-2 hover:text-primary transition-colors" href="giris.html">Giriş Yap</a>
+<a id="site-header-signup" class="bg-primary hover:bg-primary/90 text-white text-sm font-bold px-5 py-2 rounded-lg transition-all shadow-lg shadow-primary/20" href="kayit.html">Kayıt Ol</a>
+</div>
+</div>
+</div>
+</header>
+<main>
+<!-- Hero Section -->
+<section data-aa-module="hero" class="relative overflow-hidden pt-16 pb-20 lg:pt-24 lg:pb-32 bg-[#edf3ff]">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col lg:flex-row items-center gap-12">
+<div class="flex-1 space-y-8 text-center lg:text-left">
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider"><span class="relative flex h-2 w-2"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-primary"></span></span> YENİ: CANLI WEB GELİŞTİRME KURSU</div>
+<h1 class="text-5xl lg:text-7xl font-black leading-[1.1] tracking-tight text-[#140e1b] dark:text-white">Uzman Eğitmenlerle <span class="text-primary">Yeni Beceriler</span> Edinin.</h1>
+<p class="text-lg lg:text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto lg:mx-0">Sektör liderlerinden önceden kaydedilmiş video serileriyle öğrenin veya hedeflerinize özel bire bir özel dersler alın.</p>
+<div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+<a class="px-8 py-4 bg-primary text-white font-bold rounded-xl text-lg shadow-xl shadow-primary/30 hover:translate-y-[-2px] transition-all inline-block" href="kurslar.html">Öğrenmeye Başla</a>
+<a class="px-8 py-4 bg-white dark:bg-white/5 border border-primary/20 font-bold rounded-xl text-lg hover:bg-primary/5 transition-all inline-block" href="ozel_ders.html">Özel Ders Planlarını İncele</a>
+</div>
+<div class="flex items-center justify-center lg:justify-start gap-4 pt-4">
+<div class="flex -space-x-3">
+<img class="h-10 w-10 rounded-full border-2 border-white" data-alt="User avatar thumbnail 1" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBscDOM1_KT0sIeaniC8ytZIG1VarWwzzbeSe9J1xMJX3piH21bqPxYcy1knS9EhtVdLYXAe-Or2P9ufFWPJYpkw99vLYQh6sdoVsT7RcsCr5rToxjZjWfd3niS7EHIxZyLl3p56-y7vOS9n8gvRkFpREFfSp5sywzHPviB5BDMFTfXr_YGrqVQ0yQVUroJ7ZdF_KUEGk5pm0TLeOWmSdhWl5f-wjv0ZoZhxe0pppgZy7d2WenFwjmRCP8KZ_dIbKtqtoNjHFO4x05o"/>
+<img class="h-10 w-10 rounded-full border-2 border-white" data-alt="User avatar thumbnail 2" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAsG-Fi6DFJHXICt1kusQ_5Fij4IaTkjbZRxHz-0yfAELsjqdu4_n2pfKL_5mOm3e6Rbvh5mH-qzXV-7vmgt1wsAsfgkdFEZPZiZQFG0YZ32lj1wTwuKn-oTH3OU_FtqBpB8t50jSJ18z9JN758Rh5M6guXYbOV70ydrAFnACtQ8BloZzHxJ8n-yP66zBvBqNTTmuajWjRPluND0sZwG1K0oxJ6TAr9tv7aNjBa4x-Ivyl3LhNEt_fhQujVD_bA-BJ73O5ysq1GgVRN"/>
+<img class="h-10 w-10 rounded-full border-2 border-white" data-alt="User avatar thumbnail 3" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBSDrkH03Qh1qAuTW8Ugm5Xap4XdkdwCG43SQ7VEEL_efzGDZiWefTcWY4hPAZB0NvkizhPjbGHTgwbvfHyU3KOdgMeZt8CutIVIXtESRbhYEd_AhYRxwxYRpD77ZMDEwxp2xsm4dp9BhrPe4Pc4hYUbFYGbSLihSsVR6VJA2GGw9QpHX47-N-iyktQGWCMKn9ZdESf1bBq-1wMIuv14L0EAkWhz72C5UpEik2RNeMUs_M97cnkCyZnXkhGJ_-8B38ciZmrRfn4Td3F"/>
+</div>
+<p class="text-sm font-medium text-gray-500">Bu ay 12,000'den fazla öğrenci katıldı</p>
+</div>
+</div>
+<div class="flex-1 relative w-full aspect-square max-w-lg hero-float">
+<div class="absolute inset-0 bg-primary/20 rounded-[2rem] rotate-3 -z-10 transition-transform duration-500"></div>
+<div class="w-full h-full bg-cover bg-center rounded-[2rem] shadow-2xl overflow-hidden border-8 border-white dark:border-background-dark transition-transform duration-500 hover:scale-[1.01]" data-alt="Student learning on laptop with headphones" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAMCj-zb8KkL0PDbqQ2em8wt3lDuFPLTKxNHDorBiGCD3pST3yqPz7u7Oq5xLkwg8ea0ut5NtWqsvznwhj9MunHH0eRD_CpMIhtkGq6B8MgU6ydC_RxbCo5md20goiQT8VWi1FK93vVli01ZytScKPxLTsTzcIc6Oi15YCIw3t1XEujGsRJ89_TGkMG5mQM4Qio7dA-N_YldoUZijGTbRsEQxqJOU2hqqWJYeTN-3e-2uFyBYNTrVipy4AG1pWyXHltED48O5hxxRNk')">
+</div>
+</div>
+</div>
+</section>
+<!-- Featured Courses Section -->
+<section data-aa-module="featured_courses" class="py-20 bg-[#f8fbff]">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="flex items-end justify-between mb-12">
+<div>
+<h2 class="text-3xl font-black tracking-tight text-[#140e1b] dark:text-white">Öne Çıkan Kurslar</h2>
+<p class="text-gray-500 mt-2">Topluluğumuz tarafından seçilen en yüksek puanlı kursları keşfedin.</p>
+</div>
+<a class="text-primary font-bold flex items-center gap-1 hover:gap-2 transition-all" href="kurslar.html">Tüm kursları gör <span class="material-symbols-outlined">arrow_forward</span></a>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+<!-- Course Card 1 -->
+<div class="group soft-lift bg-white dark:bg-white/5 rounded-2xl border border-primary/5 overflow-hidden hover:shadow-2xl hover:shadow-primary/10 transition-all duration-300">
+<div class="relative aspect-video overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Coding course thumbnail" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDlchgUr0TGZHHqB4V9QUYp5HFJa6v73LF3BQYlPKo1ENbvJdaVixOjWy1aGgcGMZTOEgAxFlXyWQu01PZSgRscnluB3ruO-lr_aAQZv7-zcZiSIkXau_beGdsw6yVMj97h0HsTwzn28mQMQ_JwqsjZJolJU5FMtomM7DqIkSZHbgFBnhSRChREvNyJEw-nz5V7e1OjuhAsGvD9qs8p5Ixcfi9qqf3eQFSt7uJtGoupqD-4DRWGsAiQUgvpSkm7haecGQY9d1IrY5L1"/>
+<div class="absolute inset-0 bg-black/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-white text-5xl">play_circle</span>
+</div>
+</div>
+<div class="p-5 space-y-3">
+<div class="flex justify-between items-start">
+<span class="px-2 py-1 bg-blue-100 text-blue-700 text-[10px] font-bold rounded uppercase">Yazılım</span>
+<div class="flex items-center gap-1 text-yellow-500">
+<span class="material-symbols-outlined text-sm fill-current">star</span>
+<span class="text-xs font-bold">4.9</span>
+</div>
+</div>
+<a href="kurs_detay.html" class="font-bold text-lg leading-tight group-hover:text-primary transition-colors block">Full-Stack Web Geliştirme</a>
+<p class="text-sm text-gray-500">Alex Johnson • 24 Saat</p>
+<div class="pt-4 flex items-center justify-between border-t border-gray-100 dark:border-white/10">
+<span class="text-xl font-black text-primary">₺2.999</span>
+<a href="odeme_page.html" class="text-primary hover:bg-primary/10 p-2 rounded-lg transition-colors inline-flex" aria-label="Satın al">
+<span class="material-symbols-outlined">shopping_cart</span>
+</a>
+</div>
+</div>
+</div>
+<!-- Course Card 2 -->
+<div class="group soft-lift bg-white dark:bg-white/5 rounded-2xl border border-primary/5 overflow-hidden hover:shadow-2xl hover:shadow-primary/10 transition-all duration-300">
+<div class="relative aspect-video overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="UX UI Design course thumbnail" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBIqTKLvn5v_vMgD66oemDrdjCVfR9pZB_JZ4RkicGVMrzI-4JQbWB8zu3f8elRTc7hkdq0lr8uxgIqF5joqHRmIvZPDtELdOd3Fc0dK5rObK_df8gpIEk51v7FmpSS8Y_Dmw2BKMmHNR1IjqiTtY1qCUnMCZAve_kp8-qMnwP33foCXNN9SrOGpBkEce8TNgGKFPyyiCNRsl0aLlqQLKZIjJUXLz4_1H4lsIxFG321qdrdDKDaju61AQECiGE7DjQD6w95_eHo8Y3e"/>
+<div class="absolute inset-0 bg-black/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-white text-5xl">play_circle</span>
+</div>
+</div>
+<div class="p-5 space-y-3">
+<div class="flex justify-between items-start">
+<span class="px-2 py-1 bg-purple-100 text-purple-700 text-[10px] font-bold rounded uppercase">Tasarım</span>
+<div class="flex items-center gap-1 text-yellow-500">
+<span class="material-symbols-outlined text-sm fill-current">star</span>
+<span class="text-xs font-bold">4.8</span>
+</div>
+</div>
+<a href="kurs_detay.html" class="font-bold text-lg leading-tight group-hover:text-primary transition-colors block">UI/UX Tasarım Uzmanlık Eğitimi</a>
+<p class="text-sm text-gray-500">Sarah Mayer • 18 Saat</p>
+<div class="pt-4 flex items-center justify-between border-t border-gray-100 dark:border-white/10">
+<span class="text-xl font-black text-primary">₺2.499</span>
+<a href="odeme_page.html" class="text-primary hover:bg-primary/10 p-2 rounded-lg transition-colors inline-flex" aria-label="Satın al">
+<span class="material-symbols-outlined">shopping_cart</span>
+</a>
+</div>
+</div>
+</div>
+<!-- Course Card 3 -->
+<div class="group soft-lift bg-white dark:bg-white/5 rounded-2xl border border-primary/5 overflow-hidden hover:shadow-2xl hover:shadow-primary/10 transition-all duration-300">
+<div class="relative aspect-video overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Data Science course thumbnail" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBLPEdPdrFBES9to5moTpTUPhM-vPHNbh5BS5CNoQ_zw_k25RrACcdCea3G31SawGO3bDJ1LLxOtcoleKElTL136lnYLLe1HWaD0VniAoL8TTi6NqlNn1nFSLrFDOoQBrfvXAnevKOr1Zy_IFLcZwiMIySLuDuLA9LI1xtCKWBEdXQGmp7ZIpXRUmwDTatkh4M_0vycEFy_yE3XxZ3TduDVLoHc_a9vUIwXzEL2iJq2D_4gk4Kib0isaKQWjDsSFuWnPI0XvT1u9IYy"/>
+<div class="absolute inset-0 bg-black/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-white text-5xl">play_circle</span>
+</div>
+</div>
+<div class="p-5 space-y-3">
+<div class="flex justify-between items-start">
+<span class="px-2 py-1 bg-green-100 text-green-700 text-[10px] font-bold rounded uppercase">Veri</span>
+<div class="flex items-center gap-1 text-yellow-500">
+<span class="material-symbols-outlined text-sm fill-current">star</span>
+<span class="text-xs font-bold">5.0</span>
+</div>
+</div>
+<a href="kurs_detay.html" class="font-bold text-lg leading-tight group-hover:text-primary transition-colors block">Veri Bilimi Temelleri</a>
+<p class="text-sm text-gray-500">Dr. Robert Smith • 32 Saat</p>
+<div class="pt-4 flex items-center justify-between border-t border-gray-100 dark:border-white/10">
+<span class="text-xl font-black text-primary">₺3.299</span>
+<a href="odeme_page.html" class="text-primary hover:bg-primary/10 p-2 rounded-lg transition-colors inline-flex" aria-label="Satın al">
+<span class="material-symbols-outlined">shopping_cart</span>
+</a>
+</div>
+</div>
+</div>
+<!-- Course Card 4 -->
+<div class="group soft-lift bg-white dark:bg-white/5 rounded-2xl border border-primary/5 overflow-hidden hover:shadow-2xl hover:shadow-primary/10 transition-all duration-300">
+<div class="relative aspect-video overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Digital Marketing course thumbnail" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBuvMUCh92U_KBm91N6PAl4Svyf58aTA5XzLiD_3UykrjdvLATdrAdIKlkmE4AbTzkk186fPvahAYvpazV-qOJD6jt8LEAIWa-WxPTtm58ycTWogD0b6jx38FfMgI8FWE_AAt2dEkRmvpEcLIzvfggG_qSSp9NZ0KSSa0wDBlyFwor1Uw0I1LJ6PxXNyw16boyHXrQpyT2zCK6NQgM7xxpiKgobWoY5mRKlXKZPtYrDk1b0rgoAe_NoljH_S6GGxP4DtJzimfpSpkTg"/>
+<div class="absolute inset-0 bg-black/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-white text-5xl">play_circle</span>
+</div>
+</div>
+<div class="p-5 space-y-3">
+<div class="flex justify-between items-start">
+<span class="px-2 py-1 bg-orange-100 text-orange-700 text-[10px] font-bold rounded uppercase">Pazarlama</span>
+<div class="flex items-center gap-1 text-yellow-500">
+<span class="material-symbols-outlined text-sm fill-current">star</span>
+<span class="text-xs font-bold">4.7</span>
+</div>
+</div>
+<a href="kurs_detay.html" class="font-bold text-lg leading-tight group-hover:text-primary transition-colors block">Dijital Pazarlama Stratejisi</a>
+<p class="text-sm text-gray-500">Emily Chen • 12 Saat</p>
+<div class="pt-4 flex items-center justify-between border-t border-gray-100 dark:border-white/10">
+<span class="text-xl font-black text-primary">₺1.999</span>
+<a href="odeme_page.html" class="text-primary hover:bg-primary/10 p-2 rounded-lg transition-colors inline-flex" aria-label="Satın al">
+<span class="material-symbols-outlined">shopping_cart</span>
+</a>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Learning Categories -->
+<section data-aa-module="specialties" class="py-20 bg-[#eef4ff] border-y border-[#dbe5f4]">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-start justify-between mb-10">
+      <div>
+        <h2 class="text-3xl font-black tracking-tight text-[#140e1b] dark:text-white">Popüler Uzmanlık Alanları</h2>
+        <p class="text-gray-500 mt-2">Meslek odaklı alanını seç, proje bazlı içeriklerle ilerle.</p>
+      </div>
+      <a class="text-primary font-bold" href="kurslar.html">Tüm kategoriler</a>
+    </div>
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+      <a href="kurslar.html" class="soft-lift p-5 rounded-2xl border border-primary/10 bg-white dark:bg-white/5 hover:border-primary/40 transition-all">
+        <p class="font-bold">Yazılım</p>
+        <p class="text-xs text-gray-500 mt-1">Frontend, backend, full-stack</p>
+      </a>
+      <a href="kurslar.html" class="soft-lift p-5 rounded-2xl border border-primary/10 bg-white dark:bg-white/5 hover:border-primary/40 transition-all">
+        <p class="font-bold">Grafik Tasarım</p>
+        <p class="text-xs text-gray-500 mt-1">Photoshop, Illustrator, branding</p>
+      </a>
+      <a href="kurslar.html" class="soft-lift p-5 rounded-2xl border border-primary/10 bg-white dark:bg-white/5 hover:border-primary/40 transition-all">
+        <p class="font-bold">Videografiker</p>
+        <p class="text-xs text-gray-500 mt-1">Kurgu, renk, motion</p>
+      </a>
+      <a href="kurslar.html" class="soft-lift p-5 rounded-2xl border border-primary/10 bg-white dark:bg-white/5 hover:border-primary/40 transition-all">
+        <p class="font-bold">Dijital Pazarlama</p>
+        <p class="text-xs text-gray-500 mt-1">Meta ads, SEO, içerik stratejisi</p>
+      </a>
+      <a href="kurslar.html" class="soft-lift p-5 rounded-2xl border border-primary/10 bg-white dark:bg-white/5 hover:border-primary/40 transition-all">
+        <p class="font-bold">Mobil Geliştirme</p>
+        <p class="text-xs text-gray-500 mt-1">Flutter, React Native</p>
+      </a>
+      <a href="kurslar.html" class="soft-lift p-5 rounded-2xl border border-primary/10 bg-white dark:bg-white/5 hover:border-primary/40 transition-all">
+        <p class="font-bold">UI/UX</p>
+        <p class="text-xs text-gray-500 mt-1">Kullanıcı araştırması, prototip</p>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- How It Works -->
+<section data-aa-module="highlights" class="py-20 relative overflow-hidden bg-[#f4f8ff]">
+  <div class="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-transparent pointer-events-none"></div>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+    <div class="text-center max-w-3xl mx-auto">
+      <h2 class="text-3xl lg:text-4xl font-black tracking-tight text-[#140e1b] dark:text-white">Nasıl Çalışır?</h2>
+      <p class="text-gray-500 mt-3">3 adımda kayıt ol, ödemeni tamamla ve öğrenmeye hemen başla.</p>
+    </div>
+
+    <div class="mt-12 grid md:grid-cols-3 gap-6 items-stretch">
+      <article class="relative p-6 rounded-2xl bg-white dark:bg-white/5 border border-primary/15 shadow-sm hover:shadow-lg hover:shadow-primary/10 transition-all">
+        <span class="inline-flex size-10 items-center justify-center rounded-xl bg-primary text-white font-black">1</span>
+        <h3 class="font-bold mt-4 text-lg">Kursunu Seç</h3>
+        <p class="text-sm text-gray-500 mt-2">Hedefine uygun kursu veya canlı ders planını belirle.</p>
+        <a href="kurslar.html" class="inline-block mt-5 text-primary font-semibold text-sm">Kursları incele</a>
+      </article>
+
+      <article class="relative p-6 rounded-2xl bg-white dark:bg-white/5 border border-primary/15 shadow-sm hover:shadow-lg hover:shadow-primary/10 transition-all">
+        <span class="inline-flex size-10 items-center justify-center rounded-xl bg-primary text-white font-black">2</span>
+        <h3 class="font-bold mt-4 text-lg">Kayıt ve Ödeme</h3>
+        <p class="text-sm text-gray-500 mt-2">Dakikalar içinde kaydını tamamla, güvenli ödeme ile erişim kazan.</p>
+        <a href="odeme_page.html" class="inline-block mt-5 text-primary font-semibold text-sm">Ödeme sayfasına git</a>
+      </article>
+
+      <article class="relative p-6 rounded-2xl bg-white dark:bg-white/5 border border-primary/15 shadow-sm hover:shadow-lg hover:shadow-primary/10 transition-all">
+        <span class="inline-flex size-10 items-center justify-center rounded-xl bg-primary text-white font-black">3</span>
+        <h3 class="font-bold mt-4 text-lg">Öğrenmeye Başla</h3>
+        <p class="text-sm text-gray-500 mt-2">Panelinden ilerlemeni takip et, canlı derslere katıl ve çalışmayı sürdür.</p>
+        <a href="userpanel.html" class="inline-block mt-5 text-primary font-semibold text-sm">Panele git</a>
+      </article>
+    </div>
+
+    <div class="mt-8 text-center">
+      <a href="kayit.html" class="inline-flex items-center gap-2 bg-primary text-white font-bold px-6 py-3 rounded-xl hover:bg-primary/90 transition-all shadow-lg shadow-primary/25">Şimdi başla</a>
+    </div>
+  </div>
+</section>
+<!-- Tutoring Section -->
+<section data-aa-module="coaching" class="py-24 bg-primary text-white overflow-hidden relative">
+<div class="absolute top-0 right-0 w-1/3 h-full bg-white/5 skew-x-12 translate-x-1/2"></div>
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+<div class="space-y-8">
+<h2 class="text-4xl lg:text-5xl font-black tracking-tight leading-tight">Size Özel <br/>Bire Bir Rehberlik</h2>
+<p class="text-lg text-white/80 max-w-lg">Bazen bir video kurs yeterli olmaz. Özel ders programımız, sizi canlı ve etkileşimli öğrenme oturumları için dünya standartlarında uzmanlarla eşleştirir.</p>
+<div class="space-y-6">
+<div class="flex gap-4">
+<div class="bg-white/20 h-12 w-12 rounded-xl flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined">edit_calendar</span>
+</div>
+<div>
+<h4 class="font-bold text-lg">Konu Talep Edin</h4>
+<p class="text-white/70 text-sm">Mülakat hazırlığından belirli teknoloji yığınlarına kadar ne öğrenmek istediğinizi bize bildirin.</p>
+</div>
+</div>
+<div class="flex gap-4">
+<div class="bg-white/20 h-12 w-12 rounded-xl flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined">person_search</span>
+</div>
+<div>
+<h4 class="font-bold text-lg">Eşleşin</h4>
+<p class="text-white/70 text-sm">Sizi beceri seviyenize ve saat diliminize göre onaylı bir eğitmenle eşleştireceğiz.</p>
+</div>
+</div>
+<div class="flex gap-4">
+<div class="bg-white/20 h-12 w-12 rounded-xl flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined">videocam</span>
+</div>
+<div>
+<h4 class="font-bold text-lg">Canlı Oturum</h4>
+<p class="text-white/70 text-sm">Ekran paylaşımı ve işbirlikçi kodlama ile HD video platformumuz üzerinden buluşun.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+<div class="bg-white text-gray-900 p-8 rounded-3xl shadow-2xl space-y-6">
+<div class="inline-block p-3 bg-primary/10 rounded-2xl text-primary">
+<span class="material-symbols-outlined text-3xl">bolt</span>
+</div>
+<h3 class="text-2xl font-black">Hızlı Oturum</h3>
+<p class="text-gray-500 text-sm">Belirli bir sorunu gidermek veya hızlı bir portföy incelemesi için ideal.</p>
+<ul class="space-y-3 text-sm font-medium">
+<li class="flex items-center gap-2"><span class="material-symbols-outlined text-green-500 text-lg">check_circle</span> 60 Dakikalık Oturum</li>
+<li class="flex items-center gap-2"><span class="material-symbols-outlined text-green-500 text-lg">check_circle</span> Kayıt Paylaşılır</li>
+</ul>
+<div class="pt-4">
+<p class="text-3xl font-black">₺1.500<span class="text-sm text-gray-400">/saat</span></p>
+<button class="w-full mt-4 bg-primary text-white font-bold py-3 rounded-xl hover:bg-primary/90 transition-all">Hemen Al</button>
+</div>
+</div>
+<div class="bg-white/10 backdrop-blur-md border border-white/20 text-white p-8 rounded-3xl space-y-6 lg:mt-12">
+<div class="inline-block p-3 bg-white/20 rounded-2xl text-white">
+<span class="material-symbols-outlined text-3xl">workspace_premium</span>
+</div>
+<h3 class="text-2xl font-black text-white">Mentorluk</h3>
+<p class="text-white/70 text-sm">Kariyer gelişiminize ve uzmanlığımıza rehberlik edecek uzun vadeli bir ortaklık.</p>
+<ul class="space-y-3 text-sm font-medium">
+<li class="flex items-center gap-2"><span class="material-symbols-outlined text-white text-lg">check_circle</span> Ayda 4 Oturum</li>
+<li class="flex items-center gap-2"><span class="material-symbols-outlined text-white text-lg">check_circle</span> Özel Slack Erişimi</li>
+</ul>
+<div class="pt-4">
+<p class="text-3xl font-black">₺4.500<span class="text-sm text-white/50">/ay</span></p>
+<a class="w-full mt-4 bg-white text-primary font-bold py-3 rounded-xl hover:bg-gray-100 transition-all inline-flex items-center justify-center" href="odeme_page.html">Planı Seç</a>
+</div>
+</div>
+</div>
+</div>
+</div>
+  <div class="mt-10 rounded-3xl border border-white/20 bg-white/10 backdrop-blur p-6 sm:p-8">
+    <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
+      <div>
+        <p class="text-xs uppercase tracking-wider text-white/70 font-semibold">Özel Ders Talebi</p>
+        <h3 class="text-2xl font-black mt-2">İhtiyacına Uygun Dersi 1 Dakikada Planla</h3>
+        <p class="text-white/80 text-sm mt-2">Konu ve uygun saatini seç. Sana en uygun eğitmenle hızlıca eşleştirelim.</p>
+      </div>
+      <a href="talep_olustur.html" class="inline-flex items-center justify-center bg-white text-primary font-bold px-5 py-3 rounded-xl hover:bg-gray-100 transition-all">Talep Oluştur</a>
+    </div>
+    <div class="grid sm:grid-cols-3 gap-3 mt-6 text-sm">
+      <div class="rounded-xl border border-white/25 bg-white/5 px-4 py-3">Konu: React / Frontend / Yapay Zeka</div>
+      <div class="rounded-xl border border-white/25 bg-white/5 px-4 py-3">Uygunluk: Akşam / Hafta Sonu</div>
+    </div>
+  </div>
+</div>
+</div>
+</section>
+<!-- Testimonials -->
+<section data-aa-module="testimonials" class="py-20 bg-[#eef6ff]">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="mb-10 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-5">
+      <div>
+        <h2 class="text-3xl font-black tracking-tight text-[#140e1b] dark:text-white">Öğrenciler Ne Diyor?</h2>
+        <p class="text-gray-500 mt-2">Gerçek deneyimlerden kısa notlar. Üzerine gelince akış durur.</p>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="aa-chip">
+          <span class="material-symbols-outlined text-primary">verified</span> 4.9/5 Ortalama
+        </span>
+        <span class="aa-chip">
+          <span class="material-symbols-outlined text-primary">groups</span> 12K+ Öğrenci
+        </span>
+        <button type="button" class="aa-btn-ghost" data-testimonials-toggle aria-pressed="false" aria-label="Yorum akışını duraklat">
+          <span class="material-symbols-outlined text-primary">pause</span>
+          Duraklat
+        </button>
+      </div>
+    </div>
+
+    <div class="aa-marquee" tabindex="0">
+      <div class="aa-grain" aria-hidden="true"></div>
+      <div class="aa-marquee-track" aria-label="Öğrenci yorumları kayan liste">
+        <div class="aa-ribbon">
+          <div class="aa-ribbon-item">
+            <div class="aa-ribbon-quote" aria-hidden="true"><span class="material-symbols-outlined text-lg">format_quote</span></div>
+            <div class="flex items-center justify-between mb-3">
+              <div class="flex items-center gap-3">
+                <div class="h-10 w-10 rounded-full bg-primary/15 text-primary font-black flex items-center justify-center text-sm">EK</div>
+                <div>
+                  <p class="text-sm font-extrabold leading-tight">Ece K.</p>
+                  <p class="text-[11px] text-gray-500 font-semibold">Öğrenci</p>
+                </div>
+              </div>
+              <span class="aa-stars" aria-label="5 yıldız"><span class="material-symbols-outlined">star</span><span class="material-symbols-outlined">star</span><span class="material-symbols-outlined">star</span><span class="material-symbols-outlined">star</span><span class="material-symbols-outlined">star</span></span>
+            </div>
+            <p class="aa-clamp-2 text-sm leading-6 text-slate-700">“2 ayda sıfırdan frontend öğrenip ilk freelance işimi aldım.”</p>
+          </div>
+          <div class="aa-ribbon-sep" aria-hidden="true"></div>
+          <div class="aa-ribbon-item">
+            <div class="aa-ribbon-quote" aria-hidden="true"><span class="material-symbols-outlined text-lg">format_quote</span></div>
+            <div class="flex items-center justify-between mb-3">
+              <div class="flex items-center gap-3">
+                <div class="h-10 w-10 rounded-full bg-primary/15 text-primary font-black flex items-center justify-center text-sm">MA</div>
+                <div>
+                  <p class="text-sm font-extrabold leading-tight">Mehmet A.</p>
+                  <p class="text-[11px] text-gray-500 font-semibold">Öğrenci</p>
+                </div>
+              </div>
+              <span class="aa-stars" aria-label="5 yıldız"><span class="material-symbols-outlined">star</span><span class="material-symbols-outlined">star</span><span class="material-symbols-outlined">star</span><span class="material-symbols-outlined">star</span><span class="material-symbols-outlined">star</span></span>
+            </div>
+            <p class="aa-clamp-2 text-sm leading-6 text-slate-700">“Canlı dersler birebir soru-cevap için çok verimli oldu.”</p>
+          </div>
+          <div class="aa-ribbon-sep" aria-hidden="true"></div>
+          <div class="aa-ribbon-item">
+            <div class="aa-ribbon-quote" aria-hidden="true"><span class="material-symbols-outlined text-lg">format_quote</span></div>
+            <div class="flex items-center justify-between mb-3">
+              <div class="flex items-center gap-3">
+                <div class="h-10 w-10 rounded-full bg-primary/15 text-primary font-black flex items-center justify-center text-sm">ZT</div>
+                <div>
+                  <p class="text-sm font-extrabold leading-tight">Zeynep T.</p>
+                  <p class="text-[11px] text-gray-500 font-semibold">Öğrenci</p>
+                </div>
+              </div>
+              <span class="aa-stars" aria-label="5 yıldız"><span class="material-symbols-outlined">star</span><span class="material-symbols-outlined">star</span><span class="material-symbols-outlined">star</span><span class="material-symbols-outlined">star</span><span class="material-symbols-outlined">star</span></span>
+            </div>
+            <p class="aa-clamp-2 text-sm leading-6 text-slate-700">“Kurs yapısı ve panel takibi sayesinde çalışma disiplinim arttı.”</p>
+          </div>
+          <div class="aa-ribbon-sep" aria-hidden="true"></div>
+          <div class="aa-ribbon-item">
+            <div class="aa-ribbon-quote" aria-hidden="true"><span class="material-symbols-outlined text-lg">format_quote</span></div>
+            <div class="flex items-center justify-between mb-3">
+              <div class="flex items-center gap-3">
+                <div class="h-10 w-10 rounded-full bg-primary/15 text-primary font-black flex items-center justify-center text-sm">AD</div>
+                <div>
+                  <p class="text-sm font-extrabold leading-tight">Ali D.</p>
+                  <p class="text-[11px] text-gray-500 font-semibold">Öğrenci</p>
+                </div>
+              </div>
+              <span class="aa-stars" aria-label="5 yıldız"><span class="material-symbols-outlined">star</span><span class="material-symbols-outlined">star</span><span class="material-symbols-outlined">star</span><span class="material-symbols-outlined">star</span><span class="material-symbols-outlined">star</span></span>
+            </div>
+            <p class="aa-clamp-2 text-sm leading-6 text-slate-700">“Kısa videolar + pratik ödevlerle ilerlemek çok kolaylaştı.”</p>
+          </div>
+          <div class="aa-ribbon-sep" aria-hidden="true"></div>
+          <div class="aa-ribbon-item">
+            <div class="aa-ribbon-quote" aria-hidden="true"><span class="material-symbols-outlined text-lg">format_quote</span></div>
+            <div class="flex items-center justify-between mb-3">
+              <div class="flex items-center gap-3">
+                <div class="h-10 w-10 rounded-full bg-primary/15 text-primary font-black flex items-center justify-center text-sm">BS</div>
+                <div>
+                  <p class="text-sm font-extrabold leading-tight">Buse S.</p>
+                  <p class="text-[11px] text-gray-500 font-semibold">Öğrenci</p>
+                </div>
+              </div>
+              <span class="aa-stars" aria-label="5 yıldız"><span class="material-symbols-outlined">star</span><span class="material-symbols-outlined">star</span><span class="material-symbols-outlined">star</span><span class="material-symbols-outlined">star</span><span class="material-symbols-outlined">star</span></span>
+            </div>
+            <p class="aa-clamp-2 text-sm leading-6 text-slate-700">“Panelden ilerleme takibi motivasyonumu yükseltti, düzenli çalıştım.”</p>
+          </div>
+        </div>
+
+        <div class="aa-ribbon" aria-hidden="true">
+          <div class="aa-ribbon-item">
+            <div class="aa-ribbon-quote" aria-hidden="true"><span class="material-symbols-outlined text-lg">format_quote</span></div>
+            <div class="flex items-center justify-between mb-3">
+              <div class="flex items-center gap-3">
+                <div class="h-10 w-10 rounded-full bg-primary/15 text-primary font-black flex items-center justify-center text-sm">EK</div>
+                <div><p class="text-sm font-extrabold leading-tight">Ece K.</p><p class="text-[11px] text-gray-500 font-semibold">Öğrenci</p></div>
+              </div>
+              <span class="aa-stars" aria-label="5 yıldız"><span class="material-symbols-outlined">star</span><span class="material-symbols-outlined">star</span><span class="material-symbols-outlined">star</span><span class="material-symbols-outlined">star</span><span class="material-symbols-outlined">star</span></span>
+            </div>
+            <p class="aa-clamp-2 text-sm leading-6 text-slate-700">“2 ayda sıfırdan frontend öğrenip ilk freelance işimi aldım.”</p>
+          </div>
+          <div class="aa-ribbon-sep" aria-hidden="true"></div>
+          <div class="aa-ribbon-item">
+            <div class="aa-ribbon-quote" aria-hidden="true"><span class="material-symbols-outlined text-lg">format_quote</span></div>
+            <div class="flex items-center justify-between mb-3">
+              <div class="flex items-center gap-3">
+                <div class="h-10 w-10 rounded-full bg-primary/15 text-primary font-black flex items-center justify-center text-sm">MA</div>
+                <div><p class="text-sm font-extrabold leading-tight">Mehmet A.</p><p class="text-[11px] text-gray-500 font-semibold">Öğrenci</p></div>
+              </div>
+              <span class="aa-stars" aria-label="5 yıldız"><span class="material-symbols-outlined">star</span><span class="material-symbols-outlined">star</span><span class="material-symbols-outlined">star</span><span class="material-symbols-outlined">star</span><span class="material-symbols-outlined">star</span></span>
+            </div>
+            <p class="aa-clamp-2 text-sm leading-6 text-slate-700">“Canlı dersler birebir soru-cevap için çok verimli oldu.”</p>
+          </div>
+          <div class="aa-ribbon-sep" aria-hidden="true"></div>
+          <div class="aa-ribbon-item">
+            <div class="aa-ribbon-quote" aria-hidden="true"><span class="material-symbols-outlined text-lg">format_quote</span></div>
+            <div class="flex items-center justify-between mb-3">
+              <div class="flex items-center gap-3">
+                <div class="h-10 w-10 rounded-full bg-primary/15 text-primary font-black flex items-center justify-center text-sm">ZT</div>
+                <div><p class="text-sm font-extrabold leading-tight">Zeynep T.</p><p class="text-[11px] text-gray-500 font-semibold">Öğrenci</p></div>
+              </div>
+              <span class="aa-stars" aria-label="5 yıldız"><span class="material-symbols-outlined">star</span><span class="material-symbols-outlined">star</span><span class="material-symbols-outlined">star</span><span class="material-symbols-outlined">star</span><span class="material-symbols-outlined">star</span></span>
+            </div>
+            <p class="aa-clamp-2 text-sm leading-6 text-slate-700">“Kurs yapısı ve panel takibi sayesinde çalışma disiplinim arttı.”</p>
+          </div>
+          <div class="aa-ribbon-sep" aria-hidden="true"></div>
+          <div class="aa-ribbon-item">
+            <div class="aa-ribbon-quote" aria-hidden="true"><span class="material-symbols-outlined text-lg">format_quote</span></div>
+            <div class="flex items-center justify-between mb-3">
+              <div class="flex items-center gap-3">
+                <div class="h-10 w-10 rounded-full bg-primary/15 text-primary font-black flex items-center justify-center text-sm">AD</div>
+                <div><p class="text-sm font-extrabold leading-tight">Ali D.</p><p class="text-[11px] text-gray-500 font-semibold">Öğrenci</p></div>
+              </div>
+              <span class="aa-stars" aria-label="5 yıldız"><span class="material-symbols-outlined">star</span><span class="material-symbols-outlined">star</span><span class="material-symbols-outlined">star</span><span class="material-symbols-outlined">star</span><span class="material-symbols-outlined">star</span></span>
+            </div>
+            <p class="aa-clamp-2 text-sm leading-6 text-slate-700">“Kısa videolar + pratik ödevlerle ilerlemek çok kolaylaştı.”</p>
+          </div>
+          <div class="aa-ribbon-sep" aria-hidden="true"></div>
+          <div class="aa-ribbon-item">
+            <div class="aa-ribbon-quote" aria-hidden="true"><span class="material-symbols-outlined text-lg">format_quote</span></div>
+            <div class="flex items-center justify-between mb-3">
+              <div class="flex items-center gap-3">
+                <div class="h-10 w-10 rounded-full bg-primary/15 text-primary font-black flex items-center justify-center text-sm">BS</div>
+                <div><p class="text-sm font-extrabold leading-tight">Buse S.</p><p class="text-[11px] text-gray-500 font-semibold">Öğrenci</p></div>
+              </div>
+              <span class="aa-stars" aria-label="5 yıldız"><span class="material-symbols-outlined">star</span><span class="material-symbols-outlined">star</span><span class="material-symbols-outlined">star</span><span class="material-symbols-outlined">star</span><span class="material-symbols-outlined">star</span></span>
+            </div>
+            <p class="aa-clamp-2 text-sm leading-6 text-slate-700">“Panelden ilerleme takibi motivasyonumu yükseltti, düzenli çalıştım.”</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Featured Instructors -->
+<section data-aa-module="instructors" class="py-20 bg-[#f8fbff]">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-start justify-between mb-10">
+      <div>
+        <h2 class="text-[1.75rem] font-black tracking-tight text-[#140e1b] dark:text-white">Öne Çıkan Eğitmenler</h2>
+        <p class="text-gray-500 mt-2">Alanında uzman eğitmenlerle öğren.</p>
+      </div>
+      <a href="egitmenpanel.html" class="text-primary font-bold">Tüm eğitmenler</a>
+    </div>
+    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+      <a href="egitmenpanel.html" class="instructor-card p-5 rounded-2xl border border-primary/10 bg-white dark:bg-white/5 hover:border-primary/40 hover:-translate-y-1 hover:shadow-lg hover:shadow-primary/10 transition-all duration-300" style="animation-delay: 60ms;">
+        <div class="flex items-center justify-between">
+          <div class="size-10 rounded-full bg-primary/10 text-primary flex items-center justify-center">
+            <span class="material-symbols-outlined text-[20px]">person</span>
+          </div>
+          <span class="text-[10px] font-bold text-primary bg-primary/10 px-2 py-1 rounded-full">4.9</span>
+        </div>
+        <p class="font-bold mt-4">Dr. Selin Yılmaz</p>
+        <p class="text-xs text-gray-500 mt-1">React & Modern Web</p>
+        <p class="text-[11px] text-gray-500 mt-3">420+ öğrenci • 12 yıl deneyim</p>
+      </a>
+      <a href="egitmenpanel.html" class="instructor-card p-5 rounded-2xl border border-primary/10 bg-white dark:bg-white/5 hover:border-primary/40 hover:-translate-y-1 hover:shadow-lg hover:shadow-primary/10 transition-all duration-300" style="animation-delay: 140ms;">
+        <div class="flex items-center justify-between">
+          <div class="size-10 rounded-full bg-primary/10 text-primary flex items-center justify-center">
+            <span class="material-symbols-outlined text-[20px]">analytics</span>
+          </div>
+          <span class="text-[10px] font-bold text-primary bg-primary/10 px-2 py-1 rounded-full">4.8</span>
+        </div>
+        <p class="font-bold mt-4">Mert Kaya</p>
+        <p class="text-xs text-gray-500 mt-1">Veri Bilimi</p>
+        <p class="text-[11px] text-gray-500 mt-3">310+ öğrenci • 9 yıl deneyim</p>
+      </a>
+      <a href="egitmenpanel.html" class="instructor-card p-5 rounded-2xl border border-primary/10 bg-white dark:bg-white/5 hover:border-primary/40 hover:-translate-y-1 hover:shadow-lg hover:shadow-primary/10 transition-all duration-300" style="animation-delay: 220ms;">
+        <div class="flex items-center justify-between">
+          <div class="size-10 rounded-full bg-primary/10 text-primary flex items-center justify-center">
+            <span class="material-symbols-outlined text-[20px]">draw</span>
+          </div>
+          <span class="text-[10px] font-bold text-primary bg-primary/10 px-2 py-1 rounded-full">5.0</span>
+        </div>
+        <p class="font-bold mt-4">Aslı Demir</p>
+        <p class="text-xs text-gray-500 mt-1">UI/UX Tasarım</p>
+        <p class="text-[11px] text-gray-500 mt-3">280+ öğrenci • 8 yıl deneyim</p>
+      </a>
+      <a href="egitmenpanel.html" class="instructor-card p-5 rounded-2xl border border-primary/10 bg-white dark:bg-white/5 hover:border-primary/40 hover:-translate-y-1 hover:shadow-lg hover:shadow-primary/10 transition-all duration-300" style="animation-delay: 300ms;">
+        <div class="flex items-center justify-between">
+          <div class="size-10 rounded-full bg-primary/10 text-primary flex items-center justify-center">
+            <span class="material-symbols-outlined text-[20px]">school</span>
+          </div>
+          <span class="text-[10px] font-bold text-primary bg-primary/10 px-2 py-1 rounded-full">4.7</span>
+        </div>
+        <p class="font-bold mt-4">Oğuzhan Yıldız</p>
+        <p class="text-xs text-gray-500 mt-1">Web Gelistirme</p>
+        <p class="text-[11px] text-gray-500 mt-3">350+ öğrenci • 10 yıl deneyim</p>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section data-aa-module="faq" class="py-20 bg-[#d8e6ff]">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <h2 class="text-3xl font-black tracking-tight text-[#140e1b] dark:text-white text-center">Sık Sorulan Sorular</h2>
+    <div class="mt-8 space-y-3" id="faq-list">
+      <details class="group rounded-xl border border-primary/10 bg-white dark:bg-white/5 p-4">
+        <summary class="cursor-pointer font-semibold">Ödeme sonrası kursa hemen erişir miyim?</summary>
+        <p class="text-sm text-gray-500 mt-2">Evet, ödemenin ardından panelinden kursa anında erişebilirsin.</p>
+      </details>
+      <details class="group rounded-xl border border-primary/10 bg-white dark:bg-white/5 p-4">
+        <summary class="cursor-pointer font-semibold">Canlı ders kayıtları tekrar izlenebilir mi?</summary>
+        <p class="text-sm text-gray-500 mt-2">Plan tipine göre kayıtlar panelinde belirli süre açık tutulur.</p>
+      </details>
+      <details class="group rounded-xl border border-primary/10 bg-white dark:bg-white/5 p-4">
+        <summary class="cursor-pointer font-semibold">İade politikanız nedir?</summary>
+        <p class="text-sm text-gray-500 mt-2">Detaylar için yardım ve mesafeli satış sözleşmesi sayfalarını inceleyebilirsin.</p>
+      </details>
+      <details class="group rounded-xl border border-primary/10 bg-white dark:bg-white/5 p-4">
+        <summary class="cursor-pointer font-semibold">Eğitmenle birebir soru sorabilir miyim?</summary>
+        <p class="text-sm text-gray-500 mt-2">Evet, canlı ders ve talep oluşturma akışı üzerinden birebir destek alabilirsin.</p>
+      </details>
+      <details class="group rounded-xl border border-primary/10 bg-white dark:bg-white/5 p-4">
+        <summary class="cursor-pointer font-semibold">Dersleri mobil cihazdan izleyebilir miyim?</summary>
+        <p class="text-sm text-gray-500 mt-2">Evet, platform mobil tarayıcıyla uyumludur. Telefon ve tablet üzerinden erişebilirsin.</p>
+      </details>
+    </div>
+  </div>
+</section>
+<!-- Newsletter Section -->
+<section data-aa-module="newsletter" class="py-20 bg-[#f7fbff]">
+<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-8">
+<h2 class="text-3xl font-black tracking-tight">Yeni kurslardan haberdar olun</h2>
+<p class="text-gray-500 max-w-lg mx-auto">Haftalık ipuçları, öğreticiler ve özel indirimler alan 50.000'den fazla öğrenciye katılın.</p>
+<form class="flex flex-col sm:flex-row gap-2 max-w-lg mx-auto">
+<input class="flex-1 px-4 py-3 rounded-xl border border-primary/10 focus:ring-2 focus:ring-primary focus:border-transparent dark:bg-white/5" placeholder="E-posta adresinizi girin" type="email"/>
+<button class="bg-[#140e1b] dark:bg-primary text-white px-8 py-3 rounded-xl font-bold hover:opacity-90 transition-all" type="submit">Abone Ol</button>
+</form>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer id="site-footer" class="bg-[#32466F]/90 border-t border-primary/10 pt-16 pb-8">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8 mb-12">
+<div class="col-span-2 space-y-6">
+<div class="flex items-center gap-3 text-primary">
+<img alt="Site Logo" class="h-14 w-14 object-cover rounded-full" src="assets/img/logo-placeholder.svg"/>
+<h1 class="text-xl font-black tracking-tight text-[#140e1b] dark:text-white">Eğitim Platformu</h1>
+</div>
+<p class="text-slate-200 text-sm max-w-xs">Sektör uzmanlarından yüksek kaliteli video eğitimi ve kişiselleştirilmiş mentorluk yoluyla dünya çapındaki öğrencileri güçlendiriyoruz.</p>
+<div class="flex flex-col gap-2">
+<a id="site-footer-email" class="text-slate-200 hover:text-[#1e3a8a] transition-colors inline-flex items-center" href="mailto:destek@example.com" aria-label="E-posta">
+<span class="material-symbols-outlined">mail</span><span id="site-footer-email-text" class="text-sm">destek@example.com</span>
+</a>
+<a id="site-footer-phone" class="text-slate-200 hover:text-[#1e3a8a] transition-colors inline-flex items-center" href="tel:+902120000000" aria-label="Telefon">
+<span class="material-symbols-outlined">call</span><span id="site-footer-phone-text" class="text-sm">+90 212 000 00 00</span>
+</a>
+</div>
+<div class="flex items-center gap-2 pt-3">
+<a id="site-footer-social-twitter" class="w-8 h-8 rounded-lg border border-white/20 flex items-center justify-center text-slate-200 hover:text-white hover:border-white/40 transition" href="#" target="_blank" rel="noopener noreferrer" aria-label="Twitter/X">X</a>
+<a id="site-footer-social-linkedin" class="w-8 h-8 rounded-lg border border-white/20 flex items-center justify-center text-slate-200 hover:text-white hover:border-white/40 transition font-bold" href="#" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">in</a>
+<a id="site-footer-social-instagram" class="w-8 h-8 rounded-lg border border-white/20 flex items-center justify-center text-slate-200 hover:text-white hover:border-white/40 transition font-bold" href="#" target="_blank" rel="noopener noreferrer" aria-label="Instagram">ig</a>
+</div>
+</div>
+<div class="space-y-4">
+<h4 class="font-bold text-sm uppercase tracking-wider text-white">PLATFORM</h4>
+<ul id="site-footer-corp-links" class="space-y-2 text-sm text-slate-200">
+<li><a class="hover:text-white" href="kurslar.html">Kurslar</a></li>
+<li><a class="hover:text-white" href="canliders.html">Özel Ders</a></li>
+<li><a class="hover:text-white" href="egitmenpanel.html">Eğitmenler</a></li>
+<li><a class="hover:text-white" href="iletisim.html">İşletme</a></li>
+</ul>
+</div>
+<div class="space-y-4">
+<h4 class="font-bold text-sm uppercase tracking-wider text-white">DESTEK</h4>
+<ul class="space-y-2 text-sm text-slate-200">
+<li><a class="hover:text-white" href="yardim.html">Yardım Merkezi</a></li>
+<li><a class="hover:text-white" href="iletisim.html">İletişim</a></li>
+<li><a class="hover:text-white" href="gizlilik_politikasi.html">Gizlilik Politikası</a></li>
+<li><a class="hover:text-white" href="kullanim_sartlari.html">Kullanım Koşulları</a></li>
+</ul>
+</div>
+</div>
+<div class="pt-8 border-t border-primary/5 text-center">
+<p class="text-slate-200 text-xs">© 2026 Eğitim Platformu. Tüm hakları saklıdır. Geliştirici tarafından geliştirildi.</p>
+</div>
+</div>
+</footer>
+<script src="assets/js/site-header-settings.js"></script>
+<script src="assets/js/site-footer-settings.js"></script>
+<script src="assets/js/site-home-modules.js"></script>
+<script>
+  (function () {
+    function init() {
+      const marquee = document.querySelector(".aa-marquee");
+      const btn = document.querySelector("[data-testimonials-toggle]");
+      if (!marquee || !btn) return;
+
+      const setState = (paused) => {
+        marquee.classList.toggle("aa-paused", paused);
+        btn.setAttribute("aria-pressed", paused ? "true" : "false");
+        btn.setAttribute("aria-label", paused ? "Yorum akışını devam ettir" : "Yorum akışını duraklat");
+        btn.innerHTML = paused
+          ? '<span class="material-symbols-outlined text-primary">play_arrow</span>Devam'
+          : '<span class="material-symbols-outlined text-primary">pause</span>Duraklat';
+      };
+
+      let paused = false;
+      btn.addEventListener("click", () => {
+        paused = !paused;
+        setState(paused);
+      });
+
+      marquee.addEventListener("keydown", (e) => {
+        if (e.key !== " " && e.key !== "Enter") return;
+        e.preventDefault();
+        paused = !paused;
+        setState(paused);
+      });
+    }
+
+    if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init, { once: true });
+    else init();
+  })();
+</script>
+</body></html>
+
+
+
+
+
+
+
+
+
+

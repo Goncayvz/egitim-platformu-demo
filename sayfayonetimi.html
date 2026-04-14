@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html class="dark" lang="tr">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <script src="assets/js/admin-theme.js"></script>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: { primary: "#741ce9", "background-light": "#f7f6f8", "background-dark": "#181121" },
+            fontFamily: { display: ["Inter"] },
+            borderRadius: { DEFAULT: "0.25rem", lg: "0.5rem", xl: "0.75rem", full: "9999px" },
+          },
+        },
+      };
+    </script>
+    <title>Eğitim Platformu - Sınırsız Sayfa Yönetimi</title>
+    <style>
+      body { font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
+      .material-symbols-outlined{
+        font-family:"Material Symbols Outlined";
+        font-weight:normal;font-style:normal;font-size:inherit;line-height:1;letter-spacing:normal;
+        text-transform:none;display:inline-block;white-space:nowrap;word-wrap:normal;direction:ltr;
+        -webkit-font-feature-settings:"liga";-webkit-font-smoothing:antialiased;
+        font-variation-settings:"FILL" 0,"wght" 400,"GRAD" 0,"opsz" 24;
+      }
+      #admin-sidebar { overflow-x: hidden; }
+      body.sidebar-collapsed #admin-sidebar { width: 5.5rem; }
+      body.sidebar-collapsed #admin-sidebar .sidebar-brand-text { display: none; }
+      body.sidebar-collapsed #admin-sidebar nav a { justify-content: center; }
+      body.sidebar-collapsed #admin-sidebar nav a span:not(.material-symbols-outlined) { display: none; }
+      textarea.code-editor { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
+    </style>
+  </head>
+  <body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen">
+    <script src="assets/js/auth.js"></script>
+    <script>
+      window.AngelAuth?.guard({ requiredRole: "admin" });
+    </script>
+
+    <div class="flex h-screen overflow-hidden">
+      <aside id="admin-sidebar" class="w-72 bg-white dark:bg-slate-900/50 border-r border-slate-200 dark:border-slate-800 flex flex-col">
+        <div class="p-6 flex items-center gap-3">
+          <button id="sidebar-collapse-btn" type="button" class="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-white cursor-pointer" aria-label="Menüyü aç/kapat">
+            <span class="material-symbols-outlined">dashboard_customize</span>
+          </button>
+          <div class="sidebar-brand-text">
+            <h1 class="font-bold text-lg leading-tight">Eğitim Platformu Admin</h1>
+            <p class="text-xs text-primary font-medium uppercase tracking-wider">Platform Yönetimi</p>
+          </div>
+        </div>
+
+        <nav class="flex-1 px-4 space-y-1 overflow-y-auto">
+          <a data-nav="istatistik" class="aa-nav flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="s.adminpanel.html#istatistik"><span class="material-symbols-outlined">dashboard</span><span class="text-sm font-medium">İstatistikler</span></a>
+          <a data-nav="users" class="aa-nav flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="kullanicimanage.html"><span class="material-symbols-outlined">group</span><span class="text-sm font-medium">Kullanıcı Yönetimi</span></a>
+          <a data-nav="courses" class="aa-nav flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="kursadmin.html"><span class="material-symbols-outlined">auto_stories</span><span class="text-sm font-medium">Kurs Yönetimi</span></a>
+          <a data-nav="instructors" class="aa-nav flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="s.adminpanel.html#ders-talepleri"><span class="material-symbols-outlined">verified_user</span><span class="text-sm font-medium">Eğitmen Onayları</span></a>
+          <a data-nav="reports" class="aa-nav flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="s.adminpanel.html#raporlar"><span class="material-symbols-outlined">payments</span><span class="text-sm font-medium">Finansal Raporlar</span></a>
+          <a data-nav="email" class="aa-nav flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="epostaadmin.html"><span class="material-symbols-outlined">mail</span><span class="text-sm font-medium">Toplu E-posta</span></a>
+          <a data-nav="support" class="aa-nav flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="destekadmin.html"><span class="material-symbols-outlined">support_agent</span><span class="text-sm font-medium">Destek Mesajları</span></a>
+
+          <button class="w-full flex items-center justify-between text-xs font-bold text-slate-400 uppercase px-3 py-2 mt-3 tracking-widest hover:text-slate-600 dark:hover:text-slate-300" type="button" data-sidebar-toggle="sidebar-group-content" aria-expanded="true">
+            <span>İçerik Denetimi</span>
+            <span class="material-symbols-outlined text-sm transition-transform">expand_more</span>
+          </button>
+          <div id="sidebar-group-content" class="space-y-0.5">
+            <a data-nav="content-header" class="aa-nav flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="icerikdenetimi.html"><span class="material-symbols-outlined text-xl">tune</span><span class="text-sm font-semibold">Header Ayarları</span></a>
+            <a data-nav="content-footer" class="aa-nav flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="footerdenetimi.html"><span class="material-symbols-outlined text-xl">tune</span><span class="text-sm font-semibold">Footer Ayarları</span></a>
+            <a data-nav="content-modules" class="aa-nav flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="htmlmodulyonetimi.html"><span class="material-symbols-outlined text-xl">view_list</span><span class="text-sm font-semibold">HTML Modül Yönetimi</span></a>
+            <a data-nav="content-pages" class="aa-nav flex items-center gap-3 px-3 py-2.5 rounded-lg bg-primary text-white transition-colors" href="sayfayonetimi.html" aria-current="page"><span class="material-symbols-outlined text-xl">description</span><span class="text-sm font-semibold">Sınırsız Sayfa Yönetimi</span></a>
+          </div>
+
+          <a data-nav="settings" class="aa-nav flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="ayarlarpage.html"><span class="material-symbols-outlined">settings</span><span class="text-sm font-medium">Ayarlar</span></a>
+        </nav>
+      </aside>
+
+      <main class="flex-1 flex flex-col min-w-0">
+        <header class="h-16 border-b border-slate-200 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50 backdrop-blur-md flex items-center justify-between px-8 z-10">
+          <div class="flex items-center gap-3">
+            <button id="sidebar-collapse-btn-top" type="button" class="size-10 rounded-xl border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" aria-label="Menüyü aç/kapat">
+              <span class="material-symbols-outlined text-xl">menu</span>
+            </button>
+            <h2 class="text-lg font-bold">İçerik Denetimi: Sınırsız Sayfa</h2>
+          </div>
+        </header>
+
+        <div class="flex-1 overflow-y-auto p-8">
+          <div class="max-w-7xl mx-auto lg:mx-0 lg:max-w-none">
+            <div class="flex items-start justify-between gap-6 mb-6">
+              <div>
+                <h3 class="text-xl font-extrabold">Sınırsız Sayfa Yönetimi</h3>
+                <p class="text-sm text-slate-500 dark:text-slate-400">Sözleşme sayfalarını düzenleyin. Ayrıca sınırsız özel sayfa ekleyebilirsiniz.</p>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-[360px_minmax(0,1fr)] gap-8 items-start">
+              <section class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-sm overflow-hidden">
+                <div class="p-5 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between gap-3">
+                  <div class="min-w-0">
+                    <h4 class="font-extrabold text-base">Sayfalar</h4>
+                    <p class="text-xs text-slate-500 mt-1">Sözleşmeler + özel sayfalar</p>
+                  </div>
+                  <button id="btn-new-page" type="button" class="px-3 py-2 rounded-xl bg-primary text-white text-sm font-extrabold hover:bg-primary/90 transition">Yeni</button>
+                </div>
+                <div class="p-3">
+                  <div class="text-[11px] font-extrabold uppercase tracking-wider text-slate-400 px-2 pt-2 pb-1">Sözleşmeler</div>
+                  <div id="system-page-list" class="space-y-1"></div>
+                  <div class="text-[11px] font-extrabold uppercase tracking-wider text-slate-400 px-2 pt-5 pb-1">Özel Sayfalar</div>
+                  <div id="custom-page-list" class="space-y-1"></div>
+                </div>
+              </section>
+
+              <section class="space-y-6">
+                <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-sm overflow-hidden">
+                  <div class="p-5 border-b border-slate-100 dark:border-slate-800 flex items-start justify-between gap-4">
+                    <div class="min-w-0">
+                      <div class="flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary">edit_document</span>
+                        <h4 id="editor-title" class="font-extrabold text-base truncate">Düzenleyici</h4>
+                      </div>
+                      <p id="editor-subtitle" class="text-xs text-slate-500 mt-1">Bir sayfa seçin.</p>
+                    </div>
+                    <div class="flex items-center gap-2">
+                      <button id="btn-load-default" type="button" class="px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-sm font-extrabold hover:opacity-90 transition">Varsayılan</button>
+                      <button id="btn-clear-override" type="button" class="px-3 py-2 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-300 text-sm font-extrabold hover:bg-amber-500/15 transition hidden">Temizle</button>
+                      <button id="btn-delete-page" type="button" class="px-3 py-2 rounded-xl bg-rose-600 text-white text-sm font-extrabold hover:opacity-95 transition hidden">Sil</button>
+                      <button id="btn-save-page" type="button" class="px-3 py-2 rounded-xl bg-primary text-white text-sm font-extrabold hover:bg-primary/90 transition">Kaydet</button>
+                    </div>
+                  </div>
+
+                  <div class="p-6 space-y-5">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                      <div>
+                        <label class="text-xs font-extrabold uppercase tracking-wider text-slate-500">Başlık</label>
+                        <input id="field-title" class="mt-2 w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-3 py-2.5 text-sm font-semibold" placeholder="Sayfa başlığı" />
+                      </div>
+                      <div>
+                        <label id="field-key-label" class="text-xs font-extrabold uppercase tracking-wider text-slate-500">Dosya</label>
+                        <input id="field-key" class="mt-2 w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-3 py-2.5 text-sm font-semibold" />
+                        <p id="field-key-hint" class="mt-2 text-[11px] text-slate-500"></p>
+                      </div>
+                    </div>
+
+                    <div>
+                      <div class="flex items-center justify-between gap-3 mb-2">
+                        <label class="text-xs font-extrabold uppercase tracking-wider text-slate-500">İçerik (Metin)</label>
+                        <span class="text-[11px] text-slate-400 font-semibold">Kaydettikten sonra önizlemeyi yenileyin.</span>
+                      </div>
+                      <textarea id="field-text" class="code-editor w-full min-h-[260px] rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 p-3 text-[12px] leading-relaxed" placeholder="Metni buraya yazın..."></textarea>
+                      <p class="mt-2 text-[11px] text-slate-500">Not: HTML kabul edilmez; metin güvenli şekilde sayfaya yazdırılır.</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-sm overflow-hidden">
+                  <div class="p-5 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between gap-3">
+                    <div class="flex items-center gap-2 min-w-0">
+                      <span class="material-symbols-outlined text-primary">preview</span>
+                      <h4 class="font-extrabold text-base truncate">Canlı Önizleme</h4>
+                    </div>
+                    <div class="flex items-center gap-2">
+                      <button id="btn-preview-refresh" type="button" class="px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-sm font-extrabold hover:opacity-90 transition">Yenile</button>
+                      <a id="btn-preview-open" class="px-3 py-2 rounded-xl bg-primary text-white text-sm font-extrabold hover:bg-primary/90 transition" href="gizlilik_politikasi.html" target="_blank" rel="noopener noreferrer">Aç</a>
+                    </div>
+                  </div>
+                  <div class="p-4">
+                    <iframe id="preview-frame" class="w-full h-[520px] rounded-2xl border border-slate-200 dark:border-slate-800 bg-white" title="Önizleme" src="gizlilik_politikasi.html"></iframe>
+                  </div>
+                </div>
+              </section>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <div id="toast" class="fixed bottom-4 left-1/2 -translate-x-1/2 z-[60] hidden">
+      <div id="toast-inner" class="rounded-xl border border-primary/20 bg-background-light dark:bg-background-dark px-4 py-2 text-sm shadow-2xl"></div>
+    </div>
+
+    <script src="assets/js/admin-page-manager.js" defer></script>
+  </body>
+</html>

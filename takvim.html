@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html class="dark" lang="tr">
+
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>Eğitim Platformu - Takvim</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+    rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            primary: "#741ce9",
+            "background-light": "#f7f6f8",
+            "background-dark": "#181121"
+          },
+          fontFamily: { display: ["Inter"] }
+        }
+      }
+    }
+  </script>
+</head>
+
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display min-h-screen">
+  <main class="max-w-6xl mx-auto px-4 py-10">
+    <div class="flex items-center justify-between mb-8">
+      <div>
+        <h1 class="text-3xl font-bold">Ders Takvimi</h1>
+        <p class="text-slate-500 mt-1">Takvimde sadece egitim plani gorulur: hangi egitmen hangi ozel dersi veriyor.</p>
+      </div>
+      <a class="px-4 py-2 rounded-lg border border-slate-300 text-sm font-medium hover:bg-slate-100 transition-colors"
+        href="egitmenpanel.html">Eğitmen Paneline Dön</a>
+    </div>
+
+    <section
+      class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden">
+      <div
+        class="grid grid-cols-7 text-center text-xs font-semibold bg-slate-50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-800">
+        <div class="py-3">Pzt</div>
+        <div class="py-3">Sal</div>
+        <div class="py-3">Çar</div>
+        <div class="py-3">Per</div>
+        <div class="py-3">Cum</div>
+        <div class="py-3">Cts</div>
+        <div class="py-3">Paz</div>
+      </div>
+      <div class="grid grid-cols-7 gap-px bg-slate-200 dark:bg-slate-800">
+        <div class="h-28 bg-white dark:bg-slate-900 p-2 text-xs">1</div>
+        <div class="h-28 bg-white dark:bg-slate-900 p-2 text-xs">2</div>
+        <div class="h-28 bg-white dark:bg-slate-900 p-2 text-xs">3</div>
+        <div class="h-28 bg-white dark:bg-slate-900 p-2 text-xs">4</div>
+        <div class="h-28 bg-white dark:bg-slate-900 p-2 text-xs">5</div>
+        <div class="h-28 bg-white dark:bg-slate-900 p-2 text-xs">6</div>
+        <div class="h-28 bg-white dark:bg-slate-900 p-2 text-xs">7</div>
+        <div class="h-28 bg-white dark:bg-slate-900 p-2 text-xs">8</div>
+        <div class="h-28 bg-white dark:bg-slate-900 p-2 text-xs">9</div>
+        <div class="h-28 bg-white dark:bg-slate-900 p-2 text-xs">10</div>
+        <div class="h-28 bg-white dark:bg-slate-900 p-2 text-xs">11</div>
+        <div class="h-28 bg-white dark:bg-slate-900 p-2 text-xs">12</div>
+        <div class="h-28 bg-white dark:bg-slate-900 p-2 text-xs">13</div>
+        <div class="h-28 bg-white dark:bg-slate-900 p-2 text-xs">14</div>
+      </div>
+    </section>
+
+    <section class="mt-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-5">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-lg font-bold">Egitim Programi</h2>
+        <span class="text-xs text-slate-500">Ozel dersler</span>
+      </div>
+      <div id="education-schedule-list" class="space-y-3">
+        <p id="education-empty" class="text-sm text-slate-500">Gosterilecek onayli ozel ders bulunamadi.</p>
+      </div>
+    </section>
+  </main>
+  <script>
+      (function () {
+        const REQUESTS_KEY = "demo_lesson_requests_v1";
+        const INSTRUCTOR_PROFILE_KEY = "demo_instructor_profile_v1";
+        const listEl = document.getElementById("education-schedule-list");
+        const emptyEl = document.getElementById("education-empty");
+        const dayCells = Array.from(document.querySelectorAll("section .grid.grid-cols-7.gap-px > div"));
+
+        const loadJson = (key, fallback) => {
+          try {
+            const raw = localStorage.getItem(key);
+            if (!raw) return fallback;
+            const parsed = JSON.parse(raw);
+            return parsed ?? fallback;
+          } catch (_e) {
+            return fallback;
+          }
+        };
+
+        const requests = loadJson(REQUESTS_KEY, []);
+        const instructor = loadJson(INSTRUCTOR_PROFILE_KEY, {});
+        const instructorName = (instructor?.displayName || "Egitmen").trim();
+
+        const lessons = Array.isArray(requests)
+          ? requests.filter((r) => r && (r.status === "approved" || r.status === "postponed"))
+          : [];
+
+        const dayMap = new Map();
+        dayCells.forEach((cell) => {
+          const m = String(cell.textContent || "").trim().match(/^(\d{1,2})/);
+          if (m) dayMap.set(Number(m[1]), cell);
+        });
+
+        if (!lessons.length) return;
+        if (emptyEl) emptyEl.classList.add("hidden");
+
+        lessons.forEach((lesson) => {
+          const topic = String(lesson.topic || "Ozel Ders");
+          const date = String(lesson.preferredDate || "-");
+          const time = String(lesson.preferredTime || "-");
+          const status = lesson.status === "postponed" ? "Ertelendi" : "Onaylandi";
+
+          if (listEl) {
+            const row = document.createElement("div");
+            row.className = "rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50/80 dark:bg-slate-800/40 px-4 py-3";
+            row.innerHTML = `
+            <p class="text-sm font-semibold">${topic}</p>
+            <p class="text-xs text-slate-500 mt-1">Egitmen: ${instructorName}</p>
+            <p class="text-xs text-slate-500">Tarih/Saat: ${date} ${time}</p>
+            <p class="text-[11px] mt-1 ${lesson.status === "postponed" ? "text-amber-600" : "text-green-600"}">${status}</p>
+          `;
+            listEl.appendChild(row);
+          }
+
+          if (date && date !== "-") {
+            const d = new Date(date);
+            const day = d.getDate();
+            const cell = dayMap.get(day);
+            if (cell) {
+              const badge = document.createElement("div");
+              badge.className = `mt-1 rounded px-2 py-1 text-[10px] ${lesson.status === "postponed" ? "bg-amber-100 text-amber-700" : "bg-primary/10 text-primary"}`;
+              badge.textContent = `${topic} • ${instructorName}`;
+              cell.appendChild(badge);
+            }
+          }
+        });
+      })();
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html class="dark" lang="tr">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Sayfa - Eğitim Platformu</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: { primary: "#9c4fba", "background-dark": "#181121", "background-light": "#f7f6f8" },
+            fontFamily: { display: ["Lexend", "sans-serif"] },
+          },
+        },
+      };
+    </script>
+  </head>
+  <body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display min-h-screen">
+    <main id="aa-custom-page" class="max-w-4xl mx-auto px-4 py-10">
+      <div class="flex items-center justify-between gap-4 mb-6">
+        <div class="min-w-0">
+          <h1 id="aa-page-title" class="text-3xl sm:text-4xl font-black tracking-tight truncate">Sayfa</h1>
+          <p class="text-slate-500 dark:text-slate-400 mt-2">Bu sayfa içerikleri yönetim panelinden düzenlenir.</p>
+        </div>
+        <a class="shrink-0 inline-flex items-center justify-center px-4 py-2 rounded-xl border border-primary/30 font-semibold hover:bg-primary/5 transition-all" href="index.html">Ana sayfa</a>
+      </div>
+
+      <article id="aa-page-content" class="prose prose-slate dark:prose-invert max-w-none bg-white/70 dark:bg-white/5 border border-primary/10 rounded-2xl p-6 sm:p-8"></article>
+    </main>
+
+    <script src="assets/js/site-page-content.js" defer></script>
+  </body>
+</html>
