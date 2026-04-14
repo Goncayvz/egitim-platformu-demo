@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html class="dark" lang="tr">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>Eğitim Platformu - Yeni Kullanıcı Ekle</title>
+  <script src="../assets/js/admin-theme.js"></script>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: { primary: "#741ce9", "background-light": "#f7f6f8", "background-dark": "#181121" },
+          fontFamily: { display: ["Inter"] }
+        }
+      }
+    };
+  </script>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display min-h-screen">
+  <script src="../assets/js/auth.js"></script>
+  <script>
+    window.DemoAuth?.guard({ requiredRole: "admin" });
+  </script>
+  <div class="flex h-screen overflow-hidden">
+    <aside class="w-72 bg-white dark:bg-[#21182c] border-r border-slate-200 dark:border-slate-800 flex flex-col">
+      <div class="p-6 border-b border-slate-200 dark:border-slate-800">
+        <div class="flex items-center gap-3">
+          <img alt="Site Logo" class="size-10 rounded-full object-cover border border-primary/30" src="../assets/img/logo-placeholder.svg"/>
+          <div>
+            <h1 class="text-base font-bold leading-none">Eğitim Platformu Admin</h1>
+            <p class="text-xs text-primary font-medium mt-1">Süper Yönetici</p>
+          </div>
+        </div>
+      </div>
+      <nav class="flex-1 overflow-y-auto py-6 px-4 space-y-2">
+        <a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="s.adminpanel.html">
+          <span class="material-symbols-outlined">dashboard</span>
+          <span class="text-sm font-medium">Panel</span>
+        </a>
+        <a class="flex items-center gap-3 px-3 py-2 rounded-lg bg-primary/15 text-primary" href="kullanicimanage.html">
+          <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">group</span>
+          <span class="text-sm font-semibold">Kullanıcı Yönetimi</span>
+        </a>
+        <a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="kursadmin.html">
+          <span class="material-symbols-outlined">auto_stories</span>
+          <span class="text-sm font-medium">Kurs Yönetimi</span>
+        </a>
+        <a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="destekadmin.html">
+          <span class="material-symbols-outlined">support_agent</span>
+          <span class="text-sm font-medium">Destek Mesajları</span>
+        </a>
+        <a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="ayarlarpage.html">
+          <span class="material-symbols-outlined">settings</span>
+          <span class="text-sm font-medium">Ayarlar</span>
+        </a>
+      </nav>
+    </aside>
+
+    <main class="flex-1 overflow-y-auto">
+      <header class="h-16 bg-white dark:bg-[#21182c] border-b border-slate-200 dark:border-slate-800 flex items-center justify-between px-8">
+        <div>
+          <h2 class="text-xl font-bold">Yeni Kullanıcı Ekle</h2>
+          <p class="text-xs text-slate-500">Sisteme yeni kullanıcı kaydı oluşturun.</p>
+        </div>
+        <a class="px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-700 text-sm hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="kullanicimanage.html">Listeye Dön</a>
+      </header>
+
+      <div class="p-8 max-w-5xl">
+        <form id="new-user-form" class="bg-white dark:bg-[#21182c] border border-slate-200 dark:border-slate-800 rounded-xl p-6 space-y-6 shadow-sm" action="kullanicimanage.html">
+          <div class="grid md:grid-cols-2 gap-5">
+            <label class="block">
+              <span class="text-sm font-medium text-slate-600 dark:text-slate-300">Ad Soyad</span>
+              <input id="user-name" class="w-full mt-2 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-4 py-2 text-sm focus:ring-2 focus:ring-primary outline-none" placeholder="Örn: Ayşe Demir" required type="text"/>
+            </label>
+            <label class="block">
+              <span class="text-sm font-medium text-slate-600 dark:text-slate-300">E-posta</span>
+              <input id="user-email" class="w-full mt-2 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-4 py-2 text-sm focus:ring-2 focus:ring-primary outline-none" placeholder="ayse@example.com" required type="email"/>
+            </label>
+            <label class="block">
+              <span class="text-sm font-medium text-slate-600 dark:text-slate-300">Telefon</span>
+              <input id="user-phone" class="w-full mt-2 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-4 py-2 text-sm focus:ring-2 focus:ring-primary outline-none" placeholder="+90 5xx xxx xx xx" type="tel"/>
+            </label>
+            <label class="block" id="user-username-wrap">
+              <span class="text-sm font-medium text-slate-600 dark:text-slate-300">Kullanıcı Adı</span>
+              <input id="user-username" class="w-full mt-2 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-4 py-2 text-sm focus:ring-2 focus:ring-primary outline-none" placeholder="örn: egitmen.ayse" type="text" autocomplete="username"/>
+              <p class="mt-1 text-[11px] text-slate-500">Eğitmen/Admin girişi için önerilir. Sadece harf, rakam, <span class="font-semibold">.</span> <span class="font-semibold">_</span> <span class="font-semibold">-</span></p>
+            </label>
+            <label class="block">
+              <span class="text-sm font-medium text-slate-600 dark:text-slate-300">Şifre</span>
+              <div class="mt-2 flex items-center gap-2">
+                <input id="user-password" class="flex-1 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-4 py-2 text-sm focus:ring-2 focus:ring-primary outline-none" placeholder="Geçici şifre" required type="password" autocomplete="new-password"/>
+                <button id="user-pass-generate" type="button" class="px-3 py-2 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-bold hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">Üret</button>
+                <button id="user-pass-toggle" type="button" class="px-3 py-2 rounded-lg bg-white/0 border border-slate-200 dark:border-slate-700 text-xs font-bold hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">Göster</button>
+              </div>
+              <p class="mt-1 text-[11px] text-slate-500">Eğitmen için: kullanıcı adı + şifre ile giriş yapılır.</p>
+            </label>
+          </div>
+
+          <div class="grid md:grid-cols-2 gap-5">
+            <label class="block">
+              <span class="text-sm font-medium text-slate-600 dark:text-slate-300">Rol</span>
+              <select id="user-role" class="w-full mt-2 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-4 py-2 text-sm focus:ring-2 focus:ring-primary outline-none">
+                <option>Öğrenci</option>
+                <option>Eğitmen</option>
+                <option>Admin</option>
+              </select>
+            </label>
+            <label class="block">
+              <span class="text-sm font-medium text-slate-600 dark:text-slate-300">Durum</span>
+              <select id="user-status" class="w-full mt-2 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-4 py-2 text-sm focus:ring-2 focus:ring-primary outline-none">
+                <option>Aktif</option>
+                <option>Beklemede</option>
+                <option>Pasif</option>
+              </select>
+            </label>
+          </div>
+
+          <label class="block">
+            <span class="text-sm font-medium text-slate-600 dark:text-slate-300">Not</span>
+            <textarea id="user-note" class="w-full mt-2 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-4 py-3 text-sm focus:ring-2 focus:ring-primary outline-none min-h-[100px]" placeholder="Opsiyonel yönetici notu..."></textarea>
+          </label>
+
+          <div class="flex flex-wrap gap-3 pt-2">
+            <button class="px-5 py-2.5 rounded-lg bg-primary text-white text-sm font-semibold hover:bg-primary/90 transition-colors" type="submit">Kullanıcıyı Kaydet</button>
+            <a class="px-5 py-2.5 rounded-lg border border-slate-300 dark:border-slate-700 text-sm font-semibold hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="kullanicimanage.html">Vazgeç</a>
+          </div>
+        </form>
+      </div>
+    </main>
+  </div>
+<script>
+  (function () {
+    const USERS_KEY = "demo_users_v1";
+    const form = document.getElementById("new-user-form");
+    const userRole = document.getElementById("user-role");
+    const usernameWrap = document.getElementById("user-username-wrap");
+    const usernameInput = document.getElementById("user-username");
+    const emailInput = document.getElementById("user-email");
+    const passwordInput = document.getElementById("user-password");
+    const passGenBtn = document.getElementById("user-pass-generate");
+    const passToggleBtn = document.getElementById("user-pass-toggle");
+    const roleParam = (new URLSearchParams(window.location.search).get("rol") || "").toLowerCase();
+
+    if (userRole && roleParam === "egitmen") userRole.value = "Eğitmen";
+    if (userRole && roleParam === "admin") userRole.value = "Admin";
+    if (userRole && roleParam === "ogrenci") userRole.value = "Öğrenci";
+
+    const toAscii = (value) => {
+      return String(value || "")
+        .replaceAll("ğ", "g").replaceAll("Ğ", "g")
+        .replaceAll("ü", "u").replaceAll("Ü", "u")
+        .replaceAll("ş", "s").replaceAll("Ş", "s")
+        .replaceAll("ı", "i").replaceAll("İ", "i")
+        .replaceAll("ö", "o").replaceAll("Ö", "o")
+        .replaceAll("ç", "c").replaceAll("Ç", "c");
+    };
+
+    const normalizeUsername = (value) => {
+      const raw = toAscii(value).trim().toLowerCase();
+      const compact = raw.replace(/\s+/g, "");
+      return compact.replace(/[^a-z0-9._-]/g, "");
+    };
+
+    const isInstructorOrAdmin = () => {
+      const role = String(userRole?.value || "").trim().toLowerCase();
+      return role === "eğitmen" || role === "egitmen" || role === "admin";
+    };
+
+    const applyCredentialUi = () => {
+      const required = isInstructorOrAdmin();
+      if (usernameInput) usernameInput.required = required;
+      if (usernameWrap) {
+        usernameWrap.querySelector("span")?.classList.toggle("after:content-['*']", required);
+      }
+    };
+
+    const loadUsers = () => {
+      try {
+        const raw = localStorage.getItem(USERS_KEY);
+        const parsed = raw ? JSON.parse(raw) : [];
+        return Array.isArray(parsed) ? parsed : [];
+      } catch (e) {
+        return [];
+      }
+    };
+
+    const saveUsers = (users) => {
+      localStorage.setItem(USERS_KEY, JSON.stringify(users));
+    };
+
+    const uiRoleToApiRole = (roleLabel) => {
+      const r = String(roleLabel || "").trim().toLowerCase();
+      if (r === "admin") return "admin";
+      if (r === "eğitmen" || r === "egitmen") return "instructor";
+      return "student";
+    };
+
+    const uiStatusToIsActive = (statusLabel) => {
+      const s = String(statusLabel || "").trim().toLowerCase();
+      if (s === "aktif") return true;
+      return false;
+    };
+
+    const suggestUsernameFromEmail = () => {
+      if (!usernameInput || !emailInput) return;
+      const current = String(usernameInput.value || "").trim();
+      if (current) return;
+      const email = String(emailInput.value || "").trim().toLowerCase();
+      const prefix = email.split("@")[0] || "";
+      const next = normalizeUsername(prefix);
+      if (next) usernameInput.value = next;
+    };
+
+    const generatePassword = (len = 12) => {
+      const alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789!@#$%_-";
+      const bytes = new Uint32Array(len);
+      try {
+        window.crypto?.getRandomValues?.(bytes);
+      } catch (_e) {
+        for (let i = 0; i < len; i++) bytes[i] = Math.floor(Math.random() * 0xffffffff);
+      }
+      let out = "";
+      for (let i = 0; i < len; i++) out += alphabet[bytes[i] % alphabet.length];
+      return out;
+    };
+
+    userRole?.addEventListener?.("change", applyCredentialUi);
+    emailInput?.addEventListener?.("blur", suggestUsernameFromEmail);
+    passGenBtn?.addEventListener?.("click", () => {
+      if (!passwordInput) return;
+      passwordInput.value = generatePassword(12);
+      passwordInput.dispatchEvent(new Event("input", { bubbles: true }));
+    });
+    passToggleBtn?.addEventListener?.("click", () => {
+      if (!passwordInput) return;
+      const next = passwordInput.type === "password" ? "text" : "password";
+      passwordInput.type = next;
+      if (passToggleBtn) passToggleBtn.textContent = next === "text" ? "Gizle" : "Göster";
+    });
+
+    applyCredentialUi();
+    suggestUsernameFromEmail();
+
+    if (form) {
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const name = document.getElementById("user-name")?.value.trim();
+        const email = document.getElementById("user-email")?.value.trim().toLowerCase();
+        const phone = document.getElementById("user-phone")?.value.trim() || "";
+        const password = document.getElementById("user-password")?.value || "";
+        const role = document.getElementById("user-role")?.value || "Öğrenci";
+        const status = document.getElementById("user-status")?.value || "Aktif";
+        const note = document.getElementById("user-note")?.value.trim() || "";
+        const usernameRaw = document.getElementById("user-username")?.value || "";
+        const username = normalizeUsername(usernameRaw) || "";
+        const needsUsername = isInstructorOrAdmin();
+
+        if (!name || !email || !password) {
+          alert("Lütfen ad soyad, e-posta ve şifre alanlarını doldurun.");
+          return;
+        }
+        if (needsUsername && !username) {
+          alert("Eğitmen/Admin için kullanıcı adı zorunludur.");
+          return;
+        }
+
+        const setLoading = (on) => {
+          const btn = form.querySelector("button[type='submit']");
+          if (!btn) return;
+          btn.disabled = !!on;
+          btn.classList.toggle("opacity-80", !!on);
+          btn.classList.toggle("pointer-events-none", !!on);
+        };
+
+        // DB API (prod)
+        setLoading(true);
+        try {
+          const resp = await fetch("../api/admin_users_create.php", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            credentials: "include",
+            body: JSON.stringify({
+              fullName: name,
+              username,
+              email,
+              phone,
+              password,
+              role: uiRoleToApiRole(role),
+              isActive: uiStatusToIsActive(status),
+            }),
+          });
+          const data = await resp.json().catch(() => ({}));
+          if (resp.ok && data && data.ok) {
+            alert("Kullanıcı başarıyla eklendi.");
+            window.location.href = "kullanicimanage.html";
+            return;
+          }
+          alert(String(data?.message || "Kullanıcı eklenemedi."));
+          return;
+        } catch (_e) {
+          // Fallback: localStorage (dev)
+          try {
+            const users = loadUsers();
+            const alreadyExists = users.some((u) => (u.email || "").toLowerCase() === email);
+            if (alreadyExists) {
+              alert("Bu e-posta ile kayıtlı bir kullanıcı zaten var.");
+              return;
+            }
+            if (username) {
+              const usernameTaken = users.some((u) => String(u.username || "").toLowerCase() === username);
+              if (usernameTaken) {
+                alert("Bu kullanıcı adı zaten kullanılıyor.");
+                return;
+              }
+            }
+            users.push({
+              id: "u-" + Date.now(),
+              name,
+              fullName: name,
+              username: username || (email.split("@")[0] || ("user" + Date.now())).toLowerCase(),
+              email,
+              phone,
+              password,
+              role,
+              status,
+              note,
+              date: new Date().toISOString().slice(0, 10)
+            });
+            saveUsers(users);
+            alert("Kullanıcı başarıyla eklendi. (Local)");
+            window.location.href = "kullanicimanage.html";
+          } finally {
+            // noop
+          }
+        } finally {
+          setLoading(false);
+        }
+      });
+    }
+  })();
+</script>
+</body>
+</html>

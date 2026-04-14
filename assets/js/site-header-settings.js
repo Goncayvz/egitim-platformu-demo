@@ -2,6 +2,8 @@
   const SETTINGS_KEY = "demo_site_settings_v1";
   const HEADER_KEY = "siteHeader";
 
+  const PAGES_BASE = window.location.pathname.includes("/pages/") ? "" : "pages/";
+
   const headerEl = document.getElementById("site-header");
   const logoEl = document.getElementById("site-header-logo");
   const titleEl = document.getElementById("site-header-title");
@@ -57,6 +59,15 @@
     }
   };
 
+  const resolveHref = (href) => {
+    const raw = String(href || "").trim();
+    if (!raw) return "#";
+    if (/^(https?:|mailto:|tel:|#)/i.test(raw)) return raw;
+    if (raw.includes("/")) return raw;
+    if (/^[A-Za-z0-9_.-]+\.html(\?.*)?$/i.test(raw)) return `${PAGES_BASE}${raw}`;
+    return raw;
+  };
+
   const applyHeaderSettings = () => {
     const settings = readSettings();
     const header = settings?.[HEADER_KEY] || {};
@@ -82,7 +93,7 @@
         .filter((x) => x && (x.enabled !== false) && (x.label || x.href))
         .map((x) => {
           const label = escapeHtml(x.label || "");
-          const href = escapeHtml(x.href || "#");
+          const href = escapeHtml(resolveHref(x.href || "#"));
           return `<a class="text-sm font-semibold hover:text-primary transition-colors" href="${href}">${label}</a>`;
         })
         .join("");
@@ -95,7 +106,7 @@
       const login = header?.ctas?.login || defaults.ctas.login;
       if (login && login.enabled !== false) {
         loginEl.textContent = String(login.text || defaults.ctas.login.text);
-        loginEl.setAttribute("href", String(login.href || defaults.ctas.login.href));
+        loginEl.setAttribute("href", resolveHref(login.href || defaults.ctas.login.href));
         loginEl.style.display = "";
       } else {
         loginEl.style.display = "none";
@@ -106,7 +117,7 @@
       const signup = header?.ctas?.signup || defaults.ctas.signup;
       if (signup && signup.enabled !== false) {
         signupEl.textContent = String(signup.text || defaults.ctas.signup.text);
-        signupEl.setAttribute("href", String(signup.href || defaults.ctas.signup.href));
+        signupEl.setAttribute("href", resolveHref(signup.href || defaults.ctas.signup.href));
         signupEl.style.display = "";
       } else {
         signupEl.style.display = "none";

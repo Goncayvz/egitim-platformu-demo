@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html class="dark" lang="tr">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>Ödeme Sonucu - Eğitim Platformu</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: { primary: '#9c4fba', 'background-dark': '#181121', 'background-light': '#f7f6f8' },
+          fontFamily: { display: ['Lexend', 'sans-serif'] }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display min-h-screen">
+  <main class="min-h-screen grid place-items-center px-4">
+    <section class="max-w-xl w-full bg-white dark:bg-white/5 border border-primary/10 rounded-2xl p-8 text-center shadow-xl">
+      <p id="pay-icon" class="text-6xl">⏳</p>
+      <h1 id="pay-title" class="text-3xl font-black mt-3">Ödeme Beklemede</h1>
+      <p id="pay-desc" class="text-slate-500 mt-2">Ödeme tamamlanmadı veya doğrulanmadı. Lütfen tekrar deneyin.</p>
+      <div id="pay-hint" class="mt-4 text-sm text-slate-500 dark:text-slate-400"></div>
+      <div class="flex flex-wrap justify-center gap-3 mt-7">
+        <a href="odeme_page.html" class="bg-primary text-white px-5 py-3 rounded-xl font-bold">Tekrar Dene</a>
+        <a href="userpanel.html" class="border border-primary/30 px-5 py-3 rounded-xl font-semibold">Panele Git</a>
+        <a href="kurslar.html" class="border border-primary/30 px-5 py-3 rounded-xl font-semibold">Kurslara Dön</a>
+      </div>
+    </section>
+  </main>
+  <script src="../assets/js/site-cart.js"></script>
+  <script>
+    (function () {
+      const params = new URLSearchParams(window.location.search || "");
+      const status = String(params.get("status") || "").toLowerCase();
+      const paymentId = String(params.get("paymentId") || "").trim();
+
+      const iconEl = document.getElementById("pay-icon");
+      const titleEl = document.getElementById("pay-title");
+      const descEl = document.getElementById("pay-desc");
+      const hintEl = document.getElementById("pay-hint");
+
+      const set = (icon, title, desc, hint) => {
+        if (iconEl) iconEl.textContent = icon;
+        if (titleEl) titleEl.textContent = title;
+        if (descEl) descEl.textContent = desc;
+        if (hintEl) hintEl.textContent = hint || "";
+      };
+
+      async function verifyAndRender(id) {
+        set("⏳", "Ödeme Doğrulanıyor", "Ödeme durumu kontrol ediliyor…", id ? `Ödeme No: ${id}` : "");
+        try {
+          const res = await fetch(`../api/payment_verify.php?paymentId=${encodeURIComponent(String(id))}`, { credentials: "include" });
+          const json = await res.json().catch(() => null);
+          if (!res.ok || !json || json.ok !== true) {
+            if (res.status === 401) {
+              set("⏳", "Giriş Gerekli", "Ödeme durumunu görmek için giriş yapmalısın.", `Ödeme No: ${id}`);
+              return;
+            }
+            set("⏳", "Ödeme Beklemede", "Ödeme tamamlanmadı veya doğrulanamadı. Lütfen tekrar deneyin.", `Ödeme No: ${id}`);
+            return;
+          }
+
+          const p = json.payment || {};
+          const st = String(p.status || "").toLowerCase();
+          if (st === "paid") {
+            set("✓", "Ödeme Alındı", "Siparişiniz oluşturuldu. Eğitime hemen başlayabilirsiniz.", `Ödeme No: ${id}`);
+            try { window.DemoCart?.clear?.(); } catch (_e) {}
+            return;
+          }
+          if (st === "failed") {
+            set("✕", "Ödeme Başarısız", "Ödeme işlemi tamamlanamadı. Lütfen tekrar deneyin.", `Ödeme No: ${id}`);
+            return;
+          }
+          if (st === "refunded") {
+            set("⟲", "Ödeme İade Edildi", "Ödemeniz iade edildi.", `Ödeme No: ${id}`);
+            return;
+          }
+          set("⏳", "Ödeme Beklemede", "Ödemeniz henüz sonuçlanmadı. Birkaç dakika sonra tekrar kontrol edebilirsin.", `Ödeme No: ${id}`);
+        } catch (_e) {
+          set("⏳", "Ödeme Beklemede", "Ödeme tamamlanmadı veya doğrulanamadı. Lütfen tekrar deneyin.", `Ödeme No: ${id}`);
+        }
+      }
+
+      if (paymentId) {
+        verifyAndRender(paymentId);
+        return;
+      }
+
+      if (status === "success") {
+        set("✓", "Ödeme Alındı", "Siparişiniz oluşturuldu. Eğitime hemen başlayabilirsiniz.", "");
+        try { window.DemoCart?.clear?.(); } catch (_e) {}
+        return;
+      }
+
+      if (status === "failed") {
+        set("✕", "Ödeme Başarısız", "Ödeme işlemi tamamlanamadı. Lütfen tekrar deneyin.", "");
+        return;
+      }
+
+      if (status === "cancelled") {
+        set("⟲", "Ödeme İptal Edildi", "Ödeme işlemi iptal edildi.", "");
+        return;
+      }
+
+      // Varsayılan: beklemede / doğrulanmadı
+      set("⏳", "Ödeme Beklemede", "Ödeme tamamlanmadı veya doğrulanmadı. Lütfen tekrar deneyin.", "Not: Entegrasyon tamamlandığında bu sayfa sağlayıcı dönüş doğrulamasıyla güncellenecek.");
+    })();
+  </script>
+</body>
+</html>

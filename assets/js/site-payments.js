@@ -1,7 +1,13 @@
 (function () {
   "use strict";
 
-  const API_CREATE = "api/payment_create.php";
+  const API_BASE = window.location.pathname.includes("/pages/") ? "../api/" : "api/";
+  const apiUrl = (path) => {
+    const p = String(path || "").replace(/^\.?\//, "").replace(/^api\//, "");
+    return `${API_BASE}${p}`;
+  };
+
+  const API_CREATE = apiUrl("payment_create.php");
   const INTEGRATIONS_KEY = "demo_payment_integration_v1";
 
   const safeText = (v) => String(v ?? "").trim();
@@ -120,7 +126,7 @@
     return { ok: false, code: "NO_REDIRECT", message: "Ödeme başlatıldı ama yönlendirme URL'i dönmedi.", data: result.data };
   }
 
-  window.AngelPayments = {
+  window.DemoPayments = {
     API_CREATE,
     startCheckout,
     createCheckoutSession,

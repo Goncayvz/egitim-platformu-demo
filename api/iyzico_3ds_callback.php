@@ -75,7 +75,7 @@ try {
                 // ignore
             }
         }
-        $url = "../odeme_basarili.html?status=failed";
+        $url = "../pages/odeme_basarili.html?status=failed";
         if ($internalPaymentId > 0) $url .= "&paymentId=" . rawurlencode((string)$internalPaymentId);
         redirect_to($url);
     }
@@ -124,6 +124,6 @@ try {
     }
 }
 
-$url = "../odeme_basarili.html?status=" . rawurlencode($statusParam);
+$url = "../pages/odeme_basarili.html?status=" . rawurlencode($statusParam);
 if ($internalPaymentId > 0) $url .= "&paymentId=" . rawurlencode((string)$internalPaymentId);
 redirect_to($url);

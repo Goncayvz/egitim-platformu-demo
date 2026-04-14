@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html class="dark" lang="tr" translate="no">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="google" content="notranslate" />
+    <title>Eğitim Platformu - Eğitmen Ders Yönetimi</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              primary: "#9c4fba",
+              "background-light": "#f7f6f8",
+              "background-dark": "#0f0a15",
+              "neutral-dark": "#1e1628",
+            },
+            fontFamily: { display: ["Lexend", "sans-serif"] },
+          },
+        },
+      };
+    </script>
+    <style>
+      .material-symbols-outlined {
+        font-variation-settings: "FILL" 0, "wght" 500, "GRAD" 0, "opsz" 24;
+      }
+    </style>
+  </head>
+  <body class="font-display bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 antialiased min-h-screen">
+    <script src="../assets/js/auth.js"></script>
+    <script>
+      window.DemoAuth?.guard({ requiredRole: "instructor" });
+    </script>
+
+    <div class="min-h-screen flex">
+      <aside class="w-72 hidden md:flex flex-col border-r border-primary/10 bg-white/70 dark:bg-neutral-dark/70 backdrop-blur">
+        <div class="p-6 border-b border-primary/10">
+          <div class="flex items-center gap-3">
+            <div class="size-10 rounded-xl bg-primary text-white grid place-items-center">
+              <span class="material-symbols-outlined notranslate" translate="no">school</span>
+            </div>
+            <div class="min-w-0">
+              <div class="text-base font-black leading-tight truncate">Eğitmen</div>
+              <div class="text-xs text-primary font-bold uppercase tracking-wider">Ders Yönetimi</div>
+            </div>
+          </div>
+        </div>
+        <nav class="flex-1 p-4 space-y-2">
+          <a href="egitmenpanel.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-700 dark:text-slate-200 hover:bg-primary/10 transition">
+            <span class="material-symbols-outlined notranslate" translate="no">arrow_back</span>
+            <span class="font-semibold">Eğitmen Paneli</span>
+          </a>
+          <a href="canliders.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-700 dark:text-slate-200 hover:bg-primary/10 transition">
+            <span class="material-symbols-outlined notranslate" translate="no">present_to_all</span>
+            <span class="font-semibold">Canlı Ders Ekranı</span>
+          </a>
+        </nav>
+      </aside>
+
+      <main class="flex-1 min-w-0">
+        <header class="sticky top-0 z-10 border-b border-primary/10 bg-white/80 dark:bg-background-dark/70 backdrop-blur">
+          <div class="px-4 md:px-8 py-4 flex items-center justify-between gap-3">
+            <div class="min-w-0">
+              <h1 class="text-lg md:text-xl font-black truncate">Ders Yönetimi</h1>
+              <p class="text-xs text-slate-500 dark:text-slate-400">Ders oturumu oluştur, linki paylaş, derse geç.</p>
+            </div>
+            <div class="flex items-center gap-2">
+          <a class="px-4 py-2 rounded-xl bg-primary text-white text-sm font-extrabold hover:opacity-95 transition" href="canliders.html?from=instructor" target="_blank" rel="noopener noreferrer">
+            Canlı Dersi Aç
+          </a>
+            </div>
+          </div>
+        </header>
+
+        <div class="p-4 md:p-8 max-w-6xl">
+          <section class="grid lg:grid-cols-5 gap-6">
+            <div class="lg:col-span-2">
+              <div class="rounded-2xl border border-primary/10 bg-white/80 dark:bg-white/5 p-5 shadow-sm">
+                <div class="flex items-start justify-between gap-3">
+                  <div>
+                    <h2 class="text-base font-black">Yeni Oturum</h2>
+                    <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Oturum oluşturup öğrencilere link ver.</p>
+                  </div>
+                  <button id="session-randomize" type="button" class="px-3 py-2 rounded-xl border border-primary/20 text-xs font-extrabold hover:bg-primary/10 transition">
+                    ID Üret
+                  </button>
+                </div>
+
+                <form id="session-form" class="mt-5 space-y-4">
+                  <label class="block">
+                    <span class="text-xs font-bold text-slate-500 dark:text-slate-400">Ders Başlığı</span>
+                    <input id="session-title" class="mt-2 w-full rounded-xl border-primary/20 bg-white dark:bg-white/5" placeholder="Örn: React İleri Seviye" />
+                  </label>
+                  <label class="block">
+                    <span class="text-xs font-bold text-slate-500 dark:text-slate-400">Oturum ID</span>
+                    <input id="session-id" class="mt-2 w-full rounded-xl border-primary/20 bg-white dark:bg-white/5 font-mono text-sm" placeholder="Örn: react-101" />
+                    <p class="mt-1 text-[11px] text-slate-500 dark:text-slate-400">Aynı ID ile tekrar açarsan aynı “ders durumu” verisini kullanır.</p>
+                  </label>
+                  <div class="flex flex-wrap gap-2">
+                    <button type="submit" class="flex-1 px-4 py-3 rounded-xl bg-primary text-white text-sm font-extrabold hover:opacity-95 transition">
+                      Oturum Oluştur
+                    </button>
+                    <button id="session-open" type="button" class="px-4 py-3 rounded-xl border border-primary/20 text-sm font-extrabold hover:bg-primary/10 transition">
+                      Derse Git
+                    </button>
+                  </div>
+                  <div class="rounded-xl border border-primary/10 bg-primary/5 p-4">
+                    <div class="flex items-center justify-between gap-3">
+                      <div class="min-w-0">
+                        <div class="text-xs font-black text-primary uppercase tracking-wider">Öğrenci Linki</div>
+                        <div id="session-student-link" class="mt-1 text-[11px] text-slate-600 dark:text-slate-300 break-all">—</div>
+                      </div>
+                      <button id="session-copy" type="button" class="px-3 py-2 rounded-xl bg-white/80 dark:bg-white/10 border border-primary/10 text-xs font-extrabold hover:bg-white transition">
+                        Kopyala
+                      </button>
+                    </div>
+                  </div>
+                  <p id="session-feedback" class="text-xs text-slate-500"></p>
+                </form>
+              </div>
+            </div>
+
+            <div class="lg:col-span-3">
+              <div class="rounded-2xl border border-primary/10 bg-white/80 dark:bg-white/5 shadow-sm overflow-hidden">
+                <div class="p-5 border-b border-primary/10 flex items-center justify-between gap-3">
+                  <div>
+                    <h2 class="text-base font-black">Oturumlar</h2>
+                    <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Son oluşturulan ders oturumları.</p>
+                  </div>
+                  <button id="sessions-clear" type="button" class="px-3 py-2 rounded-xl border border-primary/20 text-xs font-extrabold hover:bg-primary/10 transition">
+                    Temizle
+                  </button>
+                </div>
+                <div id="sessions-list" class="p-5 space-y-3"></div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </main>
+    </div>
+
+    <script>
+      (function () {
+        const STORAGE_KEY = "demo_live_sessions_v1";
+
+        const safeText = (v) => String(v ?? "").trim();
+        const nowIso = () => new Date().toISOString();
+
+        const form = document.getElementById("session-form");
+        const titleInput = document.getElementById("session-title");
+        const idInput = document.getElementById("session-id");
+        const feedback = document.getElementById("session-feedback");
+        const studentLinkEl = document.getElementById("session-student-link");
+
+        const btnRandomize = document.getElementById("session-randomize");
+        const btnCopy = document.getElementById("session-copy");
+        const btnOpen = document.getElementById("session-open");
+        const btnClear = document.getElementById("sessions-clear");
+        const listEl = document.getElementById("sessions-list");
+
+        const getUser = () => {
+          try {
+            return window.DemoAuth?.getStoredUser?.() || {};
+          } catch (_e) {
+            return {};
+          }
+        };
+
+        const load = () => {
+          try {
+            const raw = localStorage.getItem(STORAGE_KEY);
+            const parsed = raw ? JSON.parse(raw) : [];
+            return Array.isArray(parsed) ? parsed : [];
+          } catch (_e) {
+            return [];
+          }
+        };
+
+        const save = (items) => {
+          try {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify((items || []).slice(0, 60)));
+          } catch (_e) {}
+        };
+
+        const uid = () => `ls_${Date.now()}_${Math.random().toString(16).slice(2)}`;
+
+        const buildStudentUrl = (sessionId, title, instructor) => {
+          const base = "canliders.html";
+          const params = new URLSearchParams();
+          if (sessionId) params.set("session", sessionId);
+          if (title) params.set("title", title);
+          if (instructor) params.set("instructor", instructor);
+          params.set("from", "instructor");
+          return `${base}?${params.toString()}`;
+        };
+
+        const setFeedback = (text, ok = true) => {
+          if (!feedback) return;
+          feedback.textContent = safeText(text);
+          feedback.className = `text-xs ${ok ? "text-emerald-500" : "text-rose-500"}`;
+        };
+
+        const render = () => {
+          if (!listEl) return;
+          const items = load();
+          if (!items.length) {
+            listEl.innerHTML =
+              '<div class="text-sm text-slate-500 dark:text-slate-400">Henüz oturum yok. Soldan yeni oturum oluştur.</div>';
+            return;
+          }
+
+          listEl.innerHTML = items
+            .slice()
+            .sort((a, b) => String(b.createdAt || "").localeCompare(String(a.createdAt || "")))
+            .map((s) => {
+              const title = safeText(s.title) || "Canlı Ders";
+              const sid = safeText(s.sessionId) || "-";
+              const url = safeText(s.studentUrl) || "#";
+              return `
+                <article class="rounded-xl border border-primary/10 bg-white/70 dark:bg-black/20 p-4">
+                  <div class="flex items-start justify-between gap-3">
+                    <div class="min-w-0">
+                      <div class="text-sm font-black truncate">${title}</div>
+                      <div class="mt-1 text-[11px] text-slate-500 dark:text-slate-400 break-all">ID: <span class="font-mono">${sid}</span></div>
+                      <div class="mt-2 text-[11px] text-slate-600 dark:text-slate-300 break-all">${url}</div>
+                    </div>
+                    <div class="flex items-center gap-2 shrink-0">
+                      <button type="button" class="px-3 py-2 rounded-xl bg-primary text-white text-xs font-extrabold hover:opacity-95 transition" data-open="${encodeURIComponent(url)}">
+                        Aç
+                      </button>
+                      <button type="button" class="px-3 py-2 rounded-xl border border-primary/20 text-xs font-extrabold hover:bg-primary/10 transition" data-copy="${encodeURIComponent(url)}">
+                        Kopyala
+                      </button>
+                      <button type="button" class="size-10 rounded-xl border border-primary/20 text-rose-500 hover:bg-rose-500/10 transition grid place-items-center" data-del="${safeText(
+                        s.id
+                      )}">
+                        <span class="material-symbols-outlined notranslate" translate="no">delete</span>
+                      </button>
+                    </div>
+                  </div>
+                </article>
+              `;
+            })
+            .join("");
+        };
+
+        const syncStudentLink = () => {
+          const user = getUser();
+          const title = safeText(titleInput?.value);
+          const sessionId = safeText(idInput?.value);
+          const instructor = safeText(user.fullName || user.name || "");
+          const url = sessionId ? buildStudentUrl(sessionId, title, instructor) : "";
+          if (studentLinkEl) studentLinkEl.textContent = url || "—";
+          return url;
+        };
+
+        const randomizeId = () => {
+          const candidate = `live-${Math.random().toString(16).slice(2, 8)}-${Date.now().toString(36).slice(-4)}`;
+          if (idInput) idInput.value = candidate;
+          syncStudentLink();
+        };
+
+        btnRandomize?.addEventListener("click", randomizeId);
+        titleInput?.addEventListener("input", syncStudentLink);
+        idInput?.addEventListener("input", syncStudentLink);
+
+        btnCopy?.addEventListener("click", async () => {
+          const url = syncStudentLink();
+          if (!url) {
+            setFeedback("Önce oturum ID girin.", false);
+            return;
+          }
+          try {
+            await navigator.clipboard.writeText(url);
+            setFeedback("Link kopyalandı.");
+          } catch (_e) {
+            setFeedback("Kopyalanamadı. Linki seçip manuel kopyalayın.", false);
+          }
+        });
+
+        btnOpen?.addEventListener("click", () => {
+          const url = syncStudentLink();
+          if (!url) {
+            setFeedback("Önce oturum ID girin.", false);
+            return;
+          }
+          window.location.href = url;
+        });
+
+        btnClear?.addEventListener("click", () => {
+          const ok = window.confirm("Tüm oturum listesi temizlensin mi?");
+          if (!ok) return;
+          save([]);
+          render();
+        });
+
+        listEl?.addEventListener("click", async (e) => {
+          const openBtn = e.target.closest?.("[data-open]");
+          const copyBtn = e.target.closest?.("[data-copy]");
+          const delBtn = e.target.closest?.("[data-del]");
+
+          if (openBtn) {
+            const url = decodeURIComponent(openBtn.getAttribute("data-open") || "");
+            if (url) window.open(url, "_blank", "noopener,noreferrer");
+          }
+
+          if (copyBtn) {
+            const url = decodeURIComponent(copyBtn.getAttribute("data-copy") || "");
+            if (!url) return;
+            try {
+              await navigator.clipboard.writeText(url);
+              setFeedback("Link kopyalandı.");
+            } catch (_e) {
+              setFeedback("Kopyalanamadı.", false);
+            }
+          }
+
+          if (delBtn) {
+            const id = safeText(delBtn.getAttribute("data-del"));
+            if (!id) return;
+            const items = load();
+            save(items.filter((x) => safeText(x?.id) !== id));
+            render();
+          }
+        });
+
+        form?.addEventListener("submit", (e) => {
+          e.preventDefault();
+          const user = getUser();
+          const title = safeText(titleInput?.value);
+          const sessionId = safeText(idInput?.value);
+          if (!sessionId) {
+            setFeedback("Oturum ID zorunlu.", false);
+            return;
+          }
+          const instructor = safeText(user.fullName || user.name || "");
+          const studentUrl = buildStudentUrl(sessionId, title, instructor);
+
+          const items = load();
+          items.unshift({ id: uid(), title, sessionId, studentUrl, createdAt: nowIso() });
+          save(items);
+
+          setFeedback("Oturum oluşturuldu. Link hazır.");
+          if (studentLinkEl) studentLinkEl.textContent = studentUrl;
+          render();
+        });
+
+        if (idInput && !safeText(idInput.value)) randomizeId();
+        syncStudentLink();
+        render();
+      })();
+    </script>
+  </body>
+</html>

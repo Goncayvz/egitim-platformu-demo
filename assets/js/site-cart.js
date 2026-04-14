@@ -183,7 +183,7 @@
     });
   };
 
-  window.AngelCart = {
+  window.DemoCart = {
     CART_KEY,
     load: loadCart,
     save: saveCart,

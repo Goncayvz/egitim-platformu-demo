@@ -154,7 +154,7 @@
 
   function getCartApi() {
     try {
-      return window.AngelCart || null;
+      return window.DemoCart || null;
     } catch (_e) {
       return null;
     }

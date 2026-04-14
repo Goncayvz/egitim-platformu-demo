@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html class="dark" lang="tr">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Eğitim Platformu - Toplu E-posta</title>
+    <script src="../assets/js/admin-theme.js"></script>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: { primary: "#741ce9", "background-light": "#f7f6f8", "background-dark": "#181121" },
+            fontFamily: { display: ["Inter"] },
+            borderRadius: { DEFAULT: "0.25rem", lg: "0.5rem", xl: "0.75rem", full: "9999px" },
+          },
+        },
+      };
+    </script>
+    <style>
+      body { font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
+      #admin-sidebar { overflow-x: hidden; }
+      body.sidebar-collapsed #admin-sidebar { width: 5.5rem; }
+      body.sidebar-collapsed #admin-sidebar .sidebar-brand-text { display: none; }
+      body.sidebar-collapsed #admin-sidebar nav a { justify-content: center; }
+      body.sidebar-collapsed #admin-sidebar nav a span:not(.material-symbols-outlined) { display: none; }
+    </style>
+  </head>
+  <body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen overflow-hidden">
+    <script src="../assets/js/auth.js"></script>
+    <script>
+      window.DemoAuth?.guard({ requiredRole: "admin" });
+    </script>
+
+    <div class="flex h-screen overflow-hidden">
+      <aside id="admin-sidebar" class="w-72 bg-white dark:bg-slate-900/50 border-r border-slate-200 dark:border-slate-800 flex flex-col">
+        <div class="p-6 flex items-center gap-3">
+          <button id="sidebar-collapse-btn" type="button" class="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-white cursor-pointer" aria-label="Menüyü aç/kapat">
+            <span class="material-symbols-outlined">dashboard_customize</span>
+          </button>
+          <div class="sidebar-brand-text">
+            <h1 class="font-bold text-lg leading-tight">Eğitim Platformu Admin</h1>
+            <p class="text-xs text-primary font-medium uppercase tracking-wider">Platform Yönetimi</p>
+          </div>
+        </div>
+
+        <nav class="flex-1 px-4 space-y-1 overflow-y-auto">
+          <a class="aa-nav flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="s.adminpanel.html#istatistik">
+            <span class="material-symbols-outlined">dashboard</span><span class="text-sm font-medium">İstatistikler</span>
+          </a>
+          <a class="aa-nav flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="kullanicimanage.html">
+            <span class="material-symbols-outlined">group</span><span class="text-sm font-medium">Kullanıcı Yönetimi</span>
+          </a>
+          <a class="aa-nav flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="kursadmin.html">
+            <span class="material-symbols-outlined">auto_stories</span><span class="text-sm font-medium">Kurs Yönetimi</span>
+          </a>
+          <a class="aa-nav flex items-center gap-3 px-3 py-2.5 rounded-lg bg-primary text-white hover:bg-primary/90 transition-colors" href="epostaadmin.html" aria-current="page">
+            <span class="material-symbols-outlined">mail</span><span class="text-sm font-medium">Toplu E-posta</span>
+          </a>
+          <a class="aa-nav flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="destekadmin.html">
+            <span class="material-symbols-outlined">support_agent</span><span class="text-sm font-medium">Destek Mesajları</span>
+          </a>
+          <a class="aa-nav flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="ayarlarpage.html">
+            <span class="material-symbols-outlined">settings</span><span class="text-sm font-medium">Ayarlar</span>
+          </a>
+        </nav>
+      </aside>
+
+      <main class="flex-1 flex flex-col min-w-0">
+        <header class="h-16 border-b border-slate-200 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50 backdrop-blur-md flex items-center justify-between px-8 z-10">
+          <div class="flex items-center gap-3">
+            <button id="sidebar-collapse-btn-top" type="button" class="size-10 rounded-xl border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" aria-label="Menüyü aç/kapat">
+              <span class="material-symbols-outlined text-xl">menu</span>
+            </button>
+            <h2 class="text-lg font-bold">Toplu E-posta</h2>
+          </div>
+          <div id="brevo-status" class="text-sm"></div>
+        </header>
+
+        <div class="flex-1 overflow-y-auto p-8">
+          <div class="max-w-5xl mx-auto lg:mx-0 lg:max-w-none">
+            <div class="flex items-end justify-between gap-4 flex-wrap mb-6">
+              <div>
+                <h3 class="text-xl font-extrabold">Brevo ile Gönderim</h3>
+                <p class="text-sm text-slate-500 dark:text-slate-400">Toplu, bireysel ve test e-postası gönderin.</p>
+              </div>
+              <div id="email-status" class="text-sm font-semibold text-slate-600 dark:text-slate-300"></div>
+            </div>
+
+            <div class="flex flex-wrap gap-2 mb-6">
+              <button id="btn-bulk" type="button" class="px-4 py-2 rounded-xl bg-primary text-white text-sm font-extrabold">Toplu</button>
+              <button id="btn-single" type="button" class="px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 text-sm font-extrabold">Bireysel</button>
+              <button id="btn-test" type="button" class="px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 text-sm font-extrabold">Test</button>
+            </div>
+
+            <section id="tab-bulk" class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm">
+              <form id="bulk-form" class="space-y-4">
+                <label class="block">
+                  <span class="text-xs font-bold text-slate-500">Konu</span>
+                  <input id="bulk-subject" class="mt-2 w-full rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-4 py-3 text-sm font-semibold focus:ring-2 focus:ring-primary outline-none" placeholder="Konu" />
+                </label>
+                <label class="block">
+                  <span class="text-xs font-bold text-slate-500">İçerik (metin)</span>
+                  <textarea id="bulk-body" rows="7" class="mt-2 w-full rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-4 py-3 text-sm font-semibold focus:ring-2 focus:ring-primary outline-none" placeholder="E-posta içeriği..."></textarea>
+                </label>
+                <label class="block">
+                  <span class="text-xs font-bold text-slate-500">Alıcılar (virgül veya satır satır)</span>
+                  <textarea id="bulk-recipients" rows="5" class="mt-2 w-full rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-4 py-3 text-sm font-semibold focus:ring-2 focus:ring-primary outline-none" placeholder="ali@mail.com&#10;ayse@mail.com"></textarea>
+                </label>
+                <div class="flex justify-end">
+                  <button id="bulk-send" type="submit" class="px-5 py-3 rounded-xl bg-primary text-white text-sm font-extrabold hover:opacity-95">Gönder</button>
+                </div>
+              </form>
+            </section>
+
+            <section id="tab-single" class="hidden bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm">
+              <form id="single-form" class="space-y-4">
+                <label class="block">
+                  <span class="text-xs font-bold text-slate-500">Alıcı</span>
+                  <input id="single-to" class="mt-2 w-full rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-4 py-3 text-sm font-semibold focus:ring-2 focus:ring-primary outline-none" placeholder="ornek@mail.com" />
+                </label>
+                <label class="block">
+                  <span class="text-xs font-bold text-slate-500">Konu</span>
+                  <input id="single-subject" class="mt-2 w-full rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-4 py-3 text-sm font-semibold focus:ring-2 focus:ring-primary outline-none" placeholder="Konu" />
+                </label>
+                <label class="block">
+                  <span class="text-xs font-bold text-slate-500">İçerik</span>
+                  <textarea id="single-body" rows="7" class="mt-2 w-full rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-4 py-3 text-sm font-semibold focus:ring-2 focus:ring-primary outline-none" placeholder="E-posta içeriği..."></textarea>
+                </label>
+                <div class="flex justify-end">
+                  <button id="single-send" type="submit" class="px-5 py-3 rounded-xl bg-primary text-white text-sm font-extrabold hover:opacity-95">Gönder</button>
+                </div>
+              </form>
+            </section>
+
+            <section id="tab-test" class="hidden bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm">
+              <form id="test-form" class="space-y-4">
+                <label class="block">
+                  <span class="text-xs font-bold text-slate-500">Test Alıcısı</span>
+                  <input id="test-to" class="mt-2 w-full rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-4 py-3 text-sm font-semibold focus:ring-2 focus:ring-primary outline-none" placeholder="ornek@mail.com" />
+                </label>
+                <label class="block">
+                  <span class="text-xs font-bold text-slate-500">Konu</span>
+                  <input id="test-subject" class="mt-2 w-full rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-4 py-3 text-sm font-semibold focus:ring-2 focus:ring-primary outline-none" placeholder="Konu" />
+                </label>
+                <label class="block">
+                  <span class="text-xs font-bold text-slate-500">İçerik</span>
+                  <textarea id="test-body" rows="7" class="mt-2 w-full rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-4 py-3 text-sm font-semibold focus:ring-2 focus:ring-primary outline-none" placeholder="E-posta içeriği..."></textarea>
+                </label>
+                <div class="flex justify-end">
+                  <button id="test-send" type="submit" class="px-5 py-3 rounded-xl bg-primary text-white text-sm font-extrabold hover:opacity-95">Test Gönder</button>
+                </div>
+              </form>
+            </section>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script src="../assets/js/admin-email.js"></script>
+    <script>
+      (function () {
+        const COLLAPSE_KEY = "demo_admin_v1:sidebar_collapsed";
+        const btn = document.getElementById("sidebar-collapse-btn");
+        const btnTop = document.getElementById("sidebar-collapse-btn-top");
+        if (btn || btnTop) {
+          const apply = (collapsed) => document.body.classList.toggle("sidebar-collapsed", collapsed);
+          apply(localStorage.getItem(COLLAPSE_KEY) === "1");
+          const toggle = () => {
+            const next = !document.body.classList.contains("sidebar-collapsed");
+            apply(next);
+            localStorage.setItem(COLLAPSE_KEY, next ? "1" : "0");
+          };
+          btn?.addEventListener("click", toggle);
+          btnTop?.addEventListener("click", toggle);
+        }
+      })();
+    </script>
+  </body>
+</html>

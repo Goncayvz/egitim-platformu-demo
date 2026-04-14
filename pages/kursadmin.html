@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html class="dark" lang="tr">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Eğitim Platformu - Kurs Yönetimi</title>
+    <script src="../assets/js/admin-theme.js"></script>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: { primary: "#741ce9", "background-light": "#f7f6f8", "background-dark": "#181121" },
+            fontFamily: { display: ["Inter"] },
+            borderRadius: { DEFAULT: "0.25rem", lg: "0.5rem", xl: "0.75rem", full: "9999px" },
+          },
+        },
+      };
+    </script>
+    <style>
+      body { font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
+      #admin-sidebar { overflow-x: hidden; }
+      body.sidebar-collapsed #admin-sidebar { width: 5.5rem; }
+      body.sidebar-collapsed #admin-sidebar .sidebar-brand-text { display: none; }
+      body.sidebar-collapsed #admin-sidebar nav a { justify-content: center; }
+      body.sidebar-collapsed #admin-sidebar nav a span:not(.material-symbols-outlined) { display: none; }
+    </style>
+  </head>
+  <body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen overflow-hidden">
+    <script src="../assets/js/auth.js"></script>
+    <script>
+      window.DemoAuth?.guard({ requiredRole: "admin" });
+    </script>
+
+    <div class="flex h-screen overflow-hidden">
+      <aside id="admin-sidebar" class="w-72 bg-white dark:bg-slate-900/50 border-r border-slate-200 dark:border-slate-800 flex flex-col">
+        <div class="p-6 flex items-center gap-3">
+          <button id="sidebar-collapse-btn" type="button" class="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-white cursor-pointer" aria-label="Menüyü aç/kapat">
+            <span class="material-symbols-outlined">dashboard_customize</span>
+          </button>
+          <div class="sidebar-brand-text">
+            <h1 class="font-bold text-lg leading-tight">Eğitim Platformu Admin</h1>
+            <p class="text-xs text-primary font-medium uppercase tracking-wider">Platform Yönetimi</p>
+          </div>
+        </div>
+
+        <nav class="flex-1 px-4 space-y-1 overflow-y-auto">
+          <a data-nav="istatistik" class="aa-nav flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="s.adminpanel.html#istatistik">
+            <span class="material-symbols-outlined">dashboard</span><span class="text-sm font-medium">İstatistikler</span>
+          </a>
+          <a data-nav="users" class="aa-nav flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="kullanicimanage.html">
+            <span class="material-symbols-outlined">group</span><span class="text-sm font-medium">Kullanıcı Yönetimi</span>
+          </a>
+          <a data-nav="courses" class="aa-nav flex items-center gap-3 px-3 py-2.5 rounded-lg bg-primary text-white hover:bg-primary/90 transition-colors" href="kursadmin.html" aria-current="page">
+            <span class="material-symbols-outlined">auto_stories</span><span class="text-sm font-medium">Kurs Yönetimi</span>
+          </a>
+          <a data-nav="instructors" class="aa-nav flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="s.adminpanel.html#ders-talepleri">
+            <span class="material-symbols-outlined">verified_user</span><span class="text-sm font-medium">Eğitmen Onayları</span>
+          </a>
+          <a data-nav="reports" class="aa-nav flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="s.adminpanel.html#raporlar">
+            <span class="material-symbols-outlined">payments</span><span class="text-sm font-medium">Finansal Raporlar</span>
+          </a>
+          <a data-nav="email" class="aa-nav flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="epostaadmin.html">
+            <span class="material-symbols-outlined">mail</span><span class="text-sm font-medium">Toplu E-posta</span>
+          </a>
+          <a data-nav="support" class="aa-nav flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="destekadmin.html">
+            <span class="material-symbols-outlined">support_agent</span><span class="text-sm font-medium">Destek Mesajları</span>
+          </a>
+
+          <button class="w-full flex items-center justify-between text-xs font-bold text-slate-400 uppercase px-3 py-2 mt-3 tracking-widest hover:text-slate-600 dark:hover:text-slate-300" type="button" data-sidebar-toggle="sidebar-group-content" aria-expanded="false">
+            <span>İçerik Denetimi</span>
+            <span class="material-symbols-outlined text-sm transition-transform">expand_more</span>
+          </button>
+          <div id="sidebar-group-content" class="space-y-0.5 hidden">
+            <a data-nav="content-header" class="aa-nav flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="icerikdenetimi.html"><span class="material-symbols-outlined text-xl">tune</span><span class="text-sm font-semibold">Header Ayarları</span></a>
+            <a data-nav="content-footer" class="aa-nav flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="footerdenetimi.html"><span class="material-symbols-outlined text-xl">tune</span><span class="text-sm font-semibold">Footer Ayarları</span></a>
+            <a data-nav="content-modules" class="aa-nav flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="htmlmodulyonetimi.html"><span class="material-symbols-outlined text-xl">view_list</span><span class="text-sm font-semibold">HTML Modül Yönetimi</span></a>
+            <a data-nav="content-pages" class="aa-nav flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="sayfayonetimi.html"><span class="material-symbols-outlined text-xl">description</span><span class="text-sm font-semibold">Sınırsız Sayfa Yönetimi</span></a>
+          </div>
+
+          <a data-nav="settings" class="aa-nav flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="ayarlarpage.html">
+            <span class="material-symbols-outlined">settings</span><span class="text-sm font-medium">Ayarlar</span>
+          </a>
+        </nav>
+      </aside>
+
+      <main class="flex-1 flex flex-col min-w-0">
+        <header id="admin-top-header" class="h-16 border-b border-slate-200 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50 backdrop-blur-md flex items-center justify-between px-8 z-10">
+          <div class="flex items-center gap-3">
+            <button id="sidebar-collapse-btn-top" type="button" class="size-10 rounded-xl border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" aria-label="Menüyü aç/kapat">
+              <span class="material-symbols-outlined text-xl">menu</span>
+            </button>
+            <h2 class="text-lg font-bold">Kurs Yönetimi</h2>
+          </div>
+          <div class="flex items-center gap-3">
+            <button id="courses-add" type="button" class="px-4 py-2 rounded-xl bg-primary text-white text-sm font-extrabold hover:opacity-95">Yeni Kurs</button>
+          </div>
+        </header>
+
+        <div class="flex-1 overflow-y-auto p-8">
+          <div class="max-w-7xl mx-auto lg:mx-0 lg:max-w-none">
+            <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4 mb-6">
+              <div>
+                <h3 class="text-xl font-extrabold">Kurslar</h3>
+                <p class="text-sm text-slate-500 dark:text-slate-400">Kurs ekleyin, düzenleyin ve yayına alıp kapatın.</p>
+              </div>
+              <div class="flex flex-col sm:flex-row gap-3 sm:items-center">
+                <label class="flex items-center gap-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2">
+                  <input id="courses-page-enabled" type="checkbox" class="rounded border-slate-300 text-primary focus:ring-primary" />
+                  <span class="text-sm font-extrabold">Kurslar sayfası açık</span>
+                </label>
+                <div class="flex items-center gap-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2">
+                  <span class="material-symbols-outlined text-slate-400">filter_list</span>
+                  <select id="courses-filter" class="bg-transparent border-0 text-sm font-semibold focus:ring-0">
+                    <option value="all">Tümü</option>
+                    <option value="published">Yayında</option>
+                    <option value="hidden">Kapalı</option>
+                  </select>
+                </div>
+                <div class="flex items-center gap-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 min-w-[260px]">
+                  <span class="material-symbols-outlined text-slate-400">search</span>
+                  <input id="courses-search" class="w-full bg-transparent border-0 text-sm font-semibold placeholder:text-slate-400 focus:ring-0" placeholder="Ara: başlık, eğitmen..." />
+                </div>
+              </div>
+            </div>
+
+            <div class="mb-4 text-sm font-bold text-slate-500 dark:text-slate-400" id="courses-summary">Yükleniyor…</div>
+
+            <div class="overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm">
+              <table class="w-full text-left">
+                <thead class="bg-slate-50 dark:bg-slate-800/40 text-xs uppercase tracking-wider text-slate-500">
+                  <tr>
+                    <th class="px-6 py-4">Kurs</th>
+                    <th class="px-6 py-4">Seviye</th>
+                    <th class="px-6 py-4">Süre</th>
+                    <th class="px-6 py-4">Eğitmen</th>
+                    <th class="px-6 py-4">Durum</th>
+                    <th class="px-6 py-4 text-right">İşlemler</th>
+                  </tr>
+                </thead>
+                <tbody id="courses-tbody" class="divide-y divide-slate-200 dark:divide-slate-800"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <div id="course-modal" class="hidden fixed inset-0 z-50">
+      <div id="course-modal-backdrop" class="absolute inset-0 bg-black/40"></div>
+      <div class="absolute inset-0 flex items-center justify-center p-4">
+        <div class="w-full max-w-3xl max-h-[88vh] rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-2xl overflow-hidden flex flex-col">
+          <div class="px-6 py-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
+            <div class="font-extrabold">Kurs Düzenle</div>
+            <button id="course-modal-close" type="button" class="size-10 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800">
+              <span class="material-symbols-outlined">close</span>
+            </button>
+          </div>
+          <form id="course-form" class="flex-1 overflow-y-auto p-6 space-y-5">
+            <input id="course-id" type="hidden" />
+            <div class="grid md:grid-cols-2 gap-4">
+              <label class="block">
+                <span class="text-xs font-bold text-slate-500">Başlık</span>
+                <input id="course-title" class="mt-2 w-full rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-4 py-3 text-sm font-semibold focus:ring-2 focus:ring-primary outline-none" placeholder="Kurs adı" />
+              </label>
+              <label class="block">
+                <span class="text-xs font-bold text-slate-500">Eğitmen</span>
+                <input id="course-instructor" class="mt-2 w-full rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-4 py-3 text-sm font-semibold focus:ring-2 focus:ring-primary outline-none" placeholder="Eğitmen adı" />
+              </label>
+              <label class="block md:col-span-2">
+                <span class="text-xs font-bold text-slate-500">Kısa Açıklama</span>
+                <input id="course-excerpt" class="mt-2 w-full rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-4 py-3 text-sm font-semibold focus:ring-2 focus:ring-primary outline-none" placeholder="Kısa tanım" />
+              </label>
+              <label class="block md:col-span-2">
+                <span class="text-xs font-bold text-slate-500">Detay Açıklama</span>
+                <textarea id="course-description" rows="4" class="mt-2 w-full rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-4 py-3 text-sm font-semibold focus:ring-2 focus:ring-primary outline-none" placeholder="Detaylı açıklama"></textarea>
+              </label>
+              <label class="block">
+                <span class="text-xs font-bold text-slate-500">Seviye</span>
+                <input id="course-level" class="mt-2 w-full rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-4 py-3 text-sm font-semibold focus:ring-2 focus:ring-primary outline-none" placeholder="Başlangıç / Orta / İleri" />
+              </label>
+              <label class="block">
+                <span class="text-xs font-bold text-slate-500">Süre</span>
+                <input id="course-duration" class="mt-2 w-full rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-4 py-3 text-sm font-semibold focus:ring-2 focus:ring-primary outline-none" placeholder="Örn: 12 saat" />
+              </label>
+              <label class="block">
+                <span class="text-xs font-bold text-slate-500">Ders Sayısı</span>
+                <input id="course-lessons" type="number" min="0" class="mt-2 w-full rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-4 py-3 text-sm font-semibold focus:ring-2 focus:ring-primary outline-none" placeholder="Örn: 42" />
+              </label>
+               <label class="block">
+                 <span class="text-xs font-bold text-slate-500">Fiyat Etiketi (opsiyonel)</span>
+                 <input id="course-price" class="mt-2 w-full rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-4 py-3 text-sm font-semibold focus:ring-2 focus:ring-primary outline-none" placeholder="Örn: ₺499 / Ücretsiz" />
+               </label>
+               <label class="block">
+                 <span class="text-xs font-bold text-slate-500">KDV (%)</span>
+                 <input id="course-vat" type="number" min="0" max="30" step="0.1" class="mt-2 w-full rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-4 py-3 text-sm font-semibold focus:ring-2 focus:ring-primary outline-none" placeholder="Örn: 20" />
+                 <span class="mt-1 block text-[11px] text-slate-500">Sadece admin ayarlar. Ödeme sayfasında KDV ayrı gösterilmez.</span>
+               </label>
+             </div>
+
+            <label class="inline-flex items-center gap-2 text-sm font-extrabold text-slate-700 dark:text-slate-200">
+              <input id="course-published" type="checkbox" class="rounded border-slate-300 text-primary focus:ring-primary" />
+              Yayında
+            </label>
+
+            <div class="sticky bottom-0 -mx-6 px-6 py-4 mt-2 border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex items-center justify-end gap-2">
+              <button id="course-modal-cancel" type="button" class="px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 text-sm font-extrabold hover:opacity-90">Vazgeç</button>
+              <button type="submit" class="px-4 py-2 rounded-xl bg-primary text-white text-sm font-extrabold hover:opacity-95">Kaydet</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <script src="../assets/js/admin-courses.js"></script>
+    <script>
+      (function () {
+        const COLLAPSE_KEY = "demo_admin_v1:sidebar_collapsed";
+        const btn = document.getElementById("sidebar-collapse-btn");
+        const btnTop = document.getElementById("sidebar-collapse-btn-top");
+        if (btn || btnTop) {
+          const apply = (collapsed) => document.body.classList.toggle("sidebar-collapsed", collapsed);
+          apply(localStorage.getItem(COLLAPSE_KEY) === "1");
+          const toggle = () => {
+            const next = !document.body.classList.contains("sidebar-collapsed");
+            apply(next);
+            localStorage.setItem(COLLAPSE_KEY, next ? "1" : "0");
+          };
+          btn?.addEventListener("click", toggle);
+          btnTop?.addEventListener("click", toggle);
+        }
+
+        const groupBtn = document.querySelector("[data-sidebar-toggle]");
+        if (groupBtn) {
+          const targetId = groupBtn.getAttribute("data-sidebar-toggle");
+          const panel = targetId ? document.getElementById(targetId) : null;
+          const icon = groupBtn.querySelector(".material-symbols-outlined");
+          const applyOpen = (open) => {
+            panel?.classList.toggle("hidden", !open);
+            groupBtn.setAttribute("aria-expanded", String(open));
+            icon?.classList.toggle("rotate-180", open);
+          };
+          applyOpen(false);
+          groupBtn.addEventListener("click", () => applyOpen(!(groupBtn.getAttribute("aria-expanded") === "true")));
+        }
+      })();
+    </script>
+  </body>
+</html>

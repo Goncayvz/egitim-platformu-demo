@@ -1,0 +1,1720 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="tr" translate="no"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta name="google" content="notranslate"/>
+<title>Eğitim Platformu - Eğitmen Paneli</title>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Theme Configuration -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#9c4fba",
+                        "background-light": "#f7f6f8",
+                        "background-dark": "#0f0a15",
+                        "neutral-light": "#2d2438",
+                        "neutral-dark": "#1e1628",
+                    },
+                    fontFamily: {
+                        "display": ["Lexend", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "2xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .active-link {
+            background-color: #9c4fba;
+            color: white;
+        }
+        .drag-ghost {
+            opacity: 0.5;
+            border: 2px dashed #9c4fba;
+            background-color: rgba(156, 79, 186, 0.1);
+        }
+    </style>
+</head>
+<body class="font-display bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 antialiased">
+<script src="../assets/js/auth.js"></script>
+<script>
+  window.DemoAuth?.guard({ allowRoles: ["instructor", "admin"] });
+</script>
+<script>
+  (function () {
+    try {
+      document.documentElement.classList.add("notranslate");
+      document.querySelectorAll(".material-symbols-outlined").forEach((el) => {
+        try {
+          el.classList.add("notranslate");
+          el.setAttribute("translate", "no");
+        } catch (_) {}
+      });
+    } catch (_) {}
+  })();
+</script>
+<div class="flex h-screen overflow-hidden">
+<!-- Side Navigation -->
+<aside class="w-64 flex-shrink-0 border-r border-primary/10 bg-white dark:bg-neutral-dark hidden md:flex flex-col">
+<div class="p-6 flex items-center gap-3">
+<div class="size-8 bg-primary rounded-lg flex items-center justify-center text-white">
+<span class="material-symbols-outlined">school</span>
+</div>
+<div class="min-w-0">
+<h1 class="font-black text-xl tracking-tight leading-tight truncate">Eğitim Platformu</h1>
+<p class="text-[11px] text-primary font-bold uppercase tracking-wider">Eğitmen Paneli</p>
+</div>
+</div>
+<nav class="flex-1 px-4 space-y-2 mt-4">
+<a id="instructor-content-link" class="flex items-center gap-3 px-4 py-3 rounded-xl active-link" href="#icerik-yonetimi">
+<span class="material-symbols-outlined">dashboard_customize</span>
+<span class="font-medium">İçerik Yönetimi</span>
+</a>
+<a id="instructor-requests-link" class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-700 dark:text-slate-200 hover:bg-primary/5 dark:hover:bg-white/5 transition-colors" href="#ders-talepleri">
+<span class="material-symbols-outlined">rate_review</span>
+<span class="font-medium">Ders Talepleri</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-700 dark:text-slate-200 hover:bg-primary/5 dark:hover:bg-white/5 transition-colors" href="takvim.html">
+<span class="material-symbols-outlined">calendar_month</span>
+<span class="font-medium">Takvim</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-700 dark:text-slate-200 hover:bg-primary/5 dark:hover:bg-white/5 transition-colors" href="egitmen-dersyonetimi.html">
+<span class="material-symbols-outlined">present_to_all</span>
+<span class="font-medium">Ders Yönetimi</span>
+</a>
+<a id="instructor-students-link" class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-700 dark:text-slate-200 hover:bg-primary/5 dark:hover:bg-white/5 transition-colors" href="#ogrenciler">
+<span class="material-symbols-outlined">group</span>
+<span class="font-medium">Öğrenciler</span>
+</a>
+</nav>
+<div class="p-4 mt-auto border-t border-primary/10">
+<div class="flex items-center gap-3 p-2 bg-slate-100/80 dark:bg-neutral-light rounded-xl">
+<input id="instructor-profile-file-input" class="hidden" type="file" accept=".png,.jpg,.jpeg,.webp,image/png,image/jpeg,image/webp"/>
+<button id="instructor-profile-upload-btn" class="size-10 rounded-full overflow-hidden ring-2 ring-primary/20 hover:ring-primary/40 transition-all" title="Profil fotografini degistir" type="button">
+<img id="instructor-profile-avatar" alt="Egitmen profil fotografi" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAYAIoOErzxslF8cX9Dj-r5R3mFN2n1XgubbJBJ26FvC0_to_A1IDmn2U3WJtpBc6GwakNfEBxqUCY_q2-exAuU4cfld-g54Vshz07KiaCByRmD9suNfCOHIqZJYIAOoAVffotJLeUq7YzdA1nuBHCO8WswWhYfDQ3ZHbMouSroxWKHGR1PMZntIlXVZ1zwQvajk29bmozKF1cSdeiqsuM9eFmjh9yzvs5BC_HOl8K6Fx1Pw4NoaODrokeDdL-QNBA9VJbAKZC9xrrp"/>
+</button>
+<div class="flex-1 min-w-0">
+<button id="instructor-profile-name-btn" class="text-sm font-bold truncate text-slate-900 dark:text-slate-100 text-left hover:text-primary transition-colors" type="button">Dr. Aris Thorne</button>
+<p class="text-xs text-primary font-medium uppercase">Senior Instructor</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 flex flex-col overflow-hidden">
+<!-- Header -->
+<header class="h-16 border-b border-primary/10 bg-white dark:bg-neutral-dark flex items-center justify-between px-8">
+<div class="flex items-center gap-4 text-slate-600 dark:text-slate-400 text-sm">
+<span>Eğitmen</span>
+<span class="material-symbols-outlined text-xs">chevron_right</span>
+<span id="instructor-breadcrumb-title" class="font-medium">Müfredat Düzenleyici</span>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative hidden sm:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-400">search</span>
+<input class="pl-10 pr-4 py-2 bg-slate-50 text-slate-900 dark:bg-neutral-dark dark:text-slate-100 border border-primary/20 rounded-lg text-sm w-64 focus:ring-2 focus:ring-primary/40" placeholder="Derslerde ara..." type="text"/>
+</div>
+<button id="btn-instructor-notifications" type="button" class="p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-neutral-light rounded-lg relative" aria-label="Bildirimler" title="Bildirimler">
+<span class="material-symbols-outlined notranslate" translate="no">notifications</span>
+<span id="instructor-notif-badge" class="absolute -top-0.5 -right-0.5 hidden min-w-[18px] h-[18px] px-1 bg-rose-500 text-white text-[10px] font-black rounded-full border-2 border-white grid place-items-center">0</span>
+</button>
+<button id="btn-instructor-settings" type="button" class="p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-neutral-light rounded-lg" aria-label="Ayarlar" title="Ayarlar">
+<span class="material-symbols-outlined notranslate" translate="no">settings</span>
+</button>
+</div>
+</header>
+<!-- Workspace Wrapper -->
+<div id="instructor-scroll-root" class="flex-1 overflow-y-auto p-8 bg-background-light dark:bg-background-dark">
+
+<div class="mb-6 rounded-2xl border border-primary/10 bg-white/80 dark:bg-white/5 p-5 shadow-sm">
+  <div class="flex flex-wrap items-center justify-between gap-4">
+    <div class="min-w-0">
+      <h2 class="text-base md:text-lg font-black truncate">Hızlı Eylemler</h2>
+      <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Canlı ders ve planlama araçlarına hızlı erişim.</p>
+    </div>
+    <div class="flex flex-wrap items-center gap-2">
+      <a class="px-4 py-2.5 rounded-xl bg-primary text-white text-sm font-extrabold hover:opacity-95 transition" href="egitmen-dersyonetimi.html">
+        Ders Yönetimi
+      </a>
+      <a class="px-4 py-2.5 rounded-xl border border-primary/20 text-sm font-extrabold hover:bg-primary/10 transition" href="canliders.html?from=instructor" target="_blank" rel="noopener noreferrer">
+        Canlı Dersi Aç
+      </a>
+      <a class="px-4 py-2.5 rounded-xl border border-primary/20 text-sm font-extrabold hover:bg-primary/10 transition" href="takvim.html">
+        Takvim
+      </a>
+    </div>
+  </div>
+</div>
+<!-- Stats Row -->
+<div id="instructor-stats-row" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+<div class="p-6 rounded-2xl shadow-sm border border-primary/5 flex items-center gap-4">
+<div class="size-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">group</span>
+</div>
+<div>
+<p class="text-sm text-slate-500 font-medium">Toplam Öğrenci</p>
+<p class="text-2xl font-bold">1,284</p>
+</div>
+</div>
+<div class="p-6 rounded-2xl shadow-sm border border-primary/5 flex items-center gap-4">
+<div class="size-12 rounded-xl bg-blue-100 flex items-center justify-center text-blue-600">
+<span class="material-symbols-outlined">timer</span>
+</div>
+<div>
+<p class="text-sm text-slate-500 font-medium">Verilen Ders Saati</p>
+<p class="text-2xl font-bold">450 saat</p>
+</div>
+</div>
+<div class="p-6 rounded-2xl shadow-sm border border-primary/5 flex items-center gap-4">
+<div class="size-12 rounded-xl bg-orange-100 flex items-center justify-center text-orange-600">
+<span class="material-symbols-outlined">pending_actions</span>
+</div>
+<div>
+<p class="text-sm text-slate-500 font-medium">Bekleyen Talepler</p>
+<p id="instructor-pending-count" class="text-2xl font-bold">12</p>
+</div>
+</div>
+<div class="p-6 rounded-2xl shadow-sm border border-primary/5 flex items-center gap-4">
+<div class="size-12 rounded-xl bg-green-100 flex items-center justify-center text-green-600">
+<span class="material-symbols-outlined">auto_graph</span>
+</div>
+<div>
+<p class="text-sm text-slate-500 font-medium">Ort. Puan</p>
+<p class="text-2xl font-bold">4.9/5</p>
+</div>
+</div>
+</div>
+<!-- Content Grid: Editor & Requests -->
+<div id="instructor-main-grid" class="grid grid-cols-1 xl:grid-cols-3 gap-8">
+<!-- Lesson Editor Section (Drag & Drop UI) -->
+<div id="icerik-yonetimi" class="xl:col-span-2 space-y-6">
+<div class="flex items-center justify-between">
+<div>
+<h2 id="curriculum-course-title" class="text-2xl font-bold tracking-tight">Advanced Calculus II</h2>
+<p class="text-slate-500">Video derslerinizi sıralamak için sürükleyin</p>
+</div>
+<button id="btn-curriculum-add" type="button" class="bg-primary hover:bg-primary/90 text-white px-5 py-2.5 rounded-xl font-bold text-sm flex items-center gap-2 transition-all"><span class="material-symbols-outlined text-lg notranslate" translate="no">add</span> Yeni Ders Ekle</button>
+</div>
+<!-- Draggable List -->
+<div id="curriculum-list" class="space-y-3"></div>
+<div id="curriculum-empty" class="drag-ghost p-4 rounded-2xl flex items-center gap-4 h-[88px] hidden">
+<span class="text-primary text-sm font-medium mx-auto">Henüz ders yok. “Yeni Ders Ekle” ile başlayın.</span>
+</div>
+</div>
+<!-- Tutoring Requests Panel -->
+<div id="ders-talepleri" class="space-y-6 hidden">
+<div class="flex items-center justify-between">
+<h2 class="text-xl font-bold tracking-tight">Gelen Talepler</h2>
+<span id="incoming-count-badge" class="bg-primary/10 text-primary text-xs font-bold px-2 py-1 rounded-full">12 Yeni</span>
+</div>
+<div id="instructor-action-feedback" class="hidden text-xs rounded-lg border px-3 py-2"></div>
+<div id="instructor-request-list" class="space-y-4">
+<!-- Request Card 1 -->
+<div class="request-card p-5 rounded-2xl shadow-sm border border-primary/5 flex flex-col gap-4" data-request-id="inst-req-sarah-calculus">
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-3">
+<div class="size-10 rounded-full bg-slate-200 dark:bg-neutral-light bg-cover bg-center" data-alt="Student profile photo" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBYVaRG-H6r9cexuO6x4JtOlD4GDwI8iN0wMVkpJO66oRZgJ0E9jsxLhfk1e0XyrgHXUx3a9ciWmppjCuMJqavCQvg1h3-B7m1P2yuEMujlsxE7ntLs22EgD50_fJJG6OxpVOB4ArwYucVqXuQBq4Z8N3xPWqyaDJcLTswrSQ-CYMO6PQ0x8fz1e0TSbkYMTUicJWLXopiAcNVaanN87pnHq0yAs8BRP9vj9WQdMG2GxvRLG59zYtM-cvKC-yyXyCSzoqyLG8ws2fHW')"></div>
+<div>
+<p class="request-student text-sm font-bold">Sarah Jenkins</p>
+<p class="request-topic text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider">Calculus 101</p>
+</div>
+</div>
+<span class="text-[10px] text-slate-500 px-2 py-1 rounded font-bold">2m ago</span>
+</div>
+<p class="text-xs text-slate-600 leading-relaxed italic border-l-2 border-primary/20 pl-3">
+                                "Hi Professor, I'm struggling with the concept of triple integrals in cylindrical coordinates. Could we review a few examples?"
+                            </p>
+<!-- Appointment Picker Section (Mock) -->
+<div class="pt-2 border-t border-slate-100">
+<p class="text-[10px] font-bold text-slate-400 uppercase mb-2">UYGUNLUK SEÇİN</p>
+<div class="grid grid-cols-2 gap-2">
+<button class="request-slot-btn text-[11px] py-1.5 px-2 border border-primary/20 rounded-lg hover:bg-primary/5 text-slate-700 font-medium" data-slot="Yarin, 10:00">Yarin, 10:00</button>
+<button class="request-slot-btn text-[11px] py-1.5 px-2 border border-primary/20 rounded-lg hover:bg-primary/5 text-slate-700 font-medium" data-slot="Cuma, 14:00">Cuma, 14:00</button>
+</div>
+</div>
+<div class="flex gap-2 mt-1">
+<button class="request-approve-btn flex-1 bg-primary text-white text-xs font-bold py-2.5 rounded-lg hover:bg-primary/90 transition-colors">Talebi Onayla</button>
+<button class="request-postpone-btn px-3 bg-amber-100 text-amber-700 text-xs font-bold py-2.5 rounded-lg hover:bg-amber-200 transition-colors">Ertele</button>
+<button class="request-reject-btn px-3 bg-slate-100 text-slate-700 dark:bg-neutral-light dark:text-slate-400 text-xs font-bold py-2.5 rounded-lg hover:bg-red-50 dark:hover:bg-rose-500/10 hover:text-red-500 transition-colors">Reddet</button>
+</div>
+</div>
+<!-- Request Card 2 -->
+<div class="request-card p-5 rounded-2xl shadow-sm border border-primary/5 flex flex-col gap-4 opacity-80" data-request-id="inst-req-marcus-physics">
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-3">
+<div class="size-10 rounded-full bg-slate-200 dark:bg-neutral-light bg-cover bg-center" data-alt="Student profile photo of a young man" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAQ0QOB85kiOkiMcOvSyHq33rX8x12n5yU3RFHaa2p4Wag_bqZo12-hT8y-_l2Ds_KX7Gx3W5rD_CgY1OLsKdGtBE6AR3rfOqdJfnfHNEihq2s1DCxFBot-jKGDE87-pH3C_oueu5jwdjt97i7gBuks51ywyQye19yp-IeBFau0hfNBHaQfL_8y3fO2llIo2ENqvprf0n9adQDw5CvGTHeDMa-UAWM7PRxK8GdWxcP71vXwU78stc7-iuZE5PuOUc9tmKeJ8CW4U-rY')"></div>
+<div>
+<p class="request-student text-sm font-bold">Marcus Wright</p>
+<p class="request-topic text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider">Physics: Statics</p>
+</div>
+</div>
+<span class="text-[10px] text-slate-500 px-2 py-1 rounded font-bold">1h ago</span>
+</div>
+<p class="text-xs text-slate-600 leading-relaxed">
+                                "Need quick help with homework question #4 on vector equilibrium."
+                            </p>
+<div class="flex gap-2 mt-1">
+<button class="request-approve-btn flex-1 bg-primary text-white text-xs font-bold py-2.5 rounded-lg hover:bg-primary/90">Talebi Onayla</button>
+<button class="request-postpone-btn px-3 bg-amber-100 text-amber-700 text-xs font-bold py-2.5 rounded-lg hover:bg-amber-200 transition-colors">Ertele</button>
+<button class="request-reject-btn px-3 bg-slate-100 text-slate-700 dark:bg-neutral-light dark:text-slate-400 text-xs font-bold py-2.5 rounded-lg">Reddet</button>
+</div>
+</div>
+<div id="approved-panel" class="p-4 rounded-2xl shadow-sm border border-primary/10 bg-white/80 dark:bg-neutral-dark">
+<div class="flex items-center justify-between mb-3">
+<h3 class="text-sm font-bold text-slate-900 dark:text-slate-100">Onaylanan Talepler</h3>
+<span id="approved-count-badge" class="text-[11px] px-2 py-1 rounded-full bg-green-500/15 text-green-400 font-semibold">0</span>
+</div>
+<div id="instructor-approved-list" class="space-y-2">
+<p id="approved-empty-note" class="text-xs text-slate-600 dark:text-slate-400">Henuz onaylanan talep yok.</p>
+</div>
+</div>
+<div id="postponed-panel" class="p-4 rounded-2xl shadow-sm border border-primary/10 bg-white/80 dark:bg-neutral-dark">
+<div class="flex items-center justify-between mb-3">
+<h3 class="text-sm font-bold text-slate-900 dark:text-slate-100">Ertelenen Talepler</h3>
+<span id="postponed-count-badge" class="text-[11px] px-2 py-1 rounded-full bg-amber-500/15 text-amber-300 font-semibold">0</span>
+</div>
+<div id="instructor-postponed-list" class="space-y-2">
+<p id="postponed-empty-note" class="text-xs text-slate-600 dark:text-slate-400">Henuz ertelenen talep yok.</p>
+</div>
+</div>
+<!-- Empty Placeholder for more -->
+<div id="more-placeholder" class="border-2 border-dashed border-primary/10 rounded-2xl p-8 flex flex-col items-center justify-center text-center">
+<span class="material-symbols-outlined text-primary/30 text-4xl mb-2">more_horiz</span>
+<p class="text-xs font-medium text-slate-500 dark:text-slate-400 italic">Diğer 10 bekleyen talebi görüntüle</p>
+</div>
+</div>
+</div>
+<div id="ogrenciler" class="space-y-4 hidden">
+<div class="flex items-center justify-between">
+<h2 class="text-xl font-bold tracking-tight">Ogrenciler</h2>
+<span id="student-count-badge" class="bg-blue-100 text-blue-700 text-xs font-bold px-2 py-1 rounded-full">0 Kayit</span>
+</div>
+<div class="rounded-2xl border border-primary/10 p-4">
+<p class="text-sm text-slate-600 dark:text-slate-400 mb-3">Aktif ogrenci listesi</p>
+<div id="instructor-student-list" class="space-y-2"></div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+
+<div id="instructor-notifications-modal" class="fixed inset-0 z-50 hidden" aria-hidden="true">
+  <div data-modal-backdrop class="absolute inset-0 bg-black/60"></div>
+  <div class="relative h-full w-full flex items-center justify-center p-4">
+    <div class="w-full max-w-2xl rounded-2xl border border-primary/20 bg-background-light dark:bg-background-dark shadow-2xl overflow-hidden">
+      <div class="p-5 border-b border-primary/15 bg-primary/5 flex items-center justify-between gap-3">
+        <div class="min-w-0">
+          <p class="text-xs font-bold uppercase tracking-wider text-primary">Bildirimler</p>
+          <h2 class="text-xl font-black mt-1">Son aktiviteler</h2>
+        </div>
+        <div class="flex items-center gap-2">
+          <button id="instructor-notif-open-requests" type="button" class="px-3 py-2 rounded-xl bg-white/80 dark:bg-white/10 border border-primary/15 text-sm font-extrabold hover:opacity-90">
+            Taleplere Git
+          </button>
+          <button data-modal-close type="button" class="size-10 rounded-xl hover:bg-primary/10 transition text-slate-600 dark:text-slate-300" aria-label="Kapat">
+            <span class="material-symbols-outlined notranslate" translate="no">close</span>
+          </button>
+        </div>
+      </div>
+      <div class="p-5">
+        <div id="instructor-notif-list" class="space-y-3"></div>
+        <p id="instructor-notif-empty" class="hidden text-sm text-slate-500 dark:text-slate-400">Yeni bildirim yok.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="instructor-settings-modal" class="fixed inset-0 z-50 hidden" aria-hidden="true">
+  <div data-modal-backdrop class="absolute inset-0 bg-black/60"></div>
+  <div class="relative h-full w-full flex items-center justify-center p-4">
+    <div class="w-full max-w-lg rounded-2xl border border-primary/20 bg-background-light dark:bg-background-dark shadow-2xl overflow-hidden">
+      <div class="p-5 border-b border-primary/15 bg-primary/5 flex items-center justify-between gap-3">
+        <div class="min-w-0">
+          <p class="text-xs font-bold uppercase tracking-wider text-primary">Ayarlar</p>
+          <h2 class="text-xl font-black mt-1">Hızlı ayarlar</h2>
+        </div>
+        <button data-modal-close type="button" class="size-10 rounded-xl hover:bg-primary/10 transition text-slate-600 dark:text-slate-300" aria-label="Kapat">
+          <span class="material-symbols-outlined notranslate" translate="no">close</span>
+        </button>
+      </div>
+      <div class="p-5 space-y-4">
+        <div class="flex items-center justify-between gap-3 rounded-xl border border-primary/15 bg-white/70 dark:bg-white/5 px-4 py-3">
+          <div>
+            <div class="text-sm font-extrabold">Tema</div>
+            <div class="text-[11px] text-slate-500 dark:text-slate-400">Koyu / Açık</div>
+          </div>
+          <select id="instructor-settings-theme" class="rounded-xl border border-primary/20 bg-white dark:bg-white/5 text-sm font-bold px-3 py-2">
+            <option value="dark">Koyu</option>
+            <option value="light">Açık</option>
+          </select>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <a href="egitmen-dersyonetimi.html" class="px-4 py-3 rounded-xl bg-primary text-white text-sm font-extrabold text-center hover:opacity-95 transition">Ders Yönetimi</a>
+          <a href="takvim.html" class="px-4 py-3 rounded-xl border border-primary/20 text-sm font-extrabold text-center hover:bg-primary/10 transition">Takvim</a>
+        </div>
+
+        <div class="flex items-center justify-end gap-2 pt-1">
+          <button id="instructor-settings-logout" type="button" class="px-4 py-2.5 rounded-xl bg-rose-600 text-white text-sm font-extrabold hover:bg-rose-700 transition">
+            Çıkış Yap
+          </button>
+        </div>
+        <p id="instructor-settings-feedback" class="text-xs text-slate-500 dark:text-slate-400"></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="curriculum-modal" class="fixed inset-0 z-50 hidden" aria-hidden="true">
+  <div data-modal-backdrop class="absolute inset-0 bg-black/60"></div>
+  <div class="relative h-full w-full flex items-center justify-center p-4">
+    <div class="w-full max-w-xl rounded-2xl border border-primary/20 bg-background-light dark:bg-background-dark shadow-2xl overflow-hidden">
+      <div class="p-5 border-b border-primary/15 bg-primary/5 flex items-center justify-between gap-3">
+        <div class="min-w-0">
+          <p class="text-xs font-bold uppercase tracking-wider text-primary">Ders</p>
+          <h2 id="curriculum-modal-title" class="text-xl font-black mt-1">Yeni Ders</h2>
+        </div>
+        <button data-modal-close type="button" class="size-10 rounded-xl hover:bg-primary/10 transition text-slate-600 dark:text-slate-300" aria-label="Kapat">
+          <span class="material-symbols-outlined notranslate" translate="no">close</span>
+        </button>
+      </div>
+      <form id="curriculum-form" class="p-5 space-y-4">
+        <input id="curriculum-edit-id" type="hidden" />
+        <label class="block">
+          <span class="text-xs font-bold text-slate-500 dark:text-slate-400">Başlık</span>
+          <input id="curriculum-title" class="mt-2 w-full rounded-xl border border-primary/20 bg-white/80 dark:bg-white/5" placeholder="Örn: Limits & Derivatives" required />
+        </label>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <label class="block">
+            <span class="text-xs font-bold text-slate-500 dark:text-slate-400">Süre</span>
+            <input id="curriculum-duration" class="mt-2 w-full rounded-xl border border-primary/20 bg-white/80 dark:bg-white/5" placeholder="Örn: 12:45" />
+          </label>
+          <label class="block">
+            <span class="text-xs font-bold text-slate-500 dark:text-slate-400">Görüntülenme</span>
+            <input id="curriculum-views" class="mt-2 w-full rounded-xl border border-primary/20 bg-white/80 dark:bg-white/5" placeholder="Örn: 1.2k views" />
+          </label>
+        </div>
+        <label class="block">
+          <span class="text-xs font-bold text-slate-500 dark:text-slate-400">Kapak Görseli (URL)</span>
+          <input id="curriculum-thumb" class="mt-2 w-full rounded-xl border border-primary/20 bg-white/80 dark:bg-white/5" placeholder="https://..." />
+          <p class="mt-1 text-[11px] text-slate-500 dark:text-slate-400">Boş bırakılırsa otomatik placeholder kullanılır.</p>
+        </label>
+
+        <div class="flex items-center justify-end gap-2 pt-2">
+          <button id="curriculum-cancel" type="button" class="px-4 py-2.5 rounded-xl border border-primary/20 text-sm font-extrabold hover:bg-primary/10 transition">
+            Vazgeç
+          </button>
+          <button id="curriculum-save" type="submit" class="px-4 py-2.5 rounded-xl bg-primary text-white text-sm font-extrabold hover:opacity-95 transition">
+            Kaydet
+          </button>
+        </div>
+        <p id="curriculum-feedback" class="text-xs text-slate-500 dark:text-slate-400"></p>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+  (function () {
+    const PROFILE_KEY = "demo_instructor_profile_v1";
+    const REQUEST_KEY = "demo_instructor_request_state_v1";
+    const LESSON_REQUESTS_KEY = "demo_lesson_requests_v1";
+    const ADMIN_REQUEST_STATE_KEY = "demo_admin_request_state_v1";
+    const UI_SETTINGS_KEY = "demo_site_settings_v1";
+    const EMAIL_SEND_API = "../api/email_send.php";
+    const SMS_API_BASE = "../api/sms_send.php";
+    const profileBtn = document.getElementById("instructor-profile-upload-btn");
+    const profileInput = document.getElementById("instructor-profile-file-input");
+    const profileAvatar = document.getElementById("instructor-profile-avatar");
+    const profileNameBtn = document.getElementById("instructor-profile-name-btn");
+    const incomingBadge = document.getElementById("incoming-count-badge");
+    const pendingCount = document.getElementById("instructor-pending-count");
+    const approvedCountBadge = document.getElementById("approved-count-badge");
+    const approvedList = document.getElementById("instructor-approved-list");
+    const approvedEmpty = document.getElementById("approved-empty-note");
+    const postponedCountBadge = document.getElementById("postponed-count-badge");
+    const postponedList = document.getElementById("instructor-postponed-list");
+    const postponedEmpty = document.getElementById("postponed-empty-note");
+    const requestList = document.getElementById("instructor-request-list");
+    const approvedPanel = document.getElementById("approved-panel");
+    const actionFeedback = document.getElementById("instructor-action-feedback");
+    const cards = Array.from(document.querySelectorAll(".request-card"));
+    const requestsLink = document.getElementById("instructor-requests-link");
+    const contentLink = document.getElementById("instructor-content-link");
+    const studentsLink = document.getElementById("instructor-students-link");
+    const contentSection = document.getElementById("icerik-yonetimi");
+    const requestsSection = document.getElementById("ders-talepleri");
+    const studentsSection = document.getElementById("ogrenciler");
+    const statsRow = document.getElementById("instructor-stats-row");
+    const breadcrumbTitle = document.getElementById("instructor-breadcrumb-title");
+    const mainGrid = document.getElementById("instructor-main-grid");
+    const studentList = document.getElementById("instructor-student-list");
+    const studentCountBadge = document.getElementById("student-count-badge");
+
+    const notifBtn = document.getElementById("btn-instructor-notifications");
+    const notifBadge = document.getElementById("instructor-notif-badge");
+    const notifModal = document.getElementById("instructor-notifications-modal");
+    const notifList = document.getElementById("instructor-notif-list");
+    const notifEmpty = document.getElementById("instructor-notif-empty");
+    const notifOpenRequestsBtn = document.getElementById("instructor-notif-open-requests");
+
+    const settingsBtn = document.getElementById("btn-instructor-settings");
+    const settingsModal = document.getElementById("instructor-settings-modal");
+    const settingsThemeSel = document.getElementById("instructor-settings-theme");
+    const settingsLogoutBtn = document.getElementById("instructor-settings-logout");
+    const settingsFeedback = document.getElementById("instructor-settings-feedback");
+
+    const safeJsonParse = (raw, fallback) => {
+      try {
+        return raw ? JSON.parse(raw) : fallback;
+      } catch (_e) {
+        return fallback;
+      }
+    };
+
+    const normalizeTheme = (value) => {
+      const v = String(value || "").trim().toLowerCase();
+      if (v === "light" || v === "aydınlık" || v === "acik" || v === "açık") return "light";
+      if (v === "dark" || v === "karanlık" || v === "koyu") return "dark";
+      return "dark";
+    };
+
+    const readSettings = () => safeJsonParse(localStorage.getItem(UI_SETTINGS_KEY), {}) || {};
+    const writeSettings = (next) => {
+      try {
+        localStorage.setItem(UI_SETTINGS_KEY, JSON.stringify(next || {}));
+      } catch (_e) {}
+    };
+
+    const applyTheme = (value) => {
+      const t = normalizeTheme(value);
+      document.documentElement.classList.toggle("dark", t === "dark");
+      try {
+        document.documentElement.style.colorScheme = t === "dark" ? "dark" : "light";
+      } catch (_e) {}
+    };
+
+    const escapeHtml = (value) => String(value ?? "")
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#39;");
+
+    const formatDateTime = (value) => {
+      if (!value) return "-";
+      const d = new Date(value);
+      if (Number.isNaN(d.getTime())) return String(value);
+      try {
+        return new Intl.DateTimeFormat("tr-TR", { day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" }).format(d);
+      } catch (_e) {
+        return d.toISOString().replace("T", " ").slice(0, 16);
+      }
+    };
+
+    const openModal = (el) => {
+      if (!el) return;
+      el.classList.remove("hidden");
+      el.setAttribute("aria-hidden", "false");
+    };
+
+    const closeModal = (el) => {
+      if (!el) return;
+      el.classList.add("hidden");
+      el.setAttribute("aria-hidden", "true");
+    };
+
+    const bindModal = (el) => {
+      if (!el) return;
+      el.querySelectorAll("[data-modal-close]").forEach((btn) => btn.addEventListener("click", () => closeModal(el)));
+      el.querySelectorAll("[data-modal-backdrop]").forEach((bd) => bd.addEventListener("click", () => closeModal(el)));
+    };
+
+    const readFileAsDataUrl = (file) => new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(String(reader.result || ""));
+      reader.onerror = () => reject(new Error("read-failed"));
+      reader.readAsDataURL(file);
+    });
+    const isValidEmail = (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(v || "").trim());
+    const isValidPhone = (v) => /^\+?[0-9\s()\-]{8,20}$/.test(String(v || "").trim());
+
+    const showFeedback = (message, type) => {
+      if (!actionFeedback) return;
+      actionFeedback.className = "text-xs rounded-lg border px-3 py-2";
+      if (type === "success") {
+        actionFeedback.classList.add("border-green-200", "bg-green-50", "text-green-700");
+      } else if (type === "error") {
+        actionFeedback.classList.add("border-red-200", "bg-red-50", "text-red-700");
+      } else {
+        actionFeedback.classList.add("border-slate-300", "bg-slate-50", "text-slate-600");
+      }
+      actionFeedback.textContent = message;
+      actionFeedback.classList.remove("hidden");
+    };
+
+    const hashToView = (hash) => {
+      if (hash === "#ders-talepleri") return "requests";
+      if (hash === "#ogrenciler") return "students";
+      return "content";
+    };
+    const viewToHash = (view) => {
+      if (view === "requests") return "#ders-talepleri";
+      if (view === "students") return "#ogrenciler";
+      return "#icerik-yonetimi";
+    };
+
+    let currentView = hashToView(window.location.hash);
+
+    const applyPanelView = (view) => {
+      currentView = view || currentView || "content";
+      const showRequests = currentView === "requests";
+      const showStudents = currentView === "students";
+      const showContent = !showRequests && !showStudents;
+      if (contentSection) {
+        contentSection.classList.remove("hidden");
+        contentSection.style.display = showContent ? "" : "none";
+      }
+      if (requestsSection) {
+        requestsSection.classList.remove("hidden");
+        requestsSection.style.display = showRequests ? "" : "none";
+      }
+      if (studentsSection) {
+        studentsSection.classList.remove("hidden");
+        studentsSection.style.display = showStudents ? "" : "none";
+      }
+      if (statsRow) {
+        statsRow.classList.remove("hidden");
+        statsRow.style.display = showStudents ? "none" : "grid";
+      }
+      if (approvedPanel) {
+        approvedPanel.classList.remove("hidden");
+        approvedPanel.style.display = showRequests ? "" : "none";
+      }
+      if (mainGrid) {
+        mainGrid.classList.toggle("xl:grid-cols-1", showStudents);
+        mainGrid.classList.toggle("xl:grid-cols-3", !showStudents);
+        mainGrid.style.display = "grid";
+      }
+      if (showStudents) renderStudents();
+      if (breadcrumbTitle) {
+        if (showRequests) breadcrumbTitle.textContent = "Ders Talepleri";
+        else if (showStudents) breadcrumbTitle.textContent = "Ogrenciler";
+        else breadcrumbTitle.textContent = "Mufredat Duzenleyici";
+      }
+      if (contentLink) contentLink.classList.toggle("active-link", showContent);
+      if (requestsLink) requestsLink.classList.toggle("active-link", showRequests);
+      if (studentsLink) studentsLink.classList.toggle("active-link", showStudents);
+    };
+
+    if (contentLink) {
+      contentLink.addEventListener("click", (event) => {
+        event.preventDefault();
+        applyPanelView("content");
+        window.location.hash = viewToHash("content");
+      });
+    }
+    if (requestsLink) {
+      requestsLink.addEventListener("click", (event) => {
+        event.preventDefault();
+        applyPanelView("requests");
+        window.location.hash = viewToHash("requests");
+      });
+    }
+    if (studentsLink) {
+      studentsLink.addEventListener("click", (event) => {
+        event.preventDefault();
+        applyPanelView("students");
+        window.location.hash = viewToHash("students");
+      });
+    }
+    window.addEventListener("hashchange", () => {
+      applyPanelView(hashToView(window.location.hash));
+    });
+    applyPanelView(currentView);
+
+    const loadProfile = () => {
+      try {
+        const raw = localStorage.getItem(PROFILE_KEY);
+        return raw ? JSON.parse(raw) : {};
+      } catch (_e) {
+        return {};
+      }
+    };
+
+    const saveProfile = (next) => {
+      localStorage.setItem(PROFILE_KEY, JSON.stringify(next));
+    };
+
+    const loadRequestState = () => {
+      try {
+        const raw = localStorage.getItem(REQUEST_KEY);
+        const parsed = raw ? JSON.parse(raw) : {};
+        return {
+          approved: Array.isArray(parsed.approved) ? parsed.approved : [],
+          rejected: Array.isArray(parsed.rejected) ? parsed.rejected : [],
+          postponed: Array.isArray(parsed.postponed) ? parsed.postponed : []
+        };
+      } catch (_e) {
+        return { approved: [], rejected: [], postponed: [] };
+      }
+    };
+
+    const saveRequestState = (state) => {
+      localStorage.setItem(REQUEST_KEY, JSON.stringify(state));
+    };
+
+    const loadLessonRequests = () => {
+      try {
+        const raw = localStorage.getItem(LESSON_REQUESTS_KEY);
+        const parsed = raw ? JSON.parse(raw) : [];
+        return Array.isArray(parsed) ? parsed : [];
+      } catch (_e) {
+        return [];
+      }
+    };
+
+    const loadAdminApprovedRequests = () => {
+      try {
+        const raw = localStorage.getItem(ADMIN_REQUEST_STATE_KEY);
+        const parsed = raw ? JSON.parse(raw) : {};
+        const approved = Array.isArray(parsed?.approved) ? parsed.approved : [];
+        return approved
+          .filter((x) => x && x.id)
+          .map((x) => ({
+            id: `admin-${String(x.id)}`,
+            title: String(x.title || "Onayli Talep"),
+            meta: String(x.meta || "Detay bilgisi admin panelde mevcut.")
+          }));
+      } catch (_e) {
+        return [];
+      }
+    };
+
+    const saveLessonRequests = (list) => {
+      localStorage.setItem(LESSON_REQUESTS_KEY, JSON.stringify(list.slice(0, 300)));
+    };
+
+    const renderStudents = () => {
+      if (!studentList) return;
+      let users = [];
+      try {
+        const raw = localStorage.getItem("demo_users_v1");
+        const parsed = raw ? JSON.parse(raw) : [];
+        users = Array.isArray(parsed) ? parsed : [];
+      } catch (_e) {
+        users = [];
+      }
+
+      const normalizeText = (value) => String(value || "")
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "");
+
+      const students = users.filter((u) => {
+        const role = normalizeText(u && u.role ? u.role : "");
+        return role.includes("ogrenci") || role.includes("student");
+      });
+
+      let finalStudents = students.slice();
+
+      if (!finalStudents.length) {
+        const fallbackFromRequests = loadLessonRequests()
+          .map((r) => ({
+            name: r?.studentName || r?.student || r?.requestedByName || r?.name || "Ogrenci",
+            email: r?.studentEmail || r?.email || "-",
+            status: r?.status === "postponed" ? "Ertelendi" : (r?.status === "approved" ? "Aktif" : "Beklemede")
+          }))
+          .filter((r) => r.name && String(r.name).trim().length > 0);
+
+        const uniqueMap = new Map();
+        fallbackFromRequests.forEach((s, idx) => {
+          const key = `${String(s.name).trim().toLowerCase()}|${String(s.email).trim().toLowerCase() || idx}`;
+          if (!uniqueMap.has(key)) uniqueMap.set(key, s);
+        });
+        finalStudents = Array.from(uniqueMap.values());
+      }
+
+      if (studentCountBadge) studentCountBadge.textContent = `${finalStudents.length} Kayit`;
+      if (!finalStudents.length) {
+        studentList.innerHTML = '<p class="text-sm text-slate-600 dark:text-slate-400">Kayitli ogrenci bulunamadi.</p>';
+        return;
+      }
+
+      studentList.innerHTML = finalStudents.map((u) => {
+        const name = String(u && u.name ? u.name : "Ogrenci");
+        const email = String(u && u.email ? u.email : "-");
+        const status = String(u && u.status ? u.status : "Aktif");
+        return `
+          <div class="rounded-xl border border-primary/10 px-3 py-2 flex items-center justify-between gap-3">
+            <div>
+              <p class="text-sm font-semibold text-slate-900 dark:text-slate-100">${name}</p>
+              <p class="text-xs text-slate-600 dark:text-slate-400">${email}</p>
+            </div>
+            <span class="text-xs px-2 py-1 rounded-full bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-200">${status}</span>
+          </div>
+        `;
+      }).join("");
+    };
+
+    const callApi = async (url, payload) => {
+      const resp = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+      const data = await resp.json().catch(() => ({}));
+      if (!resp.ok) throw new Error(data.message || "API hatasi");
+      return data;
+    };
+
+    const notifyStatusChange = async (request, type, postponeNote) => {
+      const notify = request.notification || {};
+      const channel = notify.channel || "email";
+      if (channel === "none") return { ok: true, skipped: true };
+      const email = (notify.email || request.email || "").trim();
+      const phone = (notify.phone || request.phone || "").trim();
+      const approvedSlotText = request.approvedSlot ? ` Planlanan saat: ${request.approvedSlot}.` : "";
+      const message = type === "postponed"
+        ? `${request.topic} talebiniz ertelendi. ${postponeNote ? "Not: " + postponeNote : ""} Guncel plan icin paneli kontrol edin.`
+        : `${request.topic} talebiniz egitmen tarafindan onaylandi.${approvedSlotText} En kisa surede ders planlamasi icin panele giris yapin.`;
+      const subject = type === "postponed" ? "Ders talebiniz ertelendi" : "Ders talebiniz onaylandi";
+      let sentEmail = false;
+      let sentSms = false;
+
+      if ((channel === "email" || channel === "both") && isValidEmail(email)) {
+        await callApi(EMAIL_SEND_API, {
+          type: type === "postponed" ? "lesson-postponed" : "lesson-approval",
+          subject,
+          body: message,
+          recipients: [email]
+        });
+        sentEmail = true;
+      }
+      if ((channel === "sms" || channel === "both") && isValidPhone(phone)) {
+        await callApi(SMS_API_BASE, { phone, message });
+        sentSms = true;
+      }
+      return { ok: true, sentEmail, sentSms };
+    };
+
+    const setSelectedSlot = (card, button) => {
+      if (!card || !button) return;
+      const buttons = Array.from(card.querySelectorAll(".request-slot-btn"));
+      buttons.forEach((b) => {
+        b.classList.remove("bg-primary", "text-white", "border-primary", "shadow");
+        b.classList.add("text-slate-700");
+      });
+      button.classList.add("bg-primary", "text-white", "border-primary", "shadow");
+      button.classList.remove("text-slate-700");
+      card.dataset.selectedSlot = button.getAttribute("data-slot") || button.textContent.trim();
+    };
+
+    const getApprovalSlot = (card, dynamicReq) => {
+      if (!card) return "";
+      const selected = (card.dataset.selectedSlot || "").trim();
+      if (selected) return selected;
+      if (dynamicReq && dynamicReq.approvedSlot) return String(dynamicReq.approvedSlot).trim();
+      if (dynamicReq) {
+        const d = String(dynamicReq.preferredDate || "").trim();
+        const t = String(dynamicReq.preferredTime || "").trim();
+        const fallback = `${d} ${t}`.trim();
+        return fallback;
+      }
+      return "";
+    };
+
+    const requireSlotBeforeApprove = (card, dynamicReq) => {
+      const hasSlotButtons = !!(card && card.querySelector(".request-slot-btn"));
+      const slot = getApprovalSlot(card, dynamicReq);
+      if (hasSlotButtons && !slot) {
+        showFeedback("Talebi onaylamadan once saat secin.", "error");
+        return { ok: false, slot: "" };
+      }
+      return { ok: true, slot };
+    };
+
+    const profile = loadProfile();
+    if (profile.avatarDataUrl && profileAvatar) profileAvatar.src = profile.avatarDataUrl;
+    if (profile.displayName && profileNameBtn) profileNameBtn.textContent = profile.displayName;
+
+    if (profileBtn && profileInput) {
+      profileBtn.addEventListener("click", () => profileInput.click());
+    }
+    if (profileInput) {
+      profileInput.addEventListener("change", async () => {
+        const file = profileInput.files && profileInput.files[0];
+        if (!file) return;
+        const allowed = ["image/png", "image/jpeg", "image/webp"];
+        if (file.type && !allowed.includes(file.type)) {
+          alert("Profil resmi icin PNG, JPG veya WEBP secin.");
+          return;
+        }
+        if (file.size > 2 * 1024 * 1024) {
+          alert("Profil resmi en fazla 2MB olabilir.");
+          return;
+        }
+        try {
+          const dataUrl = await readFileAsDataUrl(file);
+          if (profileAvatar) profileAvatar.src = dataUrl;
+          saveProfile({ ...loadProfile(), avatarDataUrl: dataUrl });
+        } catch (_e) {
+          alert("Profil resmi yuklenemedi.");
+        }
+      });
+    }
+    if (profileNameBtn) {
+      profileNameBtn.addEventListener("click", () => {
+        const current = profileNameBtn.textContent.trim();
+        const next = prompt("Yeni egitmen adini girin:", current);
+        if (!next) return;
+        const clean = next.trim();
+        if (!clean) return;
+        profileNameBtn.textContent = clean;
+        saveProfile({ ...loadProfile(), displayName: clean });
+      });
+    }
+
+    // Curriculum / lesson list (İçerik Yönetimi)
+    const CURRICULUM_KEY = "demo_instructor_curriculum_v1";
+    const curriculumAddBtn = document.getElementById("btn-curriculum-add");
+    const curriculumListEl = document.getElementById("curriculum-list");
+    const curriculumEmptyEl = document.getElementById("curriculum-empty");
+    const curriculumModalEl = document.getElementById("curriculum-modal");
+    const curriculumFormEl = document.getElementById("curriculum-form");
+    const curriculumModalTitleEl = document.getElementById("curriculum-modal-title");
+    const curriculumEditIdEl = document.getElementById("curriculum-edit-id");
+    const curriculumTitleEl = document.getElementById("curriculum-title");
+    const curriculumDurationEl = document.getElementById("curriculum-duration");
+    const curriculumViewsEl = document.getElementById("curriculum-views");
+    const curriculumThumbEl = document.getElementById("curriculum-thumb");
+    const curriculumCancelBtn = document.getElementById("curriculum-cancel");
+    const curriculumFeedbackEl = document.getElementById("curriculum-feedback");
+
+    const safeText = (v) => String(v ?? "").trim();
+    const uid = () => `les_${Date.now()}_${Math.random().toString(16).slice(2)}`;
+
+    const loadCurriculum = () => {
+      const list = safeJsonParse(localStorage.getItem(CURRICULUM_KEY), []);
+      return Array.isArray(list) ? list.filter((x) => x && typeof x === "object") : [];
+    };
+
+    const saveCurriculum = (list) => {
+      try {
+        localStorage.setItem(CURRICULUM_KEY, JSON.stringify((Array.isArray(list) ? list : []).slice(0, 200)));
+      } catch (_e) {}
+    };
+
+    const ensureSeedCurriculum = () => {
+      const existing = loadCurriculum();
+      if (existing.length) return existing;
+      const seed = [
+        {
+          id: uid(),
+          title: "Introduction to Double Integrals",
+          duration: "12:45",
+          views: "1.2k views",
+          thumb: "https://lh3.googleusercontent.com/aida-public/AB6AXuDSgXfkmVDRKQU6LShWfsBdszHr_ywGFTyuR5KBYJbZ5QWTWQf7nmcrAojjCPbH99_22M3YVFYc9lPeL49mYnTXWdopDNfW78shYaFtk6W11NjTB7rij727_ldWvt0xW-kYvOVHIT6XGDPgpYCoIwmE_ngqmLB6MZqWn_v6KEY4ce7ffMtQB2435ZuE9Wlcd5SNlKj3zbQPpCYjaQ_RMwERx4nnirf4tjcj1ZZnGFPidquFysRF2Nxdox43re9ZvtQa9sT8lSsCyZdU",
+          createdAt: new Date().toISOString(),
+        },
+        {
+          id: uid(),
+          title: "Polar Coordinates and Areas",
+          duration: "18:20",
+          views: "850 views",
+          thumb: "https://lh3.googleusercontent.com/aida-public/AB6AXuDtI2mflub8o5_uk4KtZToIW0nK9tY7mjGSmgZZvMn-_Dc4VR_GsJhd83XomOMKMd8IOY_ATVqMLiHQ2LsrBwb9_mC_qddKwbBhySq04soEsiK_ianlfg85zMjh7H5Mjlma4WscUb_djADX-0ierFOl3rgyU2gVpxEWMYlIGnJbZnOXMsTjYOwdfAOvt564gKbBIuzTaMeLpdsbGtgVZAXeZeTJ5Wtpf7XHQq8gtnBNlZUVDBFXYtL_H7tmEKEKdeqB3H6mm4k5-1cV",
+          createdAt: new Date().toISOString(),
+        },
+        {
+          id: uid(),
+          title: "Applications of Triple Integrals",
+          duration: "15:10",
+          views: "640 views",
+          thumb: "https://lh3.googleusercontent.com/aida-public/AB6AXuD2mFEdnWdDyKSfLWTFzCOsNRD4TgPFzsoG6sRY8A94Fu10qqsVCEyeAwn0zZ8SijwYiXEx7E9kptWv3LpFyhQver0LC_EvOVX341uZjMkjtLtBjbPU81A4NZimXNkeQiIbJtqLaSHwtPUqQLRbiGojm8harC2NbcSRGDgy6P8i-B3HBniV_jsaiZs1dRRfDMnkV4IiKYsmKCR9EhizXvxKjhHFzOBDuK0pdbJHX9sgWzv4BkhykWmoCfIQyi_qJkqsTIFjtSHjzmQt",
+          createdAt: new Date().toISOString(),
+        },
+      ];
+      saveCurriculum(seed);
+      return seed;
+    };
+
+    const setCurriculumFeedback = (msg, ok = true) => {
+      if (!curriculumFeedbackEl) return;
+      curriculumFeedbackEl.textContent = safeText(msg);
+      curriculumFeedbackEl.className = `text-xs ${ok ? "text-emerald-600 dark:text-emerald-400" : "text-rose-600 dark:text-rose-400"}`;
+    };
+
+    const openCurriculumModal = (mode, item) => {
+      if (!curriculumModalEl) return;
+      if (curriculumModalTitleEl) curriculumModalTitleEl.textContent = mode === "edit" ? "Dersi Düzenle" : "Yeni Ders";
+      if (curriculumEditIdEl) curriculumEditIdEl.value = mode === "edit" ? String(item?.id || "") : "";
+      if (curriculumTitleEl) curriculumTitleEl.value = mode === "edit" ? String(item?.title || "") : "";
+      if (curriculumDurationEl) curriculumDurationEl.value = mode === "edit" ? String(item?.duration || "") : "";
+      if (curriculumViewsEl) curriculumViewsEl.value = mode === "edit" ? String(item?.views || "") : "";
+      if (curriculumThumbEl) curriculumThumbEl.value = mode === "edit" ? String(item?.thumb || "") : "";
+      setCurriculumFeedback("");
+      openModal(curriculumModalEl);
+      curriculumTitleEl?.focus?.();
+    };
+
+    const closeCurriculumModal = () => {
+      closeModal(curriculumModalEl);
+    };
+
+    const renderCurriculum = () => {
+      if (!curriculumListEl) return;
+      const list = ensureSeedCurriculum();
+      curriculumEmptyEl?.classList.toggle("hidden", list.length > 0);
+
+      const rows = list.map((x, idx) => {
+        const thumb = safeText(x.thumb);
+        const style = thumb ? `background-image:url('${escapeHtml(thumb)}')` : "";
+        const title = escapeHtml(x.title || "(Başlıksız)");
+        const duration = escapeHtml(x.duration || "--:--");
+        const views = escapeHtml(x.views || "-");
+        const number = idx + 1;
+        return `
+          <div class="group p-4 rounded-2xl border border-primary/5 shadow-sm hover:shadow-md transition-all flex items-center gap-4 cursor-default bg-white/80 dark:bg-neutral-dark/40"
+               draggable="true" data-lesson-id="${escapeHtml(x.id)}">
+            <button type="button" class="cursor-grab active:cursor-grabbing text-slate-500 dark:text-slate-300 group-hover:text-primary transition-colors" data-action="drag" aria-label="Sürükle">
+              <span class="material-symbols-outlined notranslate" translate="no">drag_indicator</span>
+            </button>
+            <div class="size-16 rounded-lg bg-slate-200 dark:bg-neutral-light flex-shrink-0 relative overflow-hidden group/thumb">
+              <div class="absolute inset-0 bg-black/20 flex items-center justify-center opacity-0 group-hover/thumb:opacity-100 transition-opacity">
+                <span class="material-symbols-outlined text-white notranslate" translate="no">play_circle</span>
+              </div>
+              <div class="w-full h-full bg-slate-200 bg-cover bg-center" style="${style}"></div>
+            </div>
+            <div class="flex-1 min-w-0">
+              <h3 class="font-bold truncate text-slate-900 dark:text-slate-100">${number}. ${title}</h3>
+              <div class="flex items-center gap-3 mt-1 text-xs font-medium text-slate-600 dark:text-slate-400">
+                <span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm notranslate" translate="no">schedule</span> ${duration}</span>
+                <span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm notranslate" translate="no">visibility</span> ${views}</span>
+              </div>
+            </div>
+            <div class="flex items-center gap-2">
+              <button type="button" class="p-2 hover:bg-slate-100 dark:hover:bg-neutral-light rounded-lg text-slate-500 dark:text-slate-400 hover:text-primary transition-colors" data-action="edit" data-id="${escapeHtml(x.id)}" aria-label="Düzenle">
+                <span class="material-symbols-outlined notranslate" translate="no">edit</span>
+              </button>
+              <button type="button" class="p-2 hover:bg-red-50 dark:hover:bg-rose-500/10 rounded-lg text-slate-500 dark:text-slate-400 hover:text-red-500 transition-colors" data-action="delete" data-id="${escapeHtml(x.id)}" aria-label="Sil">
+                <span class="material-symbols-outlined notranslate" translate="no">delete</span>
+              </button>
+            </div>
+          </div>
+        `.trim();
+      });
+
+      curriculumListEl.innerHTML = rows.join("\n");
+    };
+
+    let dragId = "";
+    const bindCurriculumDnD = () => {
+      if (!curriculumListEl) return;
+
+      curriculumListEl.addEventListener("dragstart", (e) => {
+        const card = e.target?.closest?.("[data-lesson-id]");
+        if (!card) return;
+        dragId = card.getAttribute("data-lesson-id") || "";
+        try {
+          e.dataTransfer.effectAllowed = "move";
+          e.dataTransfer.setData("text/plain", dragId);
+        } catch (_e) {}
+      });
+
+      curriculumListEl.addEventListener("dragover", (e) => {
+        if (!dragId) return;
+        e.preventDefault();
+      });
+
+      curriculumListEl.addEventListener("drop", (e) => {
+        if (!dragId) return;
+        e.preventDefault();
+        const targetCard = e.target?.closest?.("[data-lesson-id]");
+        const targetId = targetCard ? (targetCard.getAttribute("data-lesson-id") || "") : "";
+        if (!targetId || targetId === dragId) {
+          dragId = "";
+          return;
+        }
+
+        const list = loadCurriculum();
+        const fromIdx = list.findIndex((x) => x.id === dragId);
+        const toIdx = list.findIndex((x) => x.id === targetId);
+        if (fromIdx < 0 || toIdx < 0) {
+          dragId = "";
+          return;
+        }
+        const [moved] = list.splice(fromIdx, 1);
+        list.splice(toIdx, 0, moved);
+        saveCurriculum(list);
+        renderCurriculum();
+        dragId = "";
+      });
+    };
+
+    const bindCurriculumActions = () => {
+      bindModal(curriculumModalEl);
+      curriculumCancelBtn?.addEventListener("click", closeCurriculumModal);
+
+      curriculumAddBtn?.addEventListener("click", () => openCurriculumModal("new"));
+
+      curriculumListEl?.addEventListener("click", (e) => {
+        const btn = e.target?.closest?.("button[data-action][data-id]");
+        if (!btn) return;
+        const action = btn.getAttribute("data-action");
+        const id = btn.getAttribute("data-id");
+        if (!id) return;
+
+        const list = loadCurriculum();
+        const item = list.find((x) => x && x.id === id);
+        if (!item) return;
+
+        if (action === "edit") {
+          openCurriculumModal("edit", item);
+          return;
+        }
+        if (action === "delete") {
+          if (!window.confirm("Bu dersi silmek istiyor musunuz?")) return;
+          saveCurriculum(list.filter((x) => x && x.id !== id));
+          renderCurriculum();
+        }
+      });
+
+      curriculumFormEl?.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const id = safeText(curriculumEditIdEl?.value);
+        const title = safeText(curriculumTitleEl?.value);
+        const duration = safeText(curriculumDurationEl?.value);
+        const views = safeText(curriculumViewsEl?.value);
+        const thumb = safeText(curriculumThumbEl?.value);
+
+        if (!title) {
+          setCurriculumFeedback("Başlık zorunlu.", false);
+          return;
+        }
+
+        const list = loadCurriculum();
+        if (id) {
+          const next = list.map((x) => (x && x.id === id ? { ...x, title, duration, views, thumb } : x));
+          saveCurriculum(next);
+          setCurriculumFeedback("Güncellendi.");
+        } else {
+          list.push({ id: uid(), title, duration, views, thumb, createdAt: new Date().toISOString() });
+          saveCurriculum(list);
+          setCurriculumFeedback("Eklendi.");
+        }
+        renderCurriculum();
+        window.setTimeout(closeCurriculumModal, 250);
+      });
+    };
+
+    try {
+      renderCurriculum();
+      bindCurriculumDnD();
+      bindCurriculumActions();
+    } catch (_e) {}
+
+    const state = loadRequestState();
+
+    const renderDynamicRequests = () => {
+      if (!requestList || !approvedPanel) return;
+      requestList.querySelectorAll(".request-dynamic").forEach((n) => n.remove());
+      requestList.querySelectorAll(".request-admin-approved").forEach((n) => n.remove());
+      const pendingRequests = loadLessonRequests().filter((r) => r && r.status === "pending");
+      pendingRequests.forEach((req) => {
+        const card = document.createElement("div");
+        card.className = "request-card request-dynamic p-5 rounded-2xl shadow-sm border border-primary/5 flex flex-col gap-4";
+        card.setAttribute("data-request-id", req.id);
+        card.innerHTML = `
+          <div class="flex items-start justify-between">
+            <div class="flex items-center gap-3">
+              <div class="size-10 rounded-full bg-slate-100 dark:bg-neutral-light flex items-center justify-center text-primary">
+                <span class="material-symbols-outlined text-lg">person</span>
+              </div>
+              <div>
+                <p class="request-student text-sm font-bold">${req.fullName || "Ogrenci"}</p>
+                <p class="request-topic text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider">${req.topic || "Ders Talebi"}</p>
+              </div>
+            </div>
+            <span class="text-[10px] text-slate-500 px-2 py-1 rounded font-bold">Yeni</span>
+          </div>
+          <p class="text-xs text-slate-600 leading-relaxed border-l-2 border-primary/20 pl-3">${req.notes || "Talep notu yok."}</p>
+          <div class="text-[11px] text-slate-600 dark:text-slate-400">
+            <p>Tarih: ${req.preferredDate || "-"} ${req.preferredTime || ""}</p>
+            <p>Iletisim: ${req.email || "-"} ${req.phone ? " / " + req.phone : ""}</p>
+          </div>
+          <div class="pt-2 border-t border-slate-100">
+            <p class="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase mb-2">UYGUNLUK SECIN</p>
+            <div class="grid grid-cols-1 gap-2">
+              <button class="request-slot-btn text-[11px] py-1.5 px-2 border border-primary/20 rounded-lg hover:bg-primary/5 text-slate-700 font-medium text-left" data-slot="${(req.preferredDate || "-") + " " + (req.preferredTime || "")}">
+                ${(req.preferredDate || "-")} ${(req.preferredTime || "")}
+              </button>
+            </div>
+          </div>
+          <div class="flex gap-2 mt-1">
+            <button class="request-approve-btn flex-1 bg-primary text-white text-xs font-bold py-2.5 rounded-lg hover:bg-primary/90 transition-colors">Talebi Onayla</button>
+            <button class="request-postpone-btn px-3 bg-amber-100 text-amber-700 text-xs font-bold py-2.5 rounded-lg hover:bg-amber-200 transition-colors">Ertele</button>
+            <button class="request-reject-btn px-3 bg-slate-100 text-slate-700 dark:bg-neutral-light dark:text-slate-400 text-xs font-bold py-2.5 rounded-lg hover:bg-red-50 dark:hover:bg-rose-500/10 hover:text-red-500 transition-colors">Reddet</button>
+          </div>
+        `;
+        requestList.insertBefore(card, approvedPanel);
+      });
+
+      // Super admin panelde onaylanan talepleri egitmen paneline dusur.
+      const adminApproved = loadAdminApprovedRequests();
+      adminApproved.forEach((req) => {
+        const card = document.createElement("div");
+        card.className = "request-card request-admin-approved p-5 rounded-2xl shadow-sm border border-cyan-500/20 bg-cyan-500/5 flex flex-col gap-3";
+        card.setAttribute("data-request-id", req.id);
+        card.innerHTML = `
+          <div class="flex items-start justify-between">
+            <div>
+              <p class="request-student text-sm font-bold text-cyan-300">Admin Onayli Talep</p>
+              <p class="request-topic text-[11px] text-slate-200 font-semibold mt-1">${req.title}</p>
+            </div>
+            <span class="text-[10px] text-cyan-300 px-2 py-1 rounded font-bold">Onayli</span>
+          </div>
+          <p class="text-xs text-slate-300">${req.meta}</p>
+          <div class="flex gap-2 mt-1">
+            <button class="request-approve-btn flex-1 bg-primary text-white text-xs font-bold py-2.5 rounded-lg hover:bg-primary/90 transition-colors">Talebi Onayla</button>
+            <button class="request-postpone-btn px-3 bg-amber-100 text-amber-700 text-xs font-bold py-2.5 rounded-lg hover:bg-amber-200 transition-colors">Ertele</button>
+            <button class="request-reject-btn px-3 bg-slate-100 text-slate-700 dark:bg-neutral-light dark:text-slate-400 text-xs font-bold py-2.5 rounded-lg hover:bg-red-50 dark:hover:bg-rose-500/10 hover:text-red-500 transition-colors">Reddet</button>
+          </div>
+        `;
+        requestList.insertBefore(card, approvedPanel);
+      });
+    };
+
+    const renderApproved = () => {
+      if (!approvedList) return;
+      approvedList.querySelectorAll(".approved-item").forEach((n) => n.remove());
+      const dynamicApproved = loadLessonRequests()
+        .filter((r) => r && r.status === "approved")
+        .map((r) => ({
+          id: r.id,
+          student: r.fullName || "Ogrenci",
+          topic: r.topic || "Ders Talebi",
+          approvedSlot: r.approvedSlot || "",
+          source: "dynamic"
+        }));
+      const staticApproved = state.approved.map((r) => ({ ...r, source: "static" }));
+      const approved = [...dynamicApproved, ...staticApproved];
+      if (approvedEmpty) approvedEmpty.classList.toggle("hidden", approved.length > 0);
+      approved.forEach((entry) => {
+        const item = document.createElement("div");
+        item.className = "approved-item rounded-xl border border-green-500/20 bg-green-500/10 px-3 py-2";
+        item.innerHTML = `
+          <div class="flex items-start justify-between gap-3">
+            <div>
+              <p class="text-xs font-semibold text-green-300">${entry.student}</p>
+              <p class="text-[11px] text-slate-300 mt-1">${entry.topic}</p>
+              ${entry.approvedSlot ? `<p class=\"text-[10px] text-green-200 mt-1\">Saat: ${entry.approvedSlot}</p>` : ""}
+            </div>
+            <button class="approved-postpone-btn px-2 py-1 rounded-md bg-amber-100 text-amber-700 text-[11px] font-semibold hover:bg-amber-200 transition-colors" data-approved-id="${entry.id}" data-source="${entry.source}">Ertele</button>
+          </div>
+        `;
+        approvedList.appendChild(item);
+      });
+      if (approvedCountBadge) approvedCountBadge.textContent = String(approved.length);
+    };
+
+    const renderPostponed = () => {
+      if (!postponedList) return;
+      postponedList.querySelectorAll(".postponed-item").forEach((n) => n.remove());
+      const dynamicPostponed = loadLessonRequests()
+        .filter((r) => r && r.status === "postponed")
+        .map((r) => ({
+          id: r.id,
+          student: r.fullName || "Ogrenci",
+          topic: r.topic || "Ders Talebi",
+          note: r.postponeNote || ""
+        }));
+      const postponed = [...dynamicPostponed, ...state.postponed];
+      if (postponedEmpty) postponedEmpty.classList.toggle("hidden", postponed.length > 0);
+      postponed.forEach((entry) => {
+        const item = document.createElement("div");
+        item.className = "postponed-item rounded-xl border border-amber-500/20 bg-amber-500/10 px-3 py-2";
+        item.innerHTML = `<p class="text-xs font-semibold text-amber-300">${entry.student}</p><p class="text-[11px] text-slate-300 mt-1">${entry.topic}</p>${entry.note ? `<p class=\"text-[10px] text-slate-400 mt-1\">Not: ${entry.note}</p>` : ""}`;
+        postponedList.appendChild(item);
+      });
+      if (postponedCountBadge) postponedCountBadge.textContent = String(postponed.length);
+    };
+
+    const renderPendingCounts = () => {
+      const visiblePending = Array.from(document.querySelectorAll(".request-card"))
+        .filter((card) => card.style.display !== "none").length;
+      if (incomingBadge) incomingBadge.textContent = `${visiblePending} Yeni`;
+      if (pendingCount) pendingCount.textContent = String(visiblePending);
+    };
+
+    cards.forEach((card) => {
+      const id = card.getAttribute("data-request-id");
+      const student = card.querySelector(".request-student")?.textContent?.trim() || "Ogrenci";
+      const topic = card.querySelector(".request-topic")?.textContent?.trim() || "Ders Talebi";
+      const approveBtn = card.querySelector(".request-approve-btn");
+      const postponeBtn = card.querySelector(".request-postpone-btn");
+      const rejectBtn = card.querySelector(".request-reject-btn");
+      const slotButtons = Array.from(card.querySelectorAll(".request-slot-btn"));
+      if (!id) return;
+
+      if (state.rejected.includes(id) || state.approved.some((a) => a.id === id) || state.postponed.some((a) => a.id === id)) {
+        card.style.display = "none";
+      }
+
+      slotButtons.forEach((btn) => {
+        btn.addEventListener("click", () => setSelectedSlot(card, btn));
+      });
+
+      if (approveBtn) {
+        approveBtn.addEventListener("click", async () => {
+          const dynamicList = loadLessonRequests();
+          const dynamicReq = dynamicList.find((r) => r && r.id === id);
+          const slotCheck = requireSlotBeforeApprove(card, dynamicReq);
+          if (!slotCheck.ok) return;
+          if (dynamicReq) {
+            dynamicReq.status = "approved";
+            dynamicReq.approvedAt = new Date().toISOString();
+            if (slotCheck.slot) dynamicReq.approvedSlot = slotCheck.slot;
+            saveLessonRequests(dynamicList);
+            card.style.display = "none";
+            try {
+              const result = await notifyStatusChange(dynamicReq, "approved");
+              if (result.skipped) {
+                showFeedback("Talep onaylandi. Kullanici bildirim almak istemiyor.", "neutral");
+              } else if (result.sentEmail || result.sentSms) {
+                showFeedback("Talep onaylandi ve kullaniciya bildirim gonderildi.", "success");
+              } else {
+                showFeedback("Talep onaylandi. Ancak secili kanal bilgisi eksik oldugu icin bildirim gonderilemedi.", "error");
+              }
+            } catch (error) {
+              showFeedback(`Talep onaylandi fakat bildirim hatasi: ${error.message}`, "error");
+            }
+          } else {
+            if (!state.approved.some((a) => a.id === id)) state.approved.push({ id, student, topic, approvedSlot: slotCheck.slot || "" });
+            state.rejected = state.rejected.filter((rid) => rid !== id);
+            saveRequestState(state);
+            card.style.display = "none";
+          }
+          renderDynamicRequests();
+          renderApproved();
+          renderPostponed();
+          renderPendingCounts();
+        });
+      }
+
+      if (postponeBtn) {
+        postponeBtn.addEventListener("click", async () => {
+          const postponeNote = prompt("Erteleme nedeni / yeni tarih notu:");
+          if (postponeNote === null) return;
+          const dynamicList = loadLessonRequests();
+          const dynamicReq = dynamicList.find((r) => r && r.id === id);
+          if (dynamicReq) {
+            dynamicReq.status = "postponed";
+            dynamicReq.postponedAt = new Date().toISOString();
+            dynamicReq.postponeNote = postponeNote.trim();
+            saveLessonRequests(dynamicList);
+            card.style.display = "none";
+            try {
+              const result = await notifyStatusChange(dynamicReq, "postponed", postponeNote.trim());
+              if (result.skipped) {
+                showFeedback("Talep ertelendi. Kullanici bildirim almak istemiyor.", "neutral");
+              } else if (result.sentEmail || result.sentSms) {
+                showFeedback("Talep ertelendi ve kullaniciya bildirim gonderildi.", "success");
+              } else {
+                showFeedback("Talep ertelendi. Ancak kanal bilgisi eksik oldugu icin bildirim gonderilemedi.", "error");
+              }
+            } catch (error) {
+              showFeedback(`Talep ertelendi fakat bildirim hatasi: ${error.message}`, "error");
+            }
+          } else {
+            if (!state.postponed.some((a) => a.id === id)) state.postponed.push({ id, student, topic, note: postponeNote.trim() });
+            state.rejected = state.rejected.filter((rid) => rid !== id);
+            state.approved = state.approved.filter((a) => a.id !== id);
+            saveRequestState(state);
+            card.style.display = "none";
+          }
+          renderDynamicRequests();
+          renderApproved();
+          renderPostponed();
+          renderPendingCounts();
+        });
+      }
+
+      if (rejectBtn) {
+        rejectBtn.addEventListener("click", () => {
+          const dynamicList = loadLessonRequests();
+          const dynamicReq = dynamicList.find((r) => r && r.id === id);
+          if (dynamicReq) {
+            dynamicReq.status = "rejected";
+            dynamicReq.rejectedAt = new Date().toISOString();
+            saveLessonRequests(dynamicList);
+          } else {
+            if (!state.rejected.includes(id)) state.rejected.push(id);
+            state.approved = state.approved.filter((a) => a.id !== id);
+            saveRequestState(state);
+          }
+          card.style.display = "none";
+          renderDynamicRequests();
+          renderApproved();
+          renderPostponed();
+          renderPendingCounts();
+        });
+      }
+    });
+
+    if (requestList) {
+      requestList.addEventListener("click", async (event) => {
+        const slotHit = event.target.closest(".request-slot-btn");
+        if (slotHit) {
+          const slotCard = event.target.closest(".request-card");
+          if (slotCard) setSelectedSlot(slotCard, slotHit);
+          return;
+        }
+        const approveHit = event.target.closest(".request-approve-btn");
+        const rejectHit = event.target.closest(".request-reject-btn");
+        const postponeHit = event.target.closest(".request-postpone-btn");
+        if (!approveHit && !rejectHit && !postponeHit) return;
+        const card = event.target.closest(".request-card.request-dynamic, .request-card.request-admin-approved");
+        if (!card) return;
+        const id = card.getAttribute("data-request-id");
+        if (!id) return;
+        const dynamicList = loadLessonRequests();
+        const dynamicReq = dynamicList.find((r) => r && r.id === id);
+        const cardStudent = card.querySelector(".request-student")?.textContent?.trim() || "Ogrenci";
+        const cardTopic = card.querySelector(".request-topic")?.textContent?.trim() || "Ders Talebi";
+
+        if (approveHit) {
+          const slotCheck = requireSlotBeforeApprove(card, dynamicReq);
+          if (!slotCheck.ok) return;
+          if (dynamicReq) {
+            dynamicReq.status = "approved";
+            dynamicReq.approvedAt = new Date().toISOString();
+            if (slotCheck.slot) dynamicReq.approvedSlot = slotCheck.slot;
+            saveLessonRequests(dynamicList);
+            card.style.display = "none";
+            try {
+              const result = await notifyStatusChange(dynamicReq, "approved");
+              if (result.skipped) {
+                showFeedback("Talep onaylandi. Kullanici bildirim almak istemiyor.", "neutral");
+              } else if (result.sentEmail || result.sentSms) {
+                showFeedback("Talep onaylandi ve kullaniciya bildirim gonderildi.", "success");
+              } else {
+                showFeedback("Talep onaylandi. Ancak secili kanal bilgisi eksik oldugu icin bildirim gonderilemedi.", "error");
+              }
+            } catch (error) {
+              showFeedback(`Talep onaylandi fakat bildirim hatasi: ${error.message}`, "error");
+            }
+          } else {
+            if (!state.approved.some((a) => a.id === id)) state.approved.push({ id, student: cardStudent, topic: cardTopic, approvedSlot: slotCheck.slot || "" });
+            state.rejected = state.rejected.filter((rid) => rid !== id);
+            state.postponed = state.postponed.filter((p) => p.id !== id);
+            saveRequestState(state);
+            card.style.display = "none";
+            showFeedback("Admin onayli talep egitmen tarafinda onaylandi.", "success");
+          }
+        }
+
+        if (postponeHit) {
+          const postponeNote = prompt("Erteleme nedeni / yeni tarih notu:");
+          if (postponeNote === null) return;
+          const cleanNote = postponeNote.trim();
+          if (dynamicReq) {
+            dynamicReq.status = "postponed";
+            dynamicReq.postponedAt = new Date().toISOString();
+            dynamicReq.postponeNote = cleanNote;
+            saveLessonRequests(dynamicList);
+            card.style.display = "none";
+            try {
+              const result = await notifyStatusChange(dynamicReq, "postponed", cleanNote);
+              if (result.skipped) {
+                showFeedback("Talep ertelendi. Kullanici bildirim almak istemiyor.", "neutral");
+              } else if (result.sentEmail || result.sentSms) {
+                showFeedback("Talep ertelendi ve kullaniciya bildirim gonderildi.", "success");
+              } else {
+                showFeedback("Talep ertelendi. Ancak kanal bilgisi eksik oldugu icin bildirim gonderilemedi.", "error");
+              }
+            } catch (error) {
+              showFeedback(`Talep ertelendi fakat bildirim hatasi: ${error.message}`, "error");
+            }
+          } else {
+            state.approved = state.approved.filter((a) => a.id !== id);
+            state.rejected = state.rejected.filter((rid) => rid !== id);
+            if (!state.postponed.some((p) => p.id === id)) {
+              state.postponed.push({ id, student: cardStudent, topic: cardTopic, note: cleanNote });
+            }
+            saveRequestState(state);
+            card.style.display = "none";
+            showFeedback("Admin onayli talep ertelendi.", "success");
+          }
+        }
+
+        if (rejectHit) {
+          if (dynamicReq) {
+            dynamicReq.status = "rejected";
+            dynamicReq.rejectedAt = new Date().toISOString();
+            saveLessonRequests(dynamicList);
+          } else {
+            if (!state.rejected.includes(id)) state.rejected.push(id);
+            state.approved = state.approved.filter((a) => a.id !== id);
+            state.postponed = state.postponed.filter((p) => p.id !== id);
+            saveRequestState(state);
+          }
+          card.style.display = "none";
+        }
+
+        renderDynamicRequests();
+        renderApproved();
+        renderPostponed();
+        renderPendingCounts();
+      });
+    }
+
+    if (approvedList) {
+      approvedList.addEventListener("click", async (event) => {
+        const postponeApprovedBtn = event.target.closest(".approved-postpone-btn");
+        if (!postponeApprovedBtn) return;
+        const id = postponeApprovedBtn.getAttribute("data-approved-id");
+        const source = postponeApprovedBtn.getAttribute("data-source");
+        if (!id) return;
+
+        const postponeNote = prompt("Onayli dersi erteleme nedeni / yeni tarih notu:");
+        if (postponeNote === null) return;
+        const cleanNote = postponeNote.trim();
+
+        if (source === "dynamic") {
+          const dynamicList = loadLessonRequests();
+          const req = dynamicList.find((r) => r && r.id === id && r.status === "approved");
+          if (!req) {
+            showFeedback("Onayli ders kaydi bulunamadi.", "error");
+            return;
+          }
+          req.status = "postponed";
+          req.postponedAt = new Date().toISOString();
+          req.postponeNote = cleanNote;
+          saveLessonRequests(dynamicList);
+          try {
+            const result = await notifyStatusChange(req, "postponed", cleanNote);
+            if (result.skipped) {
+              showFeedback("Onayli ders ertelendi. Kullanici bildirim almak istemiyor.", "neutral");
+            } else if (result.sentEmail || result.sentSms) {
+              showFeedback("Onayli ders ertelendi ve kullaniciya bildirim gonderildi.", "success");
+            } else {
+              showFeedback("Onayli ders ertelendi. Kanal bilgisi eksik oldugu icin bildirim gonderilemedi.", "error");
+            }
+          } catch (error) {
+            showFeedback(`Onayli ders ertelendi fakat bildirim hatasi: ${error.message}`, "error");
+          }
+        } else {
+          const entry = state.approved.find((a) => a.id === id);
+          if (!entry) return;
+          state.approved = state.approved.filter((a) => a.id !== id);
+          if (!state.postponed.some((p) => p.id === id)) {
+            state.postponed.push({ id: entry.id, student: entry.student, topic: entry.topic, note: cleanNote });
+          }
+          saveRequestState(state);
+          showFeedback("Onayli ders ertelendi.", "success");
+        }
+
+        renderDynamicRequests();
+        renderApproved();
+        renderPostponed();
+        renderPendingCounts();
+      });
+    }
+
+    // Header: notifications + settings
+    const NOTIF_SEEN_KEY = "demo_instructor_notif_seen_v1";
+
+    const loadNotifSeen = () => {
+      try {
+        const raw = localStorage.getItem(NOTIF_SEEN_KEY);
+        const parsed = raw ? JSON.parse(raw) : {};
+        const pending = Array.isArray(parsed?.pending) ? parsed.pending : [];
+        const adminApproved = Array.isArray(parsed?.adminApproved) ? parsed.adminApproved : [];
+        return {
+          pending: pending.map((x) => String(x || "")).filter(Boolean).slice(0, 600),
+          adminApproved: adminApproved.map((x) => String(x || "")).filter(Boolean).slice(0, 600),
+        };
+      } catch (_e) {
+        return { pending: [], adminApproved: [] };
+      }
+    };
+
+    const saveNotifSeen = (next) => {
+      try {
+        localStorage.setItem(NOTIF_SEEN_KEY, JSON.stringify(next || { pending: [], adminApproved: [] }));
+      } catch (_e) {}
+    };
+
+    const computeNotif = () => {
+      const pending = loadLessonRequests().filter((r) => r && r.status === "pending");
+      const adminApproved = loadAdminApprovedRequests();
+      return { pending, adminApproved, total: pending.length + adminApproved.length };
+    };
+
+    const computeUnreadTotal = () => {
+      const { pending, adminApproved } = computeNotif();
+      const seen = loadNotifSeen();
+      const seenPending = new Set((seen?.pending || []).map((x) => String(x)));
+      const seenAdmin = new Set((seen?.adminApproved || []).map((x) => String(x)));
+      const unreadPending = pending.filter((r) => r && r.id && !seenPending.has(String(r.id))).length;
+      const unreadAdmin = adminApproved.filter((a) => a && a.id && !seenAdmin.has(String(a.id))).length;
+      return unreadPending + unreadAdmin;
+    };
+
+    const markAllNotifsSeen = () => {
+      const { pending, adminApproved } = computeNotif();
+      const next = loadNotifSeen();
+      const pendingIds = pending.map((r) => String(r?.id || "")).filter(Boolean);
+      const adminIds = adminApproved.map((a) => String(a?.id || "")).filter(Boolean);
+
+      const mergedPending = Array.from(new Set([...(next.pending || []), ...pendingIds])).slice(-600);
+      const mergedAdmin = Array.from(new Set([...(next.adminApproved || []), ...adminIds])).slice(-600);
+      saveNotifSeen({ pending: mergedPending, adminApproved: mergedAdmin });
+    };
+
+    const syncNotifBadge = () => {
+      if (!notifBadge) return;
+      const total = computeUnreadTotal();
+      notifBadge.textContent = String(total);
+      notifBadge.classList.toggle("hidden", total <= 0);
+    };
+
+    const renderNotifications = () => {
+      if (!notifList) return;
+      const { pending, adminApproved } = computeNotif();
+
+      const items = [];
+      pending.slice(0, 6).forEach((r) => {
+        items.push({
+          icon: "pending_actions",
+          title: r.topic || "Yeni Ders Talebi",
+          meta: `${r.fullName || "Öğrenci"} • ${formatDateTime(r.createdAt || r.requestedAt || "")}`,
+          desc: r.notes || "",
+          tone: "amber"
+        });
+      });
+      adminApproved.slice(0, 4).forEach((a) => {
+        items.push({
+          icon: "verified_user",
+          title: a.title || "Admin Onaylı Talep",
+          meta: a.meta || "",
+          desc: "Bu talep süper admin panelinden onaylandı.",
+          tone: "cyan"
+        });
+      });
+
+      if (!items.length) {
+        notifList.innerHTML = "";
+        notifEmpty?.classList.remove("hidden");
+        return;
+      }
+      notifEmpty?.classList.add("hidden");
+
+      notifList.innerHTML = items.map((x) => {
+        const tone = x.tone === "cyan"
+          ? "border-cyan-500/20 bg-cyan-500/10 text-cyan-200"
+          : "border-amber-500/20 bg-amber-500/10 text-amber-200";
+        return `
+          <div class="rounded-2xl border ${tone} p-4">
+            <div class="flex items-start justify-between gap-3">
+              <div class="min-w-0">
+                <div class="flex items-center gap-2 flex-wrap">
+                  <span class="material-symbols-outlined notranslate" translate="no">${escapeHtml(x.icon)}</span>
+                  <div class="font-extrabold text-sm truncate">${escapeHtml(x.title)}</div>
+                </div>
+                ${x.meta ? `<div class="mt-1 text-[11px] opacity-80 truncate">${escapeHtml(x.meta)}</div>` : ""}
+                ${x.desc ? `<div class="mt-2 text-sm opacity-90 break-words">${escapeHtml(x.desc)}</div>` : ""}
+              </div>
+            </div>
+          </div>
+        `.trim();
+      }).join("\n");
+    };
+
+    // Apply theme from shared settings
+    try {
+      const s = readSettings();
+      applyTheme(s?.theme || "dark");
+    } catch (_e) {}
+
+    try {
+      bindModal(notifModal);
+      bindModal(settingsModal);
+
+      document.addEventListener("keydown", (e) => {
+        if (e.key !== "Escape") return;
+        closeModal(notifModal);
+        closeModal(settingsModal);
+      });
+
+      notifBtn?.addEventListener("click", () => {
+        // "Bildirimler" açılınca okunmuş kabul et -> badge sıfırlansın.
+        markAllNotifsSeen();
+        syncNotifBadge();
+        renderNotifications();
+        openModal(notifModal);
+      });
+
+      notifOpenRequestsBtn?.addEventListener("click", () => {
+        closeModal(notifModal);
+        applyPanelView("requests");
+        window.location.hash = viewToHash("requests");
+      });
+
+      settingsBtn?.addEventListener("click", () => {
+        const s = readSettings();
+        if (settingsThemeSel) settingsThemeSel.value = normalizeTheme(s?.theme || "dark");
+        if (settingsFeedback) settingsFeedback.textContent = "";
+        openModal(settingsModal);
+      });
+
+      settingsThemeSel?.addEventListener("change", () => {
+        const nextTheme = normalizeTheme(settingsThemeSel.value);
+        const cur = readSettings();
+        writeSettings({ ...cur, theme: nextTheme });
+        applyTheme(nextTheme);
+        if (settingsFeedback) settingsFeedback.textContent = "Tema güncellendi.";
+      });
+
+      settingsLogoutBtn?.addEventListener("click", () => {
+        window.DemoAuth?.logout?.({ redirectTo: "giris.html" });
+      });
+
+      syncNotifBadge();
+      window.addEventListener("storage", (e) => {
+        if (!e) return;
+        if (e.key === LESSON_REQUESTS_KEY || e.key === ADMIN_REQUEST_STATE_KEY) syncNotifBadge();
+        if (e.key === UI_SETTINGS_KEY) {
+          const s = readSettings();
+          applyTheme(s?.theme || "dark");
+        }
+      });
+    } catch (_e) {}
+
+    renderDynamicRequests();
+    renderApproved();
+    renderPostponed();
+    renderPendingCounts();
+    renderStudents();
+  })();
+</script>
+</body>
+</html>

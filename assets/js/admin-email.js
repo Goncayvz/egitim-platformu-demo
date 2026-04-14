@@ -1,6 +1,12 @@
 (() => {
   "use strict";
 
+  const API_BASE = window.location.pathname.includes("/pages/") ? "../api/" : "api/";
+  const apiUrl = (path) => {
+    const p = String(path || "").replace(/^\.?\//, "").replace(/^api\//, "");
+    return `${API_BASE}${p}`;
+  };
+
   function $(id) {
     return document.getElementById(id);
   }
@@ -56,7 +62,7 @@
     const el = $("brevo-status");
     if (!el) return;
     try {
-      const s = await apiGet("./api/email_status.php");
+      const s = await apiGet(apiUrl("email_status.php"));
       if (!s.configured) {
         el.innerHTML =
           '<span class="px-2 py-1 rounded-full text-xs font-extrabold bg-rose-50 dark:bg-rose-500/10 text-rose-600">Brevo yapılandırılmadı</span>' +
@@ -103,7 +109,7 @@
       if (recipients.some((x) => !isValidEmail(x))) return setStatus("Alıcı listesinde geçersiz e-posta var.", "warn");
       $("bulk-send")?.setAttribute("disabled", "disabled");
       try {
-        const res = await apiPost("./api/email_send.php", { subject, body, recipients });
+        const res = await apiPost(apiUrl("email_send.php"), { subject, body, recipients });
         setStatus(`Toplu gönderim tamamlandı. Gönderildi: ${res.delivered}, Hata: ${res.failed}`, "ok");
       } catch (err) {
         setStatus(String(err?.message || err), "danger");
@@ -122,7 +128,7 @@
       if (!subject || !body) return setStatus("Konu ve içerik zorunlu.", "warn");
       $("single-send")?.setAttribute("disabled", "disabled");
       try {
-        const res = await apiPost("./api/email_send.php", { subject, body, recipients: [to] });
+        const res = await apiPost(apiUrl("email_send.php"), { subject, body, recipients: [to] });
         setStatus(`Gönderildi. ${res.delivered ? "Başarılı" : "Kontrol edin"}`, "ok");
       } catch (err) {
         setStatus(String(err?.message || err), "danger");
@@ -141,7 +147,7 @@
       if (!subject || !body) return setStatus("Konu ve içerik zorunlu.", "warn");
       $("test-send")?.setAttribute("disabled", "disabled");
       try {
-        const res = await apiPost("./api/email_test.php", { subject, body, recipients: [to] });
+        const res = await apiPost(apiUrl("email_test.php"), { subject, body, recipients: [to] });
         setStatus(res.message || "Test e-postası gönderildi.", "ok");
       } catch (err) {
         setStatus(String(err?.message || err), "danger");
@@ -157,4 +163,3 @@
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", bind, { once: true });
   else bind();
 })();
-

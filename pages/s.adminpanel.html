@@ -1,0 +1,2432 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="tr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="../assets/js/admin-theme.js"></script>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#741ce9",
+              "background-light": "#f7f6f8",
+              "background-dark": "#181121",
+            },
+            fontFamily: {
+              "display": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<title>Eğitim Platformu - Süper Admin</title>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen">
+<script src="../assets/js/auth.js"></script>
+<script>
+  window.DemoAuth?.guard({ requiredRole: "admin" });
+</script>
+<div class="flex h-screen overflow-hidden">
+<aside id="admin-sidebar" class="w-72 bg-white dark:bg-slate-900/50 border-r border-slate-200 dark:border-slate-800 flex flex-col">
+<div class="p-6 flex items-center gap-3">
+<img id="admin-brand-logo" alt="Site Logo" class="w-10 h-10 rounded-full object-cover border border-primary/30" src="../assets/img/logo-placeholder.svg"/>
+<div>
+<h1 class="font-bold text-lg leading-tight">Eğitim Platformu Admin</h1>
+<p class="text-xs text-primary font-medium uppercase tracking-wider">Platform Yönetimi</p>
+</div>
+</div>
+<nav class="flex-1 px-4 space-y-1 overflow-y-auto">
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="s.adminpanel.html#istatistik">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="text-sm font-medium">İstatistikler</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="kullanicimanage.html">
+<span class="material-symbols-outlined">group</span>
+<span class="text-sm font-medium">Kullanıcı Yönetimi</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="kursadmin.html">
+<span class="material-symbols-outlined">auto_stories</span>
+<span class="text-sm font-medium">Kurs Yönetimi</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="s.adminpanel.html#ders-talepleri">
+<span class="material-symbols-outlined">verified_user</span>
+<span class="text-sm font-medium">Eğitmen Onayları</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="egitmenpanel.html">
+<span class="material-symbols-outlined">school</span>
+<span class="text-sm font-medium">Eğitmen Paneli</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="s.adminpanel.html#raporlar">
+<span class="material-symbols-outlined">payments</span>
+<span class="text-sm font-medium">Finansal Raporlar</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="destekadmin.html">
+<span class="material-symbols-outlined">support_agent</span>
+<span class="text-sm font-medium">Destek Mesajları</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="epostaadmin.html">
+<span class="material-symbols-outlined">mail</span>
+<span class="text-sm font-medium">Toplu E-posta</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="posentegrasyon.html">
+<span class="material-symbols-outlined">credit_card</span>
+<span class="text-sm font-medium">Entegrasyonlar</span>
+</a>
+<button class="w-full flex items-center justify-between text-xs font-bold text-slate-400 uppercase px-3 py-2 mt-3 tracking-widest hover:text-slate-600 dark:hover:text-slate-300" type="button" data-sidebar-toggle="sidebar-group-content" aria-expanded="false">
+<span>İçerik Denetimi</span>
+<span class="material-symbols-outlined text-sm transition-transform">expand_more</span>
+</button>
+<div id="sidebar-group-content" class="space-y-0.5 hidden">
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all" href="icerikdenetimi.html">
+<span class="material-symbols-outlined text-xl">tune</span>
+<span class="text-sm font-semibold">Header Ayarları</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all" href="footerdenetimi.html">
+<span class="material-symbols-outlined text-xl">tune</span>
+<span class="text-sm font-semibold">Footer Ayarları</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all" href="htmlmodulyonetimi.html">
+<span class="material-symbols-outlined text-xl">view_list</span>
+<span class="text-sm font-semibold">HTML Modül Yönetimi</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all" href="sayfayonetimi.html">
+<span class="material-symbols-outlined text-xl">description</span>
+<span class="text-sm font-semibold">Sınırsız Sayfa Yönetimi</span>
+</a>
+</div>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="ayarlarpage.html">
+<span class="material-symbols-outlined">settings</span>
+<span class="text-sm font-medium">Ayarlar</span>
+</a>
+</nav>
+<div class="p-4 border-t border-slate-200 dark:border-slate-800">
+<button class="w-full flex items-center justify-center gap-2 bg-primary/10 text-primary hover:bg-primary/20 transition-colors py-2.5 rounded-lg font-bold text-sm">
+<span class="material-symbols-outlined text-sm">add</span>
+                    Yeni Kurs Ekle
+                </button>
+</div>
+</aside>
+<main class="flex-1 flex flex-col overflow-hidden">
+<header id="admin-top-header" class="h-16 border-b border-slate-200 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50 backdrop-blur-md flex items-center justify-between px-8 z-10">
+<div class="flex items-center gap-4 flex-1">
+<div class="relative w-full max-w-md">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">search</span>
+<input class="w-full bg-slate-100 dark:bg-slate-800 border-none rounded-lg pl-10 pr-4 py-2 text-sm focus:ring-2 focus:ring-primary transition-all outline-none" placeholder="Platformda ara..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-2">
+<button id="btn-admin-notifications" type="button" class="p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full relative transition-colors" aria-label="Bildirimler" title="Bildirimler">
+<span class="material-symbols-outlined notranslate" translate="no">notifications</span>
+<span id="admin-notif-badge" class="absolute -top-0.5 -right-0.5 hidden min-w-[18px] h-[18px] px-1 bg-rose-500 text-white text-[10px] font-black rounded-full border-2 border-white dark:border-slate-900 grid place-items-center">0</span>
+</button>
+<button id="btn-admin-settings" type="button" class="p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors" aria-label="Ayarlar" title="Ayarlar">
+<span class="material-symbols-outlined notranslate" translate="no">settings</span>
+</button>
+<button id="btn-admin-messages" type="button" class="p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors" aria-label="Destek Mesajları" title="Destek Mesajları">
+<span class="material-symbols-outlined notranslate" translate="no">chat_bubble</span>
+</button>
+</div>
+<div class="h-8 w-px bg-slate-200 dark:border-slate-800"></div>
+<div class="flex items-center gap-3 cursor-pointer group">
+<div class="text-right hidden sm:block">
+<button id="admin-profile-name-btn" class="text-sm font-semibold leading-none hover:text-primary transition-colors text-right" title="Kullanici adini degistir" type="button">Caner Aras</button>
+<p class="text-xs text-slate-500 font-medium mt-1">Süper Admin</p>
+</div>
+<input id="admin-profile-file-input" class="hidden" type="file" accept=".png,.jpg,.jpeg,.webp,image/png,image/jpeg,image/webp"/>
+<button id="admin-profile-upload-btn" class="w-10 h-10 rounded-full bg-primary/20 overflow-hidden border-2 border-primary/20 group-hover:border-primary transition-all" title="Profil fotografini degistir" type="button">
+<img id="admin-profile-avatar" class="w-full h-full object-cover" data-alt="Admin profil fotoğrafı" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAhp0RiJTiq0RtnnX9CyIXlIq9Y7jnwW3B597AyWDdLDeIrf4P47NIWpud1zoqqDKsQVhfMJ25w5ryviT-bu4pOPvFO-sc4CyVp85jk8JZJQuDNdExXFkAj7VYDCK8-F3cY2h3PmqjjNrhuVscSxMYSuOx1blFAQz2K3r6t97rzvL0pBybDUfuDVSJmvTLuT51AXaWek4TSxPI2JMS6vXETIgKQA_W5IYGMBpRPOq7X0FES2exstL5wwDVLyUgbQccwbWkGqF60J155"/>
+</button>
+</div>
+</div>
+</header>
+<div class="flex-1 overflow-y-auto p-8 space-y-8">
+<section id="istatistik">
+<div class="flex items-end justify-between gap-6 mb-6">
+<div>
+<h2 class="text-xl font-bold">İstatistikler</h2>
+<p class="text-sm text-slate-500">Dashboard verileri</p>
+</div>
+<a class="text-primary font-bold text-sm hover:underline" href="s.adminpanel.html#raporlar">Raporlara git</a>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+<div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 rounded-xl flex flex-col justify-between hover:border-primary/50 transition-colors group">
+<div class="flex items-center justify-between mb-4">
+<div class="p-2 bg-primary/10 rounded-lg text-primary group-hover:bg-primary group-hover:text-white transition-colors">
+<span class="material-symbols-outlined">person</span>
+</div>
+<span class="text-green-500 text-xs font-bold bg-green-500/10 px-2 py-1 rounded">+12%</span>
+</div>
+<div>
+<p class="text-slate-500 text-sm font-medium">Toplam Öğrenci</p>
+<p class="text-2xl font-bold mt-1">12,450</p>
+</div>
+</div>
+<div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 rounded-xl flex flex-col justify-between hover:border-primary/50 transition-colors group">
+<div class="flex items-center justify-between mb-4">
+<div class="p-2 bg-primary/10 rounded-lg text-primary group-hover:bg-primary group-hover:text-white transition-colors">
+<span class="material-symbols-outlined">co_present</span>
+</div>
+<span class="text-green-500 text-xs font-bold bg-green-500/10 px-2 py-1 rounded">+5%</span>
+</div>
+<div>
+<p class="text-slate-500 text-sm font-medium">Aktif Eğitmenler</p>
+<p class="text-2xl font-bold mt-1">842</p>
+</div>
+</div>
+<div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 rounded-xl flex flex-col justify-between hover:border-primary/50 transition-colors group">
+<div class="flex items-center justify-between mb-4">
+<div class="p-2 bg-primary/10 rounded-lg text-primary group-hover:bg-primary group-hover:text-white transition-colors">
+<span class="material-symbols-outlined">pending_actions</span>
+</div>
+<span class="text-orange-500 text-xs font-bold bg-orange-500/10 px-2 py-1 rounded">Kritik</span>
+</div>
+<div>
+<p class="text-slate-500 text-sm font-medium">Bekleyen Talepler</p>
+<p class="text-2xl font-bold mt-1">156</p>
+</div>
+</div>
+<div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 rounded-xl flex flex-col justify-between hover:border-primary/50 transition-colors group">
+<div class="flex items-center justify-between mb-4">
+<div class="p-2 bg-primary/10 rounded-lg text-primary group-hover:bg-primary group-hover:text-white transition-colors">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+</div>
+<span class="text-green-500 text-xs font-bold bg-green-500/10 px-2 py-1 rounded">+18%</span>
+</div>
+<div>
+<p class="text-slate-500 text-sm font-medium">Aylık Kazanç</p>
+<p class="text-2xl font-bold mt-1">₺45,200</p>
+</div>
+</div>
+</div>
+</section>
+<section class="grid grid-cols-1 lg:grid-cols-3 gap-8" id="raporlar">
+<div class="lg:col-span-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 rounded-xl">
+<div class="flex items-center justify-between mb-8">
+<div>
+<h3 class="font-bold text-lg">Kullanıcı Artışı ve Gelir</h3>
+<p class="text-sm text-slate-500">Son 6 aylık performans analizi</p>
+</div>
+<div class="flex gap-2">
+<button class="px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-800 text-xs font-medium hover:bg-slate-50 dark:hover:bg-slate-800">PDF İndir</button>
+</div>
+</div>
+<div class="h-64 flex items-end gap-3 px-2">
+<div class="flex-1 flex flex-col items-center gap-2 group">
+<div class="w-full bg-primary/20 rounded-t-lg relative h-40 group-hover:bg-primary transition-all">
+<div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-[10px] py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity">₺85k</div>
+</div>
+<span class="text-[10px] font-bold text-slate-500">Ocak</span>
+</div>
+<div class="flex-1 flex flex-col items-center gap-2 group">
+<div class="w-full bg-primary/20 rounded-t-lg relative h-32 group-hover:bg-primary transition-all"></div>
+<span class="text-[10px] font-bold text-slate-500">Şubat</span>
+</div>
+<div class="flex-1 flex flex-col items-center gap-2 group">
+<div class="w-full bg-primary/20 rounded-t-lg relative h-52 group-hover:bg-primary transition-all"></div>
+<span class="text-[10px] font-bold text-slate-500">Mart</span>
+</div>
+<div class="flex-1 flex flex-col items-center gap-2 group">
+<div class="w-full bg-primary/20 rounded-t-lg relative h-44 group-hover:bg-primary transition-all"></div>
+<span class="text-[10px] font-bold text-slate-500">Nisan</span>
+</div>
+<div class="flex-1 flex flex-col items-center gap-2 group">
+<div class="w-full bg-primary rounded-t-lg relative h-60"></div>
+<span class="text-[10px] font-bold text-slate-500">Mayıs</span>
+</div>
+<div class="flex-1 flex flex-col items-center gap-2 group">
+<div class="w-full bg-primary/20 rounded-t-lg relative h-48 group-hover:bg-primary transition-all"></div>
+<span class="text-[10px] font-bold text-slate-500">Haziran</span>
+</div>
+</div>
+</div>
+<div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 rounded-xl flex flex-col">
+<h3 class="font-bold text-lg mb-6">Hızlı Eylemler</h3>
+<div class="space-y-4 flex-1">
+<a class="w-full flex items-center justify-between p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50 hover:bg-primary hover:text-white transition-all group" href="kullanici_ekle.html?rol=egitmen" id="quick-add-instructor">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary group-hover:text-white">person_add</span>
+<span class="text-sm font-semibold">Yeni Eğitmen Ekle</span>
+</div>
+<span class="material-symbols-outlined text-sm">chevron_right</span>
+</a>
+<a class="w-full flex items-center justify-between p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50 hover:bg-primary hover:text-white transition-all group" href="s.adminpanel.html#duyurular" id="quick-announcement">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary group-hover:text-white">campaign</span>
+<span class="text-sm font-semibold">Duyuru Yayınla</span>
+</div>
+<span class="material-symbols-outlined text-sm">chevron_right</span>
+</a>
+<a class="w-full flex items-center justify-between p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50 hover:bg-primary hover:text-white transition-all group" href="s.adminpanel.html#toplu-eposta" id="quick-email">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary group-hover:text-white">mail</span>
+<span class="text-sm font-semibold">Toplu E-posta Gönder</span>
+</div>
+<span class="material-symbols-outlined text-sm">chevron_right</span>
+</a>
+<a class="w-full flex items-center justify-between p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50 hover:bg-primary hover:text-white transition-all group" href="s.adminpanel.html#raporlar" id="quick-report">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary group-hover:text-white">analytics</span>
+<span class="text-sm font-semibold">Sistem Raporu Al</span>
+</div>
+<span class="material-symbols-outlined text-sm">chevron_right</span>
+</a>
+</div>
+<div class="mt-6 pt-6 border-t border-slate-200 dark:border-slate-800">
+<p class="text-xs text-slate-500 text-center">Sistem durumu: <span class="text-green-500 font-bold">Aktif</span></p>
+</div>
+</div>
+</section>
+<!-- Not: Bu blok `icerikdenetimi.html` sayfasına taşındı. -->
+<section class="hidden grid grid-cols-1 xl:grid-cols-2 gap-8 scroll-mt-24" id="icerik-denetimi">
+<div class="xl:col-span-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden">
+<div class="p-6 border-b border-slate-200 dark:border-slate-800 flex items-start justify-between gap-4 flex-wrap">
+<div>
+<h3 class="font-bold text-lg">İçerik Denetimi: Header Ayarları</h3>
+<p class="text-sm text-slate-500 mt-1">Menü yönlendirmeleri, renkler ve logo ayarlarını yönetin.</p>
+</div>
+<div class="flex items-center gap-2">
+<button id="header-settings-reset" class="px-4 py-2 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 text-sm font-semibold hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors" type="button">Varsayılan</button>
+<button id="header-settings-save-disabled" class="px-4 py-2 rounded-lg bg-primary text-white text-sm font-semibold hover:bg-primary/90 transition-colors" type="button" title="Bu panel icerikdenetimi.html sayfasina tasindi">Kaydet</button>
+</div>
+<div id="header-settings-feedback" class="hidden w-full text-xs rounded-lg border px-3 py-2"></div>
+</div>
+<div class="p-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
+<div class="space-y-6">
+<div class="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/40 p-4">
+<h4 class="text-sm font-bold mb-3">Logo</h4>
+<div class="flex items-center gap-3">
+<div class="w-12 h-12 rounded-full overflow-hidden border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 flex items-center justify-center">
+<img id="header-logo-preview" class="w-full h-full object-cover" src="../assets/img/logo-placeholder.svg" alt="Logo önizleme"/>
+</div>
+<div class="flex-1 min-w-0">
+<p class="text-xs text-slate-500">Header ve admin marka görseli için kullanılır.</p>
+<p id="header-logo-file-name" class="text-[11px] text-slate-400 mt-1 truncate"></p>
+</div>
+</div>
+<div class="mt-3 flex flex-wrap gap-2">
+<input id="header-logo-file" class="hidden" type="file" accept=".png,.jpg,.jpeg,.webp,image/png,image/jpeg,image/webp"/>
+<button id="header-logo-upload-btn" class="px-3 py-2 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-sm font-semibold hover:border-primary/60 transition-colors" type="button">Logo Yükle</button>
+<button id="header-logo-clear-btn" class="px-3 py-2 rounded-lg bg-rose-600 text-white text-sm font-semibold hover:bg-rose-500 transition-colors" type="button">Temizle</button>
+</div>
+<p class="text-[11px] text-slate-500 mt-2">Öneri: 512×512 (maks. 2MB) • PNG/JPG/WEBP</p>
+</div>
+<div class="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/40 p-4">
+<h4 class="text-sm font-bold mb-3">Renkler</h4>
+<div class="space-y-3">
+<label class="block">
+<span class="text-xs font-semibold text-slate-500">Header Arka Plan</span>
+<div id="header-bg-palette" class="mt-2 flex flex-wrap gap-2">
+<button type="button" class="size-7 rounded-full border border-slate-200 dark:border-slate-700 bg-[#32466f] hover:ring-2 hover:ring-slate-300 transition" data-color-hex="#32466f" title="#32466f" aria-label="Header arka plan rengi #32466f"></button>
+<button type="button" class="size-7 rounded-full border border-slate-200 dark:border-slate-700 bg-[#0f172a] hover:ring-2 hover:ring-slate-300 transition" data-color-hex="#0f172a" title="#0f172a" aria-label="Header arka plan rengi #0f172a"></button>
+<button type="button" class="size-7 rounded-full border border-slate-200 dark:border-slate-700 bg-[#111827] hover:ring-2 hover:ring-slate-300 transition" data-color-hex="#111827" title="#111827" aria-label="Header arka plan rengi #111827"></button>
+<button type="button" class="size-7 rounded-full border border-slate-200 dark:border-slate-700 bg-white hover:ring-2 hover:ring-slate-300 transition" data-color-hex="#ffffff" title="#ffffff" aria-label="Header arka plan rengi #ffffff"></button>
+<button type="button" class="size-7 rounded-full border border-slate-200 dark:border-slate-700 bg-slate-50 hover:ring-2 hover:ring-slate-300 transition" data-color-hex="#f8fafc" title="#f8fafc" aria-label="Header arka plan rengi #f8fafc"></button>
+<button type="button" class="size-7 rounded-full border border-slate-200 dark:border-slate-700 bg-primary hover:ring-2 hover:ring-slate-300 transition" data-color-hex="#741ce9" title="#741ce9" aria-label="Header arka plan rengi #741ce9"></button>
+</div>
+<div class="mt-1 flex items-center gap-2">
+<input id="header-bg-color" class="w-12 h-9 rounded-lg border border-slate-200 dark:border-slate-700 bg-white" type="color" value="#32466f"/>
+<input id="header-bg-hex" class="flex-1 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 px-3 py-2 text-sm font-semibold focus:ring-2 focus:ring-primary outline-none" type="text" value="#32466f"/>
+</div>
+</label>
+<label class="block">
+<span class="text-xs font-semibold text-slate-500">Yazı Rengi</span>
+<div id="header-text-palette" class="mt-2 flex flex-wrap gap-2">
+<button type="button" class="size-7 rounded-full border border-slate-200 dark:border-slate-700 bg-white hover:ring-2 hover:ring-slate-300 transition" data-color-hex="#ffffff" title="#ffffff" aria-label="Header yazı rengi #ffffff"></button>
+<button type="button" class="size-7 rounded-full border border-slate-200 dark:border-slate-700 bg-[#e2e8f0] hover:ring-2 hover:ring-slate-300 transition" data-color-hex="#e2e8f0" title="#e2e8f0" aria-label="Header yazı rengi #e2e8f0"></button>
+<button type="button" class="size-7 rounded-full border border-slate-200 dark:border-slate-700 bg-[#cbd5e1] hover:ring-2 hover:ring-slate-300 transition" data-color-hex="#cbd5e1" title="#cbd5e1" aria-label="Header yazı rengi #cbd5e1"></button>
+<button type="button" class="size-7 rounded-full border border-slate-200 dark:border-slate-700 bg-[#0f172a] hover:ring-2 hover:ring-slate-300 transition" data-color-hex="#0f172a" title="#0f172a" aria-label="Header yazı rengi #0f172a"></button>
+<button type="button" class="size-7 rounded-full border border-slate-200 dark:border-slate-700 bg-[#111827] hover:ring-2 hover:ring-slate-300 transition" data-color-hex="#111827" title="#111827" aria-label="Header yazı rengi #111827"></button>
+</div>
+<div class="mt-1 flex items-center gap-2">
+<input id="header-text-color" class="w-12 h-9 rounded-lg border border-slate-200 dark:border-slate-700 bg-white" type="color" value="#ffffff"/>
+<input id="header-text-hex" class="flex-1 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 px-3 py-2 text-sm font-semibold focus:ring-2 focus:ring-primary outline-none" type="text" value="#ffffff"/>
+</div>
+</label>
+</div>
+</div>
+<div class="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/40 p-4">
+<h4 class="text-sm font-bold mb-3">Butonlar</h4>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+<label class="block">
+<span class="text-xs font-semibold text-slate-500">Giriş Yazısı</span>
+<input id="header-cta-login-text" class="mt-1 w-full rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 px-3 py-2 text-sm font-semibold focus:ring-2 focus:ring-primary outline-none" type="text" value="Giriş Yap"/>
+</label>
+<label class="block">
+<span class="text-xs font-semibold text-slate-500">Giriş Linki</span>
+<input id="header-cta-login-href" class="mt-1 w-full rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 px-3 py-2 text-sm font-semibold focus:ring-2 focus:ring-primary outline-none" type="text" value="giris.html"/>
+</label>
+<label class="block">
+<span class="text-xs font-semibold text-slate-500">Kayıt Yazısı</span>
+<input id="header-cta-signup-text" class="mt-1 w-full rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 px-3 py-2 text-sm font-semibold focus:ring-2 focus:ring-primary outline-none" type="text" value="Kayıt Ol"/>
+</label>
+<label class="block">
+<span class="text-xs font-semibold text-slate-500">Kayıt Linki</span>
+<input id="header-cta-signup-href" class="mt-1 w-full rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 px-3 py-2 text-sm font-semibold focus:ring-2 focus:ring-primary outline-none" type="text" value="kayit.html"/>
+</label>
+</div>
+</div>
+</div>
+<div class="lg:col-span-2 space-y-6">
+<div class="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/40 p-4">
+<div class="flex items-center justify-between gap-3 flex-wrap">
+<div>
+<h4 class="text-sm font-bold">Menü Yönlendirmeleri</h4>
+<p class="text-xs text-slate-500 mt-1">Header menüsünde görünen linkleri düzenleyin.</p>
+</div>
+<button id="header-nav-add" class="px-3 py-2 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-sm font-semibold hover:border-primary/60 transition-colors" type="button">Link Ekle</button>
+</div>
+<div id="header-nav-list" class="mt-4 space-y-3"></div>
+</div>
+<div class="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/40 p-4">
+<div class="flex items-start justify-between gap-3 flex-wrap">
+<div>
+<h4 class="text-sm font-bold">Site Canlı Önizleme</h4>
+<p class="text-xs text-slate-500 mt-1">Kaydettikçe önizleme yenilenir.</p>
+</div>
+<div class="flex items-center gap-2 flex-wrap">
+<select id="header-live-preview-page" class="h-10 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-sm font-semibold px-3">
+<option value="../index.html">Anasayfa</option>
+<option value="kurslar.html">Kurslar</option>
+<option value="iletisim.html">İletişim</option>
+</select>
+<button id="header-live-preview-refresh" type="button" class="h-10 px-4 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 text-sm font-bold hover:border-primary/60 transition">Yenile</button>
+<a id="header-live-preview-open" class="h-10 px-4 rounded-lg bg-primary text-white text-sm font-bold inline-flex items-center justify-center hover:bg-primary/90 transition" href="../index.html" target="_blank" rel="noopener noreferrer">Yeni Sekme</a>
+</div>
+</div>
+<div class="mt-4">
+<iframe id="header-live-preview-frame" title="Site önizleme" class="w-full h-[70vh] min-h-[520px] rounded-xl border border-slate-200 dark:border-slate-800 bg-white" src="../index.html"></iframe>
+<p class="mt-3 text-[11px] text-slate-500">Not: Önizleme sayfalarının <span class="font-bold">site-header-settings.js</span> ile ayarları okuması gerekir.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="grid grid-cols-1 xl:grid-cols-2 gap-8" id="duyurular">
+<div class="xl:col-span-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden">
+<div class="p-6 border-b border-slate-200 dark:border-slate-800">
+<h3 class="font-bold text-lg">Duyuru Hazırlama</h3>
+<p class="text-sm text-slate-500 mt-1">Platform genelinde yayınlanacak duyuruyu oluşturun.</p>
+</div>
+<div class="p-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
+<div class="lg:col-span-2 space-y-4">
+<label class="block">
+<span class="text-sm font-medium text-slate-600 dark:text-slate-300">Duyuru Başlığı</span>
+<input id="announcement-title" class="w-full mt-2 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-4 py-2 text-sm focus:ring-2 focus:ring-primary outline-none" placeholder="Örn: Yeni canlı ders takvimi yayınlandı" type="text"/>
+</label>
+<label class="block">
+<span class="text-sm font-medium text-slate-600 dark:text-slate-300">Duyuru İçeriği</span>
+<textarea id="announcement-content" class="w-full mt-2 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-4 py-3 text-sm focus:ring-2 focus:ring-primary outline-none min-h-[140px]" placeholder="Duyuru detay metnini girin..."></textarea>
+</label>
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+<label class="block">
+<span class="text-sm font-medium text-slate-600 dark:text-slate-300">Hedef Kitle</span>
+<select id="announcement-audience" class="w-full mt-2 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-4 py-2 text-sm focus:ring-2 focus:ring-primary outline-none">
+<option>Tüm Kullanıcılar</option>
+<option>Öğrenciler</option>
+<option>Eğitmenler</option>
+<option>Adminler</option>
+</select>
+</label>
+<label class="block">
+<span class="text-sm font-medium text-slate-600 dark:text-slate-300">Yayın Tarihi</span>
+<input id="announcement-date" class="w-full mt-2 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-4 py-2 text-sm focus:ring-2 focus:ring-primary outline-none" type="date"/>
+</label>
+<label class="block">
+<span class="text-sm font-medium text-slate-600 dark:text-slate-300">Öncelik</span>
+<select id="announcement-priority" class="w-full mt-2 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-4 py-2 text-sm focus:ring-2 focus:ring-primary outline-none">
+<option>Normal</option>
+<option>Önemli</option>
+<option>Kritik</option>
+</select>
+</label>
+</div>
+<div class="flex flex-wrap gap-3 pt-2">
+<button id="announcement-preview-btn" class="px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-700 text-sm font-medium hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" type="button">Önizle</button>
+<button id="announcement-publish-btn" class="px-4 py-2 rounded-lg bg-primary text-white text-sm font-semibold hover:bg-primary/90 transition-colors" type="button">Duyuruyu Yayınla</button>
+</div>
+</div>
+<div class="bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-200 dark:border-slate-700 p-4">
+<h4 class="text-sm font-bold mb-3">Önizleme</h4>
+<div id="announcement-preview" class="rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 p-4 min-h-[200px]">
+<p class="text-xs text-slate-400">Henüz önizleme oluşturulmadı.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="xl:col-span-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden" id="toplu-eposta">
+<div class="p-6 border-b border-slate-200 dark:border-slate-800">
+<h3 class="font-bold text-lg">Toplu E-posta Hazırlama</h3>
+<p class="text-sm text-slate-500 mt-1">Segment seçip e-posta içeriğini hazırlayın ve gönderin.</p>
+</div>
+<div class="p-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
+<div class="lg:col-span-2 space-y-4">
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+<label class="block">
+<span class="text-sm font-medium text-slate-600 dark:text-slate-300">Alıcı Segmenti</span>
+<select id="email-segment" class="w-full mt-2 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-4 py-2 text-sm focus:ring-2 focus:ring-primary outline-none">
+<option>Tüm Kullanıcılar</option>
+<option>Öğrenciler</option>
+<option>Eğitmenler</option>
+<option>Pasif Kullanıcılar</option>
+<option>Özel Seçim (Kullanıcı Listesi)</option>
+</select>
+</label>
+<label class="block">
+<span class="text-sm font-medium text-slate-600 dark:text-slate-300">Gönderim Zamanı</span>
+<input id="email-send-time" class="w-full mt-2 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-4 py-2 text-sm focus:ring-2 focus:ring-primary outline-none" type="datetime-local"/>
+</label>
+</div>
+<div id="custom-recipient-wrap" class="rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/40 p-4 hidden">
+<div class="flex items-center justify-between mb-3">
+<p class="text-sm font-semibold">Kullanıcı Listesinden Seç</p>
+<label class="inline-flex items-center gap-2 text-xs text-slate-500">
+<input id="select-all-users" class="rounded border-slate-300 text-primary focus:ring-primary" type="checkbox"/>
+<span>Tümünü Seç</span>
+</label>
+</div>
+<input id="user-filter-input" class="w-full rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 px-3 py-2 text-sm focus:ring-2 focus:ring-primary outline-none" placeholder="Kullanıcı ara..." type="text"/>
+<div id="recipient-list" class="mt-3 max-h-40 overflow-y-auto space-y-2 pr-1"></div>
+<p class="text-xs text-slate-500 mt-2">Seçilen kullanıcı: <span id="selected-user-count" class="font-semibold">0</span></p>
+</div>
+<label class="block">
+<span class="text-sm font-medium text-slate-600 dark:text-slate-300">E-posta Konusu</span>
+<input id="email-subject" class="w-full mt-2 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-4 py-2 text-sm focus:ring-2 focus:ring-primary outline-none" placeholder="Örn: Yeni dönem kampanyamız başladı" type="text"/>
+</label>
+<label class="block">
+<span class="text-sm font-medium text-slate-600 dark:text-slate-300">E-posta İçeriği</span>
+<textarea id="email-body" class="w-full mt-2 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-4 py-3 text-sm focus:ring-2 focus:ring-primary outline-none min-h-[140px]" placeholder="E-posta gövde metnini yazın..."></textarea>
+</label>
+<label class="block">
+<span class="text-sm font-medium text-slate-600 dark:text-slate-300">Test E-postası Alıcısı</span>
+<input id="test-email-address" class="w-full mt-2 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-4 py-2 text-sm focus:ring-2 focus:ring-primary outline-none" placeholder="ornek@example.com" type="email"/>
+</label>
+<div id="email-action-feedback" class="hidden text-xs rounded-lg border px-3 py-2"></div>
+<div class="flex flex-wrap gap-3 pt-2">
+<button id="email-preview-btn" class="px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-700 text-sm font-medium hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" type="button">Önizle</button>
+<button id="email-test-btn" class="px-4 py-2 rounded-lg border border-primary/40 text-primary text-sm font-medium hover:bg-primary/10 transition-colors" type="button">Test E-postası Gönder</button>
+<button id="email-send-btn" class="px-4 py-2 rounded-lg bg-primary text-white text-sm font-semibold hover:bg-primary/90 transition-colors" type="button">Toplu Gönderimi Başlat</button>
+</div>
+</div>
+<div class="bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-200 dark:border-slate-700 p-4">
+<h4 class="text-sm font-bold mb-3">E-posta Önizleme</h4>
+<div id="email-preview" class="rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 p-4 min-h-[200px]">
+<p class="text-xs text-slate-400">Henüz e-posta önizlemesi oluşturulmadı.</p>
+</div>
+<div class="mt-4">
+<div class="flex items-center justify-between mb-2">
+<h5 class="text-xs font-bold uppercase tracking-wider text-slate-500">Gönderim Geçmişi</h5>
+</div>
+<div id="email-log-list" class="space-y-2">
+<p class="text-xs text-slate-400">Henüz gönderim kaydı yok.</p>
+</div>
+</div>
+<div class="mt-4">
+<div class="flex items-center justify-between mb-2">
+<h5 class="text-xs font-bold uppercase tracking-wider text-slate-500">Zamanlanan Gönderimler</h5>
+<button id="refresh-scheduled-btn" class="text-xs font-semibold text-primary hover:underline" type="button">Yenile</button>
+</div>
+<div id="scheduled-mail-list" class="space-y-2">
+<p class="text-xs text-slate-400">Zamanlanan gönderim yok.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden">
+<div class="p-6 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
+<h3 class="font-bold text-lg">Son Kayıt Olanlar</h3>
+<a class="text-primary text-sm font-semibold hover:underline" href="kullanicimanage.html">Tümünü Gör</a>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full">
+<thead>
+<tr class="text-left text-slate-500 text-xs font-bold uppercase tracking-wider border-b border-slate-100 dark:border-slate-800">
+<th class="px-6 py-4">Kullanıcı</th>
+<th class="px-6 py-4">Tür</th>
+<th class="px-6 py-4">Tarih</th>
+<th class="px-6 py-4">Durum</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Kullanıcı avatarı" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAaWRbeWuDJN6wLSdX9n6hiCxBy7vM-Zm4wIuwNQjRMmSr2LwX8zhVetGAoj2UkWaD7zCiruqndexubBODzpYTyoZIflTG39LQ-SjVZjhavT5oJLcZFrXL4qSbKjvy76BpnJYZOTbjmoDZ1QjqgUCZYnA2PZH674FoKjRN0ACPjDEwKVRCrM1l93rVONQamXLOzMU_kqQZ2pfvHi6J4fwClHRNIWAQEedgzZhIc6OWUkoXJhfv4sfsfPwID8GbVCKoMWtez8GcI3muv"/>
+</div>
+<span class="text-sm font-medium">Ahmet Yılmaz</span>
+</div>
+</td>
+<td class="px-6 py-4 text-sm">Öğrenci</td>
+<td class="px-6 py-4 text-sm text-slate-500">Bugün, 14:20</td>
+<td class="px-6 py-4">
+<span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-green-500/10 text-green-500">Aktif</span>
+</td>
+</tr>
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Kullanıcı avatarı" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCk57wLwVViPzWV-GBLeQbW2AWCLvPHjZud8Y982vaeEsHK6ilabQWVrDR5fBuwGZD9jd9vljLa4QE8GztCjAd3LuAd8DofboaCikmPFP76uQzT1IesHtiuhqxFZJt5zFYpb4N6WKq8xd1uVE-WWCPMoaTGa5IOPjpr84xO6xPzS-O3BVosBaUDoZE3tADCDDbAOeW8nOMM1-D05NDtePvjAd4S0s3tBIJUd4W6m1LgSKJOTyUBKBu6lx-bW2cV6bHxBfnvlPrhwVnt"/>
+</div>
+<span class="text-sm font-medium">Ayşe Demir</span>
+</div>
+</td>
+<td class="px-6 py-4 text-sm">Eğitmen</td>
+<td class="px-6 py-4 text-sm text-slate-500">Dün, 09:15</td>
+<td class="px-6 py-4">
+<span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-amber-500/10 text-amber-500">Onay Bekliyor</span>
+</td>
+</tr>
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Kullanıcı avatarı" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAvg0rc_IzKdGUbhe_9FypzS6GXH-zQap3rdEGT70O7RD28l2AYUzdfjEXx9-BAsuW7A7s9SAiUe450nnw7rYJsnXmQI25lT12lw1oCP4tf-zbxSAzN560Ey3ndANJAi8C6_FrFSPADOVhqYUWLMLQHj88ao1UMX8TjstZSsltrA5ey-wXeVUE_Guu1swSO7INlUqyLZTuUtMJHfBrmDahGSeL2bdpoVIDK--4s07p4M0V0IOIRl5XdpIPpKShItIY9E8G6zDMQe804"/>
+</div>
+<span class="text-sm font-medium">Mehmet Can</span>
+</div>
+</td>
+<td class="px-6 py-4 text-sm">Öğrenci</td>
+<td class="px-6 py-4 text-sm text-slate-500">22 May, 18:45</td>
+<td class="px-6 py-4">
+<span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-green-500/10 text-green-500">Aktif</span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden" id="ders-talepleri">
+<div class="p-6 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
+<h3 class="font-bold text-lg">Eğitmen Panelinden Gelen Ders Talepleri</h3>
+<a class="text-primary text-sm font-semibold hover:underline" href="talep_olustur.html">Tümünü Gör</a>
+</div>
+<div class="p-6 space-y-4" id="pending-list">
+<div class="request-item p-4 rounded-xl border border-slate-100 dark:border-slate-800 flex items-center justify-between group hover:border-primary transition-colors" data-request-id="req-react-mentorluk">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white">
+<span class="material-symbols-outlined">person_search</span>
+</div>
+<div>
+<h4 class="text-sm font-bold">React Mentorluk Talebi</h4>
+<p class="text-xs text-slate-500 mt-1">Öğrenci: Ahmet Yılmaz • Eğitmen: Dr. Selin Yılmaz</p>
+</div>
+</div>
+<div class="flex gap-2">
+<button class="w-8 h-8 rounded-lg bg-red-500/10 text-red-500 flex items-center justify-center hover:bg-red-500 hover:text-white transition-colors">
+<span class="material-symbols-outlined text-sm">close</span>
+</button>
+<button class="w-8 h-8 rounded-lg bg-green-500/10 text-green-500 flex items-center justify-center hover:bg-green-500 hover:text-white transition-colors">
+<span class="material-symbols-outlined text-sm">check</span>
+</button>
+</div>
+</div>
+<div class="request-item p-4 rounded-xl border border-slate-100 dark:border-slate-800 flex items-center justify-between group hover:border-primary transition-colors" data-request-id="req-matematik-ozel">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white">
+<span class="material-symbols-outlined">calculate</span>
+</div>
+<div>
+<h4 class="text-sm font-bold">Matematik Özel Ders Talebi</h4>
+<p class="text-xs text-slate-500 mt-1">Öğrenci: Elif Aksoy • Eğitmen: Oğuzhan Yıldız</p>
+</div>
+</div>
+<div class="flex gap-2">
+<button class="w-8 h-8 rounded-lg bg-red-500/10 text-red-500 flex items-center justify-center hover:bg-red-500 hover:text-white transition-colors">
+<span class="material-symbols-outlined text-sm">close</span>
+</button>
+<button class="w-8 h-8 rounded-lg bg-green-500/10 text-green-500 flex items-center justify-center hover:bg-green-500 hover:text-white transition-colors">
+<span class="material-symbols-outlined text-sm">check</span>
+</button>
+</div>
+</div>
+<div class="request-item p-4 rounded-xl border border-slate-100 dark:border-slate-800 flex items-center justify-between group hover:border-primary transition-colors" data-request-id="req-ingilizce-konusma">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white">
+<span class="material-symbols-outlined">language</span>
+</div>
+<div>
+<h4 class="text-sm font-bold">İngilizce Konuşma Kulübü Talebi</h4>
+<p class="text-xs text-slate-500 mt-1">Öğrenci: Mehmet Can • Eğitmen: Aslı Demir</p>
+</div>
+</div>
+<div class="flex gap-2">
+<button class="w-8 h-8 rounded-lg bg-red-500/10 text-red-500 flex items-center justify-center hover:bg-red-500 hover:text-white transition-colors">
+<span class="material-symbols-outlined text-sm">close</span>
+</button>
+<button class="w-8 h-8 rounded-lg bg-green-500/10 text-green-500 flex items-center justify-center hover:bg-green-500 hover:text-white transition-colors">
+<span class="material-symbols-outlined text-sm">check</span>
+</button>
+</div>
+</div>
+</div>
+<div class="px-6 pb-6">
+<div class="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/40 p-4">
+<div class="flex items-center justify-between">
+<h4 class="text-sm font-bold">Onaylanan Eğitimler</h4>
+<span class="text-xs font-semibold text-green-600 dark:text-green-400" id="approved-count">0 onay</span>
+</div>
+<p class="text-xs text-slate-500 mt-2" id="approved-empty">Henüz onaylanan eğitim yok.</p>
+<div class="space-y-2 mt-3" id="approved-list"></div>
+</div>
+</div>
+</div>
+</section>
+</div>
+</main>
+</div>
+
+<div id="admin-notifications-modal" class="fixed inset-0 z-50 hidden" aria-hidden="true">
+  <div data-modal-backdrop class="absolute inset-0 bg-black/60"></div>
+  <div class="relative h-full w-full flex items-center justify-center p-4">
+    <div class="w-full max-w-2xl rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-2xl overflow-hidden">
+      <div class="p-5 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between gap-3">
+        <div class="min-w-0">
+          <div class="text-xs font-black uppercase tracking-wider text-primary">Bildirimler</div>
+          <div class="text-lg font-black mt-1">Son aktiviteler</div>
+        </div>
+        <div class="flex items-center gap-2">
+          <button id="admin-notif-mark-read" type="button" class="px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-sm font-extrabold hover:opacity-90">
+            Hepsini okundu
+          </button>
+          <button data-modal-close type="button" class="size-10 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition text-slate-600 dark:text-slate-300" aria-label="Kapat">
+            <span class="material-symbols-outlined notranslate" translate="no">close</span>
+          </button>
+        </div>
+      </div>
+      <div class="p-5">
+        <div class="flex items-center justify-between gap-3 mb-3">
+          <div class="text-sm font-extrabold">Destek Mesajları</div>
+          <a href="destekadmin.html" class="text-sm font-extrabold text-primary hover:underline">Tümünü gör</a>
+        </div>
+        <div id="admin-notif-list" class="space-y-3"></div>
+        <p id="admin-notif-empty" class="hidden text-sm text-slate-500 dark:text-slate-400">Yeni bildirim yok.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="admin-settings-modal" class="fixed inset-0 z-50 hidden" aria-hidden="true">
+  <div data-modal-backdrop class="absolute inset-0 bg-black/60"></div>
+  <div class="relative h-full w-full flex items-center justify-center p-4">
+    <div class="w-full max-w-lg rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-2xl overflow-hidden">
+      <div class="p-5 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between gap-3">
+        <div class="min-w-0">
+          <div class="text-xs font-black uppercase tracking-wider text-primary">Ayarlar</div>
+          <div class="text-lg font-black mt-1">Hızlı ayarlar</div>
+        </div>
+        <button data-modal-close type="button" class="size-10 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition text-slate-600 dark:text-slate-300" aria-label="Kapat">
+          <span class="material-symbols-outlined notranslate" translate="no">close</span>
+        </button>
+      </div>
+      <div class="p-5 space-y-4">
+        <div class="flex items-center justify-between gap-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/40 px-4 py-3">
+          <div>
+            <div class="text-sm font-extrabold">Tema</div>
+            <div class="text-[11px] text-slate-500 dark:text-slate-400">Admin panel görünümü</div>
+          </div>
+          <select id="admin-settings-theme" class="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm font-extrabold px-3 py-2">
+            <option value="dark">Koyu</option>
+            <option value="light">Açık</option>
+          </select>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <a href="ayarlarpage.html" class="px-4 py-3 rounded-xl bg-primary text-white text-sm font-extrabold text-center hover:opacity-95 transition">Genel Ayarlar</a>
+          <a href="icerikdenetimi.html" class="px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-800 text-sm font-extrabold text-center hover:bg-slate-100 dark:hover:bg-slate-800 transition">Header Ayarları</a>
+          <a href="footerdenetimi.html" class="px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-800 text-sm font-extrabold text-center hover:bg-slate-100 dark:hover:bg-slate-800 transition">Footer Ayarları</a>
+          <a href="epostaadmin.html" class="px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-800 text-sm font-extrabold text-center hover:bg-slate-100 dark:hover:bg-slate-800 transition">Toplu E-posta</a>
+        </div>
+
+        <div class="flex items-center justify-end gap-2 pt-1">
+          <button id="admin-settings-logout" type="button" class="px-4 py-2.5 rounded-xl bg-rose-600 text-white text-sm font-extrabold hover:bg-rose-700 transition">
+            Çıkış Yap
+          </button>
+        </div>
+        <p id="admin-settings-feedback" class="text-xs text-slate-500 dark:text-slate-400"></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  (function () {
+    const UI_SETTINGS_KEY = "demo_site_settings_v1";
+    const ADMIN_PROFILE_KEY = "demo_admin_profile_v1";
+    const adminHeader = document.getElementById("admin-top-header");
+    const adminSidebar = document.getElementById("admin-sidebar");
+    const adminBrandLogo = document.getElementById("admin-brand-logo");
+    const adminProfileUploadBtn = document.getElementById("admin-profile-upload-btn");
+    const adminProfileFileInput = document.getElementById("admin-profile-file-input");
+    const adminProfileAvatar = document.getElementById("admin-profile-avatar");
+    const adminProfileNameBtn = document.getElementById("admin-profile-name-btn");
+
+    const toRgba = (hex, alpha) => {
+      const clean = String(hex || "").trim().replace("#", "");
+      if (!/^[0-9a-fA-F]{6}$/.test(clean)) return "";
+      const r = parseInt(clean.slice(0, 2), 16);
+      const g = parseInt(clean.slice(2, 4), 16);
+      const b = parseInt(clean.slice(4, 6), 16);
+      return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+    };
+
+    const upsertFavicon = (href) => {
+      if (!href) return;
+      let icon = document.querySelector("link[rel='icon']");
+      if (!icon) {
+        icon = document.createElement("link");
+        icon.setAttribute("rel", "icon");
+        document.head.appendChild(icon);
+      }
+      icon.setAttribute("href", href);
+    };
+
+    const readFileAsDataUrl = (file) => new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(String(reader.result || ""));
+      reader.onerror = () => reject(new Error("Dosya okunamadi"));
+      reader.readAsDataURL(file);
+    });
+
+    const applyAdminAvatar = (src) => {
+      if (!adminProfileAvatar || !src) return;
+      adminProfileAvatar.src = src;
+    };
+
+    const applyAdminName = (name) => {
+      if (!adminProfileNameBtn || !name) return;
+      adminProfileNameBtn.textContent = name;
+    };
+
+    const loadStoredAdminProfile = () => {
+      try {
+        const raw = localStorage.getItem(ADMIN_PROFILE_KEY);
+        if (!raw) return;
+        const parsed = JSON.parse(raw);
+        if (parsed?.avatarDataUrl) applyAdminAvatar(parsed.avatarDataUrl);
+        if (parsed?.displayName) applyAdminName(parsed.displayName);
+      } catch (_e) {}
+    };
+
+    const safeJsonParse = (raw, fallback) => {
+      try {
+        return raw ? JSON.parse(raw) : fallback;
+      } catch {
+        return fallback;
+      }
+    };
+
+    const escapeHtml = (value) =>
+      String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#39;");
+
+    const formatDateTime = (value) => {
+      if (!value) return "-";
+      const d = new Date(value);
+      if (Number.isNaN(d.getTime())) return String(value);
+      try {
+        return new Intl.DateTimeFormat("tr-TR", {
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
+          hour: "2-digit",
+          minute: "2-digit",
+        }).format(d);
+      } catch {
+        return d.toISOString().replace("T", " ").slice(0, 16);
+      }
+    };
+
+    const readSettings = () => safeJsonParse(localStorage.getItem(UI_SETTINGS_KEY), {}) || {};
+    const writeSettings = (next) => {
+      try {
+        localStorage.setItem(UI_SETTINGS_KEY, JSON.stringify(next || {}));
+      } catch (_e) {}
+    };
+
+    const normalizeTheme = (value) => {
+      const v = String(value || "").trim().toLowerCase();
+      if (v === "light" || v === "aydınlık" || v === "acik" || v === "açık") return "light";
+      if (v === "dark" || v === "karanlık" || v === "koyu") return "dark";
+      return "dark";
+    };
+
+    const applyTheme = (value) => {
+      const t = normalizeTheme(value);
+      document.documentElement.classList.toggle("dark", t === "dark");
+      try {
+        document.documentElement.style.colorScheme = t === "dark" ? "dark" : "light";
+      } catch (_e) {}
+    };
+
+    const SUPPORT_KEY = "demo_support_messages_v1";
+    const getSupportList = () => {
+      const list = safeJsonParse(localStorage.getItem(SUPPORT_KEY), []);
+      return Array.isArray(list) ? list : [];
+    };
+    const setSupportList = (list) => {
+      try {
+        localStorage.setItem(SUPPORT_KEY, JSON.stringify(Array.isArray(list) ? list : []));
+      } catch (_e) {}
+    };
+
+    const modal = (id) => document.getElementById(id);
+    const openModal = (el) => {
+      if (!el) return;
+      el.classList.remove("hidden");
+      el.setAttribute("aria-hidden", "false");
+    };
+    const closeModal = (el) => {
+      if (!el) return;
+      el.classList.add("hidden");
+      el.setAttribute("aria-hidden", "true");
+    };
+    const bindModal = (el) => {
+      if (!el) return;
+      el.querySelectorAll("[data-modal-close]").forEach((btn) => btn.addEventListener("click", () => closeModal(el)));
+      el.querySelectorAll("[data-modal-backdrop]").forEach((bd) => bd.addEventListener("click", () => closeModal(el)));
+    };
+
+    const notifBtn = document.getElementById("btn-admin-notifications");
+    const notifBadge = document.getElementById("admin-notif-badge");
+    const notifModal = modal("admin-notifications-modal");
+    const notifList = document.getElementById("admin-notif-list");
+    const notifEmpty = document.getElementById("admin-notif-empty");
+    const notifMarkRead = document.getElementById("admin-notif-mark-read");
+
+    const settingsBtn = document.getElementById("btn-admin-settings");
+    const settingsModal = modal("admin-settings-modal");
+    const settingsThemeSel = document.getElementById("admin-settings-theme");
+    const settingsLogoutBtn = document.getElementById("admin-settings-logout");
+    const settingsFeedback = document.getElementById("admin-settings-feedback");
+
+    const messagesBtn = document.getElementById("btn-admin-messages");
+
+    const computeNotifCounts = () => {
+      const list = getSupportList().filter((x) => x && typeof x === "object");
+      const newCount = list.filter((x) => String(x.status || "new") === "new").length;
+      return { newCount, total: list.length };
+    };
+
+    const syncNotifBadge = () => {
+      if (!notifBadge) return;
+      const { newCount } = computeNotifCounts();
+      notifBadge.textContent = String(newCount);
+      notifBadge.classList.toggle("hidden", newCount <= 0);
+    };
+
+    const renderNotifications = () => {
+      if (!notifList) return;
+      const list = getSupportList()
+        .filter((x) => x && typeof x === "object")
+        .sort((a, b) => String(b.createdAt || b.updatedAt || "").localeCompare(String(a.createdAt || a.updatedAt || "")));
+
+      const top = list.slice(0, 6);
+      if (!top.length) {
+        notifList.innerHTML = "";
+        if (notifEmpty) notifEmpty.classList.remove("hidden");
+        return;
+      }
+      if (notifEmpty) notifEmpty.classList.add("hidden");
+
+      notifList.innerHTML = top
+        .map((x) => {
+          const isNew = String(x.status || "new") === "new";
+          const subject = escapeHtml(x.subject || "Destek Mesajı");
+          const name = escapeHtml(x.name || "-");
+          const email = escapeHtml(x.email || "-");
+          const created = escapeHtml(formatDateTime(x.createdAt));
+          const message = escapeHtml(String(x.message || "")).slice(0, 220);
+          return `
+            <div class="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4">
+              <div class="flex items-start justify-between gap-3">
+                <div class="min-w-0">
+                  <div class="flex items-center gap-2 flex-wrap">
+                    <span class="material-symbols-outlined text-primary notranslate" translate="no">support_agent</span>
+                    <div class="font-extrabold text-sm truncate">${subject}</div>
+                    ${isNew ? '<span class="px-2 py-1 rounded-full text-[11px] font-black bg-rose-50 dark:bg-rose-500/10 text-rose-600">Yeni</span>' : ""}
+                  </div>
+                  <div class="mt-1 text-[11px] text-slate-500 dark:text-slate-400 truncate">${name} • ${email} • ${created}</div>
+                  <div class="mt-2 text-sm text-slate-700 dark:text-slate-200 break-words">${message}${String(x.message || "").length > 220 ? "…" : ""}</div>
+                </div>
+                <a class="shrink-0 px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-800 text-sm font-extrabold hover:bg-slate-100 dark:hover:bg-slate-800 transition" href="destekadmin.html">Aç</a>
+              </div>
+            </div>
+          `.trim();
+        })
+        .join("\n");
+    };
+
+    const handleAdminProfileUpload = async (file) => {
+      if (!file) return;
+      const allowed = ["image/png", "image/jpeg", "image/webp"];
+      if (file.type && !allowed.includes(file.type)) {
+        alert("Profil resmi icin PNG, JPG veya WEBP secin.");
+        return;
+      }
+      if (file.size > 2 * 1024 * 1024) {
+        alert("Profil resmi en fazla 2MB olabilir.");
+        return;
+      }
+      try {
+        const dataUrl = await readFileAsDataUrl(file);
+        applyAdminAvatar(dataUrl);
+        localStorage.setItem(ADMIN_PROFILE_KEY, JSON.stringify({ avatarDataUrl: dataUrl }));
+      } catch (_e) {
+        alert("Profil resmi yuklenemedi.");
+      }
+    };
+
+    loadStoredAdminProfile();
+
+    if (adminProfileUploadBtn && adminProfileFileInput) {
+      adminProfileUploadBtn.addEventListener("click", () => adminProfileFileInput.click());
+    }
+    if (adminProfileFileInput) {
+      adminProfileFileInput.addEventListener("change", () => {
+        const file = adminProfileFileInput.files && adminProfileFileInput.files[0];
+        handleAdminProfileUpload(file);
+      });
+    }
+    if (adminProfileNameBtn) {
+      adminProfileNameBtn.addEventListener("click", () => {
+        const current = adminProfileNameBtn.textContent.trim();
+        const next = prompt("Yeni admin adini girin:", current);
+        if (!next) return;
+        const clean = next.trim();
+        if (!clean) return;
+        applyAdminName(clean);
+        try {
+          const raw = localStorage.getItem(ADMIN_PROFILE_KEY);
+          const parsed = raw ? JSON.parse(raw) : {};
+          parsed.displayName = clean;
+          localStorage.setItem(ADMIN_PROFILE_KEY, JSON.stringify(parsed));
+        } catch (_e) {}
+      });
+    }
+
+    const applyAdminThemeFromSettings = () => {
+      try {
+        const raw = localStorage.getItem(UI_SETTINGS_KEY);
+        if (!raw) return;
+        const settings = JSON.parse(raw);
+        const primary = settings?.primaryColor;
+        const secondary = settings?.secondaryColor;
+        const theme = settings?.theme;
+        const contentBg = settings?.contentBg;
+        const headerBg = settings?.headerBg;
+        const surfaceBg = settings?.surfaceBg;
+        const logoDataUrl = settings?.logoDataUrl;
+        const faviconDataUrl = settings?.faviconDataUrl;
+
+        if (adminBrandLogo && typeof logoDataUrl === "string" && logoDataUrl) {
+          adminBrandLogo.src = logoDataUrl;
+        }
+        if (typeof faviconDataUrl === "string" && faviconDataUrl) {
+          upsertFavicon(faviconDataUrl);
+        }
+
+        if (theme === "light" || theme === "dark") {
+          document.documentElement.classList.toggle("dark", theme === "dark");
+        }
+        const isDark = document.documentElement.classList.contains("dark");
+
+        if (isDark) {
+          if (adminHeader) {
+            adminHeader.style.backgroundColor = "";
+            adminHeader.style.borderColor = "";
+          }
+          if (adminSidebar) {
+            adminSidebar.style.background = "";
+          }
+          document.body.style.backgroundColor = "";
+          const main = document.querySelector("main");
+          if (main) main.style.backgroundColor = "";
+          document.querySelectorAll("main div.bg-white.border, main section.bg-white.border").forEach((el) => {
+            el.style.backgroundColor = "";
+          });
+          return;
+        }
+
+        if (adminHeader && (primary || headerBg)) {
+          const headerTint = headerBg
+            ? (toRgba(headerBg, isDark ? 0.7 : 0.82) || `${headerBg}e6`)
+            : toRgba(primary, isDark ? 0.28 : 0.16);
+          if (headerTint) adminHeader.style.backgroundColor = headerTint;
+          const borderTint = toRgba(primary, 0.35);
+          if (borderTint) adminHeader.style.borderColor = borderTint;
+        }
+
+        if (adminSidebar && primary && secondary) {
+          const sideTintA = toRgba(primary, isDark ? 0.2 : 0.12);
+          const sideTintB = toRgba(secondary, isDark ? 0.14 : 0.08);
+          if (sideTintA && sideTintB) {
+            adminSidebar.style.background = `linear-gradient(180deg, ${sideTintA}, ${sideTintB})`;
+          }
+        }
+
+        if (contentBg) {
+          const pageTone = toRgba(contentBg, isDark ? 0.2 : 0.12) || contentBg;
+          document.body.style.backgroundColor = pageTone;
+          const main = document.querySelector("main");
+          if (main) main.style.backgroundColor = pageTone;
+        }
+
+        if (surfaceBg) {
+          const surfaceTone = toRgba(surfaceBg, isDark ? 0.28 : 0.22) || surfaceBg;
+          document.querySelectorAll("main div.bg-white.border, main section.bg-white.border").forEach((el) => {
+            if (el.closest("#admin-top-header")) return;
+            el.style.backgroundColor = surfaceTone;
+          });
+        }
+      } catch (_e) {}
+    };
+
+    applyAdminThemeFromSettings();
+    window.addEventListener("storage", (event) => {
+      if (event.key === UI_SETTINGS_KEY) applyAdminThemeFromSettings();
+    });
+
+    const bindSidebarActiveState = () => {
+      if (!adminSidebar) return;
+
+      const nav = adminSidebar.querySelector("nav");
+      if (!nav) return;
+
+      const links = Array.from(nav.querySelectorAll("a[href]"));
+      if (!links.length) return;
+
+      const normalizePath = (value) => String(value || "").toLowerCase().replace(/\/+$/, "");
+      const currentPath = normalizePath(window.location.pathname);
+
+      const getUrl = (el) => {
+        const raw = el?.getAttribute?.("href") || "";
+        try {
+          return new URL(raw, window.location.href);
+        } catch (_e) {
+          return null;
+        }
+      };
+
+      const metas = links.map((el) => ({ el, url: getUrl(el) }));
+
+      const setLinkActive = (el, active) => {
+        if (!el) return;
+        el.classList.toggle("bg-primary", active);
+        el.classList.toggle("text-white", active);
+        el.classList.toggle("hover:bg-primary/90", active);
+        el.classList.toggle("text-slate-600", !active);
+        el.classList.toggle("dark:text-slate-400", !active);
+        el.classList.toggle("hover:bg-slate-100", !active);
+        el.classList.toggle("dark:hover:bg-slate-800", !active);
+        el.setAttribute("aria-current", active ? "page" : "false");
+      };
+
+      const applyActive = (target) => {
+        metas.forEach(({ el }) => setLinkActive(el, el === target));
+      };
+
+      const sections = metas
+        .map(({ el, url }) => {
+          if (!url) return null;
+          if (normalizePath(url.pathname) !== currentPath) return null;
+          const hash = String(url.hash || "");
+          if (!hash.startsWith("#")) return null;
+          const id = hash.slice(1);
+          if (!id) return null;
+          const section = document.getElementById(id);
+          if (!section) return null;
+          return { el, section, hash };
+        })
+        .filter(Boolean);
+
+      const findLinkForHash = (hash) => {
+        const clean = String(hash || "");
+        if (!clean.startsWith("#")) return null;
+        const found = metas.find(({ url }) => url && normalizePath(url.pathname) === currentPath && url.hash === clean);
+        return found ? found.el : null;
+      };
+
+      const pickLinkByScroll = () => {
+        if (!sections.length) return null;
+        const headerBottom = adminHeader?.getBoundingClientRect?.().bottom;
+        const refY = (Number.isFinite(headerBottom) ? headerBottom : 0) + 12;
+
+        let best = null;
+        let bestTop = -Infinity;
+
+        for (const item of sections) {
+          const rect = item.section.getBoundingClientRect();
+          if (rect.bottom < refY) continue;
+          if (rect.top <= refY && rect.top > bestTop) {
+            bestTop = rect.top;
+            best = item;
+          }
+        }
+
+        if (best) return best.el;
+
+        let next = null;
+        let nextDist = Infinity;
+        for (const item of sections) {
+          const rect = item.section.getBoundingClientRect();
+          const dist = rect.top - refY;
+          if (dist >= 0 && dist < nextDist) {
+            nextDist = dist;
+            next = item;
+          }
+        }
+
+        return next ? next.el : sections[0].el;
+      };
+
+      let rafId = 0;
+      const update = () => {
+        const byScroll = pickLinkByScroll();
+        if (byScroll) {
+          applyActive(byScroll);
+          return;
+        }
+        const byHash = findLinkForHash(window.location.hash);
+        if (byHash) applyActive(byHash);
+      };
+
+      const scheduleUpdate = () => {
+        if (rafId) return;
+        rafId = requestAnimationFrame(() => {
+          rafId = 0;
+          update();
+        });
+      };
+
+      // Initial state
+      update();
+
+      // Hash navigation
+      window.addEventListener("hashchange", () => setTimeout(update, 0));
+
+      // Scroll-based detection (page scroll is inside the main content area)
+      const scroller =
+        (adminHeader && adminHeader.nextElementSibling instanceof HTMLElement && adminHeader.nextElementSibling) ||
+        document.querySelector("main > div.overflow-y-auto");
+      scroller?.addEventListener("scroll", scheduleUpdate, { passive: true });
+      window.addEventListener("resize", scheduleUpdate, { passive: true });
+
+      // Immediate feedback on click
+      links.forEach((a) => {
+        a.addEventListener("click", () => setTimeout(update, 0));
+      });
+    };
+
+    const wireSidebarDropdown = () => {
+      const STORAGE_KEY = "demo_admin_v1:sidebar_groups";
+      const toggles = Array.from(document.querySelectorAll("[data-sidebar-toggle]"));
+      if (!toggles.length) return;
+
+      let saved = {};
+      try {
+        saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}") || {};
+      } catch {
+        saved = {};
+      }
+
+      const applyState = (btn, isOpen, persist) => {
+        const targetId = btn.getAttribute("data-sidebar-toggle");
+        const panel = targetId ? document.getElementById(targetId) : null;
+        const icon = btn.querySelector(".material-symbols-outlined");
+        if (!panel) return;
+        panel.classList.toggle("hidden", !isOpen);
+        btn.setAttribute("aria-expanded", String(isOpen));
+        if (icon) icon.classList.toggle("rotate-180", isOpen);
+        if (persist && targetId) {
+          saved[targetId] = !!isOpen;
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(saved));
+        }
+      };
+
+      toggles.forEach((btn) => {
+        const targetId = btn.getAttribute("data-sidebar-toggle");
+        const isOpen = typeof saved[targetId] === "boolean" ? saved[targetId] : false;
+        applyState(btn, isOpen, false);
+        btn.addEventListener("click", () => {
+          const current = btn.getAttribute("aria-expanded") === "true";
+          applyState(btn, !current, true);
+        });
+      });
+    };
+
+    wireSidebarDropdown();
+    bindSidebarActiveState();
+
+    const clickByText = (selector, text, handler) => {
+      const el = Array.from(document.querySelectorAll(selector)).find((n) =>
+        n.textContent.includes(text)
+      );
+      if (el) el.addEventListener("click", handler);
+    };
+
+    clickByText("button", "Yeni Kurs Ekle", () => {
+      window.location.href = "kursadmin.html?new=1";
+    });
+
+    clickByText("button", "PDF İndir", () => {
+      alert("Rapor PDF oluşturma kuyruğa alındı.");
+    });
+
+    const topButtons = document.querySelectorAll("header button");
+    if (topButtons[0]) {
+      topButtons[0].addEventListener("click", () => {
+        window.location.href = "#duyurular";
+      });
+    }
+    if (topButtons[1]) {
+      topButtons[1].addEventListener("click", () => {
+        window.location.href = "iletisim.html";
+      });
+    }
+
+    const quickAnnouncement = document.getElementById("quick-announcement");
+    const quickEmail = document.getElementById("quick-email");
+    const quickReport = document.getElementById("quick-report");
+    const announcementTitle = document.getElementById("announcement-title");
+    const announcementContent = document.getElementById("announcement-content");
+    const announcementAudience = document.getElementById("announcement-audience");
+    const announcementDate = document.getElementById("announcement-date");
+    const announcementPriority = document.getElementById("announcement-priority");
+    const announcementPreview = document.getElementById("announcement-preview");
+    const announcementPreviewBtn = document.getElementById("announcement-preview-btn");
+    const announcementPublishBtn = document.getElementById("announcement-publish-btn");
+    const emailSegment = document.getElementById("email-segment");
+    const emailSendTime = document.getElementById("email-send-time");
+    const customRecipientWrap = document.getElementById("custom-recipient-wrap");
+    const selectAllUsers = document.getElementById("select-all-users");
+    const selectedUserCount = document.getElementById("selected-user-count");
+    const userFilterInput = document.getElementById("user-filter-input");
+    const recipientList = document.getElementById("recipient-list");
+    const USERS_KEY = "demo_users_v1";
+    let recipientCheckboxes = [];
+    let recipientRows = [];
+    const emailSubject = document.getElementById("email-subject");
+    const emailBody = document.getElementById("email-body");
+    const emailPreview = document.getElementById("email-preview");
+    const emailPreviewBtn = document.getElementById("email-preview-btn");
+    const emailTestBtn = document.getElementById("email-test-btn");
+    const emailSendBtn = document.getElementById("email-send-btn");
+    const testEmailAddress = document.getElementById("test-email-address");
+    const emailActionFeedback = document.getElementById("email-action-feedback");
+    const emailLogList = document.getElementById("email-log-list");
+    const scheduledMailList = document.getElementById("scheduled-mail-list");
+    const refreshScheduledBtn = document.getElementById("refresh-scheduled-btn");
+    const EMAIL_LOG_KEY = "demo_email_log_v1";
+    const EMAIL_API_ENDPOINTS = {
+      test: "../api/email_test.php",
+      send: "../api/email_send.php",
+      scheduled: "../api/email_scheduled.php"
+    };
+
+    const renderAnnouncementPreview = () => {
+      if (!announcementPreview) return;
+      const title = announcementTitle?.value?.trim() || "Duyuru Başlığı";
+      const content = announcementContent?.value?.trim() || "Duyuru içeriği henüz girilmedi.";
+      const audience = announcementAudience?.value || "Tüm Kullanıcılar";
+      const priority = announcementPriority?.value || "Normal";
+      announcementPreview.innerHTML = `
+        <p class="text-xs text-slate-500 mb-2">Kitle: <span class="font-semibold">${audience}</span> • Öncelik: <span class="font-semibold">${priority}</span></p>
+        <h5 class="text-sm font-bold">${title}</h5>
+        <p class="text-sm text-slate-600 dark:text-slate-300 mt-2">${content}</p>
+      `;
+    };
+
+    const focusSection = (id) => {
+      const section = document.getElementById(id);
+      if (!section) return;
+      section.scrollIntoView({ behavior: "smooth", block: "start" });
+      section.classList.add("ring-2", "ring-primary/30", "rounded-xl");
+      setTimeout(() => {
+        section.classList.remove("ring-2", "ring-primary/30", "rounded-xl");
+      }, 1400);
+    };
+
+    if (quickAnnouncement) {
+      quickAnnouncement.addEventListener("click", (e) => {
+        e.preventDefault();
+        focusSection("duyurular");
+        setTimeout(() => announcementTitle?.focus(), 280);
+      });
+    }
+
+    if (quickEmail) {
+      quickEmail.addEventListener("click", (e) => {
+        e.preventDefault();
+        focusSection("toplu-eposta");
+        setTimeout(() => emailSubject?.focus(), 280);
+      });
+    }
+
+    if (quickReport) {
+      quickReport.addEventListener("click", (e) => {
+        e.preventDefault();
+        const blob = new Blob(["Eğitim Platformu Sistem Raporu\\nTarih: " + new Date().toLocaleString("tr-TR")], { type: "text/plain;charset=utf-8" });
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = "sistem-raporu.txt";
+        a.click();
+        URL.revokeObjectURL(a.href);
+      });
+    }
+
+    if (announcementPreviewBtn) {
+      announcementPreviewBtn.addEventListener("click", () => {
+        renderAnnouncementPreview();
+      });
+    }
+    if (announcementPublishBtn) {
+      announcementPublishBtn.addEventListener("click", async () => {
+        const title = announcementTitle?.value?.trim();
+        const content = announcementContent?.value?.trim();
+        const audience = announcementAudience?.value || "Tüm Kullanıcılar";
+        const priority = announcementPriority?.value || "Normal";
+
+        if (!title || !content) {
+          showFeedback("Lütfen duyuru başlığı ve içeriğini girin.", "error");
+          return;
+        }
+
+        const recipients = Array.from(
+          new Set(getAudienceFilteredUsers(audience, getBaseUsers()).map((u) => u.email))
+        );
+        if (recipients.length === 0) {
+          showFeedback("Seçilen kitle için e-posta alıcısı bulunamadı.", "error");
+          return;
+        }
+
+        let sendAt = null;
+        if (announcementDate?.value) {
+          const scheduled = new Date(`${announcementDate.value}T09:00:00`);
+          if (scheduled.getTime() < Date.now()) {
+            showFeedback("Duyuru tarihi geçmiş olamaz.", "error");
+            return;
+          }
+          sendAt = scheduled.toISOString();
+        }
+
+        await setButtonBusy(announcementPublishBtn, "Yayınlanıyor...", async () => {
+          try {
+            const result = await callEmailApi("/send", {
+              type: "announcement",
+              subject: `[Duyuru] ${title}`,
+              body: `${content}\n\nÖncelik: ${priority}\nKitle: ${audience}`,
+              recipients,
+              sendAt
+            });
+            renderAnnouncementPreview();
+            addEmailLog({
+              type: "announcement",
+              status: result.scheduled ? "Zamanlandı" : "Başarılı",
+              subject: `[Duyuru] ${title}`,
+              recipientCount: recipients.length,
+              recipients,
+              createdAt: new Date().toISOString()
+            });
+            if (result.scheduled) {
+              showFeedback(
+                `Duyuru e-postası ${new Date(result.sendAt || sendAt).toLocaleString("tr-TR")} için zamanlandı.`,
+                "success"
+              );
+              loadScheduledJobs();
+            } else {
+              showFeedback(`Duyuru e-postası ${recipients.length} kullanıcıya gönderildi.`, "success");
+            }
+          } catch (error) {
+            showFeedback(error.message || "Duyuru yayınlanamadı.", "error");
+          }
+        });
+      });
+    }
+
+    const getStoredUsers = () => {
+      try {
+        const raw = localStorage.getItem(USERS_KEY);
+        const parsed = raw ? JSON.parse(raw) : [];
+        if (!Array.isArray(parsed) || parsed.length === 0) return [];
+        return parsed.filter((u) => u && u.name && u.email).map((u) => ({
+          id: u.id || u.email,
+          name: u.name,
+          email: u.email,
+          role: (u.role || "Öğrenci").trim(),
+          status: (u.status || "Aktif").trim()
+        }));
+      } catch (e) {
+        return [];
+      }
+    };
+
+    const defaultRecipientUsers = [
+      { id: "seed-1", name: "Ahmet Yılmaz", email: "ahmet@example.com", role: "Admin", status: "Aktif" },
+      { id: "seed-2", name: "Ayşe Demir", email: "ayse@example.com", role: "Öğrenci", status: "Aktif" },
+      { id: "seed-3", name: "Mert Kaya", email: "mert@example.com", role: "Eğitmen", status: "Beklemede" },
+      { id: "seed-4", name: "Aslı Demir", email: "asli@example.com", role: "Öğrenci", status: "Pasif" },
+      { id: "seed-5", name: "Oğuzhan Yıldız", email: "oguzhan@example.com", role: "Eğitmen", status: "Aktif" }
+    ];
+
+    const isCustomSelection = () => (emailSegment?.value || "").includes("Özel Seçim");
+    const isValidEmail = (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test((value || "").trim());
+
+    const getBaseUsers = () => {
+      const users = getStoredUsers();
+      return users.length > 0 ? users : defaultRecipientUsers;
+    };
+
+    const getSegmentFilteredUsers = (segmentValue, users) => {
+      if (!segmentValue || segmentValue === "Tüm Kullanıcılar" || isCustomSelection()) return users;
+      if (segmentValue === "Öğrenciler") return users.filter((u) => u.role.toLowerCase().includes("öğrenci"));
+      if (segmentValue === "Eğitmenler") return users.filter((u) => u.role.toLowerCase().includes("eğitmen"));
+      if (segmentValue === "Pasif Kullanıcılar") return users.filter((u) => u.status.toLowerCase().includes("pasif"));
+      return users;
+    };
+
+    const getAudienceFilteredUsers = (audienceValue, users) => {
+      if (!audienceValue || audienceValue === "Tüm Kullanıcılar") return users;
+      if (audienceValue === "Öğrenciler") return users.filter((u) => u.role.toLowerCase().includes("öğrenci"));
+      if (audienceValue === "Eğitmenler") return users.filter((u) => u.role.toLowerCase().includes("eğitmen"));
+      if (audienceValue === "Adminler") return users.filter((u) => u.role.toLowerCase().includes("admin"));
+      return users;
+    };
+
+    const getResolvedRecipients = () => {
+      if (isCustomSelection()) {
+        return recipientCheckboxes.filter((c) => c.checked).map((c) => c.value);
+      }
+      const users = getSegmentFilteredUsers(emailSegment?.value || "", getBaseUsers());
+      return users.map((u) => u.email);
+    };
+
+    const updateSelectedCount = () => {
+      const count = recipientCheckboxes.filter((c) => c.checked).length;
+      if (selectedUserCount) selectedUserCount.textContent = String(count);
+      if (selectAllUsers) {
+        selectAllUsers.checked = recipientCheckboxes.length > 0 && count === recipientCheckboxes.length;
+      }
+      return count;
+    };
+
+    const applyRecipientFilter = () => {
+      const q = (userFilterInput?.value || "").trim().toLowerCase();
+      recipientRows.forEach((row) => {
+        row.style.display = row.textContent.toLowerCase().includes(q) ? "" : "none";
+      });
+    };
+
+    const attachRecipientEvents = () => {
+      recipientCheckboxes.forEach((checkbox) => {
+        checkbox.addEventListener("change", updateSelectedCount);
+      });
+    };
+
+    const renderRecipientList = () => {
+      if (!recipientList) return;
+      const users = getStoredUsers();
+      const baseUsers = users.length > 0 ? users : defaultRecipientUsers;
+      const filteredUsers = getSegmentFilteredUsers(emailSegment?.value || "", baseUsers);
+      recipientList.innerHTML = filteredUsers.map((u) => `
+        <label class="recipient-row flex items-center justify-between rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 px-3 py-2">
+          <span class="text-sm">${u.name} <span class="text-xs text-slate-500">${u.email}</span></span>
+          <input class="recipient-checkbox rounded border-slate-300 text-primary focus:ring-primary" type="checkbox" value="${u.email}"/>
+        </label>
+      `).join("");
+      recipientCheckboxes = Array.from(recipientList.querySelectorAll(".recipient-checkbox"));
+      recipientRows = Array.from(recipientList.querySelectorAll(".recipient-row"));
+      attachRecipientEvents();
+      applyRecipientFilter();
+      updateSelectedCount();
+    };
+
+    const toggleCustomRecipientArea = () => {
+      if (!customRecipientWrap) return;
+      customRecipientWrap.classList.toggle("hidden", !isCustomSelection());
+    };
+
+    const renderEmailPreview = () => {
+      if (!emailPreview) return;
+      const segment = emailSegment?.value || "Tüm Kullanıcılar";
+      const recipientCount = getResolvedRecipients().length;
+      const subject = emailSubject?.value?.trim() || "E-posta Konusu";
+      const body = emailBody?.value?.trim() || "E-posta içeriği henüz girilmedi.";
+      const sendTime = emailSendTime?.value ? new Date(emailSendTime.value).toLocaleString("tr-TR") : "Hemen";
+      emailPreview.innerHTML = `
+        <p class="text-xs text-slate-500 mb-2">Segment: <span class="font-semibold">${segment}</span> • Alıcı: <span class="font-semibold">${recipientCount}</span> • Zaman: <span class="font-semibold">${sendTime}</span></p>
+        <h5 class="text-sm font-bold">${subject}</h5>
+        <p class="text-sm text-slate-600 dark:text-slate-300 mt-2">${body}</p>
+      `;
+    };
+
+    const showFeedback = (message, type) => {
+      if (!emailActionFeedback) return;
+      emailActionFeedback.className = "text-xs rounded-lg border px-3 py-2";
+      if (type === "success") {
+        emailActionFeedback.classList.add("border-green-200", "bg-green-50", "text-green-700", "dark:border-green-900/40", "dark:bg-green-900/10", "dark:text-green-300");
+      } else {
+        emailActionFeedback.classList.add("border-red-200", "bg-red-50", "text-red-700", "dark:border-red-900/40", "dark:bg-red-900/10", "dark:text-red-300");
+      }
+      emailActionFeedback.textContent = message;
+      emailActionFeedback.classList.remove("hidden");
+    };
+
+    const getEmailLogs = () => {
+      try {
+        const raw = localStorage.getItem(EMAIL_LOG_KEY);
+        const parsed = raw ? JSON.parse(raw) : [];
+        return Array.isArray(parsed) ? parsed : [];
+      } catch (e) {
+        return [];
+      }
+    };
+
+    const saveEmailLogs = (logs) => {
+      localStorage.setItem(EMAIL_LOG_KEY, JSON.stringify(logs.slice(0, 50)));
+    };
+
+    const renderEmailLogs = () => {
+      if (!emailLogList) return;
+      const logs = getEmailLogs();
+      if (!logs.length) {
+        emailLogList.innerHTML = '<p class="text-xs text-slate-400">Henüz gönderim kaydı yok.</p>';
+        return;
+      }
+      emailLogList.innerHTML = logs.slice(0, 8).map((log) => `
+        <div class="rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2">
+          <p class="text-xs font-semibold">${log.type === "test" ? "Test E-postası" : log.type === "announcement" ? "Duyuru E-postası" : "Toplu Gönderim"} • ${log.status}</p>
+          <p class="text-xs text-slate-500 mt-1">${log.subject}</p>
+          <p class="text-xs text-slate-500">${log.recipientCount} alıcı • ${new Date(log.createdAt).toLocaleString("tr-TR")}</p>
+        </div>
+      `).join("");
+    };
+
+    const addEmailLog = (entry) => {
+      const logs = getEmailLogs();
+      logs.unshift(entry);
+      saveEmailLogs(logs);
+      renderEmailLogs();
+    };
+
+    const callEmailApi = async (path, payload) => {
+      const endpoint = path === "/test" ? EMAIL_API_ENDPOINTS.test : EMAIL_API_ENDPOINTS.send;
+      let resp;
+      try {
+        resp = await fetch(endpoint, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+      } catch (_networkErr) {
+        throw new Error("Mail API'ye ulasilamadi. Sayfayi PHP sunucu uzerinden acin.");
+      }
+      const rawText = await resp.text();
+      let data = {};
+      try {
+        data = rawText ? JSON.parse(rawText) : {};
+      } catch (_e) {
+        data = {};
+      }
+      if (!resp.ok || !data.ok) {
+        const detail = (data && data.message)
+          ? data.message
+          : (rawText ? `Sunucu yaniti: ${rawText.slice(0, 140)}` : "");
+        throw new Error(detail || `Mail servisi hatasi (HTTP ${resp.status}).`);
+      }
+      return data;
+    };
+
+    const loadScheduledJobs = async () => {
+      if (!scheduledMailList) return;
+      try {
+        const resp = await fetch(EMAIL_API_ENDPOINTS.scheduled);
+        const data = await resp.json().catch(() => ({}));
+        if (!resp.ok || !data.ok) throw new Error(data.message || "Zamanlanan gönderimler alınamadı.");
+        const jobs = Array.isArray(data.jobs) ? data.jobs : [];
+        if (!jobs.length) {
+          scheduledMailList.innerHTML = '<p class="text-xs text-slate-400">Zamanlanan gönderim yok.</p>';
+          return;
+        }
+        scheduledMailList.innerHTML = jobs.slice(0, 8).map((job) => `
+          <div class="rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2">
+            <p class="text-xs font-semibold">${job.type === "announcement" ? "Duyuru E-postası" : "Toplu Gönderim"} • Planlandı</p>
+            <p class="text-xs text-slate-500 mt-1">${job.subject || "-"}</p>
+            <p class="text-xs text-slate-500">${job.recipientCount || 0} alıcı • ${new Date(job.sendAt).toLocaleString("tr-TR")}</p>
+          </div>
+        `).join("");
+      } catch (_error) {
+        scheduledMailList.innerHTML = '<p class="text-xs text-red-500">Zamanlanan gönderimler alınamadı.</p>';
+      }
+    };
+
+    const setButtonBusy = async (button, busyText, fn) => {
+      if (!button) return;
+      const oldText = button.textContent;
+      button.disabled = true;
+      button.textContent = busyText;
+      try {
+        await fn();
+      } finally {
+        button.disabled = false;
+        button.textContent = oldText;
+      }
+    };
+
+    if (emailPreviewBtn) {
+      emailPreviewBtn.addEventListener("click", () => renderEmailPreview());
+    }
+    if (emailSegment) {
+      emailSegment.addEventListener("change", () => {
+        toggleCustomRecipientArea();
+        renderRecipientList();
+        renderEmailPreview();
+      });
+    }
+    if (selectAllUsers) {
+      selectAllUsers.addEventListener("change", () => {
+        recipientCheckboxes.forEach((c) => (c.checked = selectAllUsers.checked));
+        updateSelectedCount();
+      });
+    }
+    if (userFilterInput) {
+      userFilterInput.addEventListener("input", applyRecipientFilter);
+    }
+    if (refreshScheduledBtn) {
+      refreshScheduledBtn.addEventListener("click", () => {
+        loadScheduledJobs();
+      });
+    }
+    if (emailTestBtn) {
+      emailTestBtn.addEventListener("click", async () => {
+        const testAddress = testEmailAddress?.value?.trim();
+        if (!emailSubject?.value?.trim() || !emailBody?.value?.trim()) {
+          showFeedback("Test e-postası için konu ve içerik girin.", "error");
+          return;
+        }
+        if (!isValidEmail(testAddress)) {
+          showFeedback("Geçerli bir test e-posta adresi girin.", "error");
+          return;
+        }
+        if (emailSendTime?.value && new Date(emailSendTime.value) < new Date()) {
+          showFeedback("Gönderim zamanı geçmiş bir tarih olamaz.", "error");
+          return;
+        }
+        await setButtonBusy(emailTestBtn, "Gönderiliyor...", async () => {
+          try {
+            const result = await callEmailApi("/test", {
+              subject: emailSubject.value.trim(),
+              body: emailBody.value.trim(),
+              recipients: [testAddress]
+            });
+            renderEmailPreview();
+            addEmailLog({
+              type: "test",
+              status: "Başarılı",
+              subject: emailSubject.value.trim(),
+              recipientCount: 1,
+              recipients: [testAddress],
+              createdAt: new Date().toISOString()
+            });
+            showFeedback(result.message || `Test e-postası ${testAddress} adresine gönderildi.`, "success");
+          } catch (error) {
+            showFeedback(error.message || "Test e-postası gönderilemedi.", "error");
+          }
+        });
+      });
+    }
+    if (emailSendBtn) {
+      emailSendBtn.addEventListener("click", async () => {
+        if (!emailSubject?.value?.trim() || !emailBody?.value?.trim()) {
+          showFeedback("Toplu gönderim için konu ve içerik zorunludur.", "error");
+          return;
+        }
+        const recipients = Array.from(new Set(getResolvedRecipients()));
+        if (recipients.length === 0) {
+          showFeedback("Bu segment için gönderilecek alıcı bulunamadı.", "error");
+          return;
+        }
+        if (isCustomSelection() && updateSelectedCount() === 0) {
+          showFeedback("Toplu gönderim için en az bir kullanıcı seçin.", "error");
+          return;
+        }
+        if (emailSendTime?.value && new Date(emailSendTime.value) < new Date()) {
+          showFeedback("Gönderim zamanı geçmiş bir tarih olamaz.", "error");
+          return;
+        }
+        await setButtonBusy(emailSendBtn, "Başlatılıyor...", async () => {
+          try {
+            const result = await callEmailApi("/send", {
+              subject: emailSubject.value.trim(),
+              body: emailBody.value.trim(),
+              recipients,
+              sendAt: emailSendTime?.value || null
+            });
+            renderEmailPreview();
+            addEmailLog({
+              type: "bulk",
+              status: result.scheduled ? "Zamanlandı" : "Başarılı",
+              subject: emailSubject.value.trim(),
+              recipientCount: recipients.length,
+              recipients,
+              createdAt: new Date().toISOString()
+            });
+            if (result.scheduled) {
+              showFeedback(
+                `Toplu e-posta gönderimi ${new Date(result.sendAt || emailSendTime.value).toLocaleString("tr-TR")} için zamanlandı.`,
+                "success"
+              );
+              loadScheduledJobs();
+            } else {
+              showFeedback(
+                `Toplu e-posta tamamlandı. Başarılı: ${result.delivered || 0}, Hata: ${result.failed || 0}.`,
+                "success"
+              );
+            }
+          } catch (error) {
+            showFeedback(error.message || "Toplu e-posta gönderimi başlatılamadı.", "error");
+          }
+        });
+      });
+    }
+    toggleCustomRecipientArea();
+    renderRecipientList();
+    renderEmailLogs();
+    loadScheduledJobs();
+
+    (() => {
+      const HEADER_SETTINGS_KEY = "siteHeader";
+      const saveBtn = document.getElementById("header-settings-save");
+      if (!saveBtn) return;
+
+      const resetBtn = document.getElementById("header-settings-reset");
+      const feedbackEl = document.getElementById("header-settings-feedback");
+      const logoPreview = document.getElementById("header-logo-preview");
+      const logoNameEl = document.getElementById("header-logo-file-name");
+      const logoFileInput = document.getElementById("header-logo-file");
+      const logoUploadBtn = document.getElementById("header-logo-upload-btn");
+      const logoClearBtn = document.getElementById("header-logo-clear-btn");
+      const bgPalette = document.getElementById("header-bg-palette");
+      const textPalette = document.getElementById("header-text-palette");
+      const bgColor = document.getElementById("header-bg-color");
+      const bgHex = document.getElementById("header-bg-hex");
+      const textColor = document.getElementById("header-text-color");
+      const textHex = document.getElementById("header-text-hex");
+      const ctaLoginText = document.getElementById("header-cta-login-text");
+      const ctaLoginHref = document.getElementById("header-cta-login-href");
+      const ctaSignupText = document.getElementById("header-cta-signup-text");
+      const ctaSignupHref = document.getElementById("header-cta-signup-href");
+      const navAddBtn = document.getElementById("header-nav-add");
+      const navList = document.getElementById("header-nav-list");
+      const previewSelect = document.getElementById("header-live-preview-page");
+      const previewRefreshBtn = document.getElementById("header-live-preview-refresh");
+      const previewOpen = document.getElementById("header-live-preview-open");
+      const previewFrame = document.getElementById("header-live-preview-frame");
+
+      const escapeHtml = (value) =>
+        String(value ?? "")
+          .replaceAll("&", "&amp;")
+          .replaceAll("<", "&lt;")
+          .replaceAll(">", "&gt;")
+          .replaceAll('"', "&quot;")
+          .replaceAll("'", "&#39;");
+
+      const normalizeHex = (value, fallback) => {
+        const raw = String(value || "").trim().replace("#", "").toLowerCase();
+        if (/^[0-9a-f]{6}$/.test(raw)) return `#${raw}`;
+        if (/^[0-9a-f]{3}$/.test(raw)) return `#${raw.split("").map((c) => c + c).join("")}`;
+        return fallback;
+      };
+
+      const defaults = () => ({
+        bgHex: "#32466f",
+        textHex: "#ffffff",
+          navLinks: [
+            { label: "Kurslar", href: "kurslar.html", enabled: true },
+            { label: "Özel Ders", href: "ozel_ders.html", enabled: true },
+            { label: "Kurumsal", href: "iletisim.html", enabled: true },
+          ],
+        ctas: {
+          login: { text: "Giriş Yap", href: "giris.html", enabled: true },
+          signup: { text: "Kayıt Ol", href: "kayit.html", enabled: true },
+        },
+      });
+
+      let navModel = defaults().navLinks.map((x) => ({ ...x }));
+
+      const showFeedback = (message, type) => {
+        if (!feedbackEl) return;
+        feedbackEl.textContent = message || "";
+        feedbackEl.classList.remove("hidden");
+        feedbackEl.classList.remove(
+          "border-emerald-500/30",
+          "bg-emerald-500/10",
+          "text-emerald-600",
+          "border-rose-500/30",
+          "bg-rose-500/10",
+          "text-rose-600",
+          "border-slate-300",
+          "bg-slate-50",
+          "text-slate-600"
+        );
+        if (type === "success") {
+          feedbackEl.classList.add("border-emerald-500/30", "bg-emerald-500/10", "text-emerald-600");
+        } else if (type === "error") {
+          feedbackEl.classList.add("border-rose-500/30", "bg-rose-500/10", "text-rose-600");
+        } else {
+          feedbackEl.classList.add("border-slate-300", "bg-slate-50", "text-slate-600");
+        }
+      };
+
+      const hideFeedback = () => {
+        if (!feedbackEl) return;
+        feedbackEl.classList.add("hidden");
+        feedbackEl.textContent = "";
+      };
+
+      const loadUiSettings = () => {
+        try {
+          const raw = localStorage.getItem(UI_SETTINGS_KEY);
+          const parsed = raw ? JSON.parse(raw) : {};
+          return parsed && typeof parsed === "object" ? parsed : {};
+        } catch (_e) {
+          return {};
+        }
+      };
+
+      const saveUiSettings = (next) => {
+        try {
+          localStorage.setItem(UI_SETTINGS_KEY, JSON.stringify(next || {}));
+        } catch (_e) { }
+      };
+
+      const syncPaletteActive = (paletteEl, currentHex) => {
+        if (!paletteEl) return;
+        const normalized = normalizeHex(currentHex, "");
+        paletteEl.querySelectorAll("button[data-color-hex]").forEach((btn) => {
+          const hex = normalizeHex(btn.getAttribute("data-color-hex"), "");
+          const on = !!normalized && !!hex && normalized === hex;
+          btn.classList.toggle("ring-2", on);
+          btn.classList.toggle("ring-primary", on);
+          btn.classList.toggle("ring-offset-2", on);
+          btn.classList.toggle("ring-offset-slate-50", on);
+          btn.classList.toggle("dark:ring-offset-slate-900", on);
+        });
+      };
+
+      const getHeaderFromSettings = (settings) => {
+        const d = defaults();
+        const header = settings?.[HEADER_SETTINGS_KEY] || {};
+        const navLinks = Array.isArray(header.navLinks) ? header.navLinks : [];
+        const ctas = header.ctas || {};
+        return {
+          bgHex: normalizeHex(header.bgHex, d.bgHex),
+          textHex: normalizeHex(header.textHex, d.textHex),
+          navLinks: (navLinks.length ? navLinks : d.navLinks).map((x) => ({
+            label: String(x?.label || "").trim(),
+            href: String(x?.href || "").trim(),
+            enabled: x?.enabled !== false,
+          })),
+          ctas: {
+            login: {
+              text: String(ctas?.login?.text || d.ctas.login.text),
+              href: String(ctas?.login?.href || d.ctas.login.href),
+              enabled: ctas?.login?.enabled !== false,
+            },
+            signup: {
+              text: String(ctas?.signup?.text || d.ctas.signup.text),
+              href: String(ctas?.signup?.href || d.ctas.signup.href),
+              enabled: ctas?.signup?.enabled !== false,
+            },
+          },
+        };
+      };
+
+      const renderNavList = () => {
+        if (!navList) return;
+        if (!Array.isArray(navModel) || navModel.length === 0) {
+          navList.innerHTML = `
+            <div class="p-3 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm text-slate-600 dark:text-slate-300">
+              Henüz link eklenmedi. “Link Ekle” ile başlayın.
+            </div>
+          `.trim();
+          return;
+        }
+        navList.innerHTML = navModel
+          .map((item, idx) => {
+            const label = escapeHtml(item?.label || "");
+            const href = escapeHtml(item?.href || "");
+            const checked = item?.enabled !== false ? "checked" : "";
+            return `
+              <div class="grid grid-cols-1 md:grid-cols-12 gap-3 items-center p-3 rounded-lg bg-white dark:bg-slate-900 border border-slate-200/70 dark:border-slate-700/70">
+                <div class="md:col-span-4">
+                  <div class="text-xs font-bold text-slate-500">Başlık</div>
+                  <input data-nav-idx="${idx}" data-nav-field="label" class="mt-1 w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-sm font-semibold" value="${label}" />
+                </div>
+                <div class="md:col-span-6">
+                  <div class="text-xs font-bold text-slate-500">Link</div>
+                  <input data-nav-idx="${idx}" data-nav-field="href" class="mt-1 w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-sm font-semibold" value="${href}" />
+                </div>
+                <div class="md:col-span-2 flex items-center justify-between gap-3">
+                  <label class="inline-flex items-center gap-2 text-sm font-semibold text-slate-700 dark:text-slate-200">
+                    <input type="checkbox" data-nav-idx="${idx}" data-nav-field="enabled" class="rounded border-slate-300 text-primary focus:ring-primary" ${checked} />
+                    Göster
+                  </label>
+                  <button type="button" class="size-9 rounded-lg hover:bg-rose-50 dark:hover:bg-rose-900/20 text-rose-600" data-nav-remove="${idx}" title="Sil">
+                    <span class="material-symbols-outlined text-lg">delete</span>
+                  </button>
+                </div>
+              </div>
+            `.trim();
+          })
+          .join("");
+      };
+
+      const applyFormFromSettings = () => {
+        const settings = loadUiSettings();
+        const header = getHeaderFromSettings(settings);
+
+        if (bgColor) bgColor.value = header.bgHex;
+        if (bgHex) bgHex.value = header.bgHex;
+        if (textColor) textColor.value = header.textHex;
+        if (textHex) textHex.value = header.textHex;
+
+        if (ctaLoginText) ctaLoginText.value = header.ctas.login.text;
+        if (ctaLoginHref) ctaLoginHref.value = header.ctas.login.href;
+        if (ctaSignupText) ctaSignupText.value = header.ctas.signup.text;
+        if (ctaSignupHref) ctaSignupHref.value = header.ctas.signup.href;
+
+        navModel = header.navLinks.map((x) => ({ ...x }));
+        renderNavList();
+        syncPaletteActive(bgPalette, header.bgHex);
+        syncPaletteActive(textPalette, header.textHex);
+
+        try {
+          const logoDataUrl = settings?.logoDataUrl;
+          const logoFileName = settings?.logoFileName;
+          if (logoPreview) logoPreview.src = (typeof logoDataUrl === "string" && logoDataUrl) ? logoDataUrl : "../assets/img/logo-placeholder.svg";
+          if (logoNameEl) logoNameEl.textContent = typeof logoFileName === "string" ? logoFileName : "";
+        } catch (_e) { }
+      };
+
+      const persistHeaderSettings = () => {
+        const settings = loadUiSettings();
+        const d = defaults();
+
+        const nextHeader = {
+          bgHex: normalizeHex(bgHex?.value, d.bgHex),
+          textHex: normalizeHex(textHex?.value, d.textHex),
+          navLinks: (Array.isArray(navModel) ? navModel : [])
+            .filter((x) => x && (x.label || x.href))
+            .map((x) => ({
+              label: String(x.label || "").trim(),
+              href: String(x.href || "").trim(),
+              enabled: x.enabled !== false,
+            })),
+          ctas: {
+            login: { text: String(ctaLoginText?.value || d.ctas.login.text).trim(), href: String(ctaLoginHref?.value || d.ctas.login.href).trim(), enabled: true },
+            signup: { text: String(ctaSignupText?.value || d.ctas.signup.text).trim(), href: String(ctaSignupHref?.value || d.ctas.signup.href).trim(), enabled: true },
+          },
+        };
+
+        const next = { ...settings, [HEADER_SETTINGS_KEY]: nextHeader, headerBg: nextHeader.bgHex };
+        saveUiSettings(next);
+        applyAdminThemeFromSettings();
+        showFeedback("Header ayarları kaydedildi.", "success");
+      };
+
+      const refreshPreview = () => {
+        if (!previewFrame) return;
+        const page = String(previewSelect?.value || "../index.html");
+        if (previewOpen) previewOpen.href = page;
+        const join = page.includes("?") ? "&" : "?";
+        previewFrame.src = `${page}${join}preview=${Date.now()}`;
+      };
+
+      if (bgColor && bgHex) {
+        bgColor.addEventListener("input", () => {
+          bgHex.value = bgColor.value || bgHex.value;
+          syncPaletteActive(bgPalette, bgHex.value);
+        });
+      }
+      if (textColor && textHex) {
+        textColor.addEventListener("input", () => {
+          textHex.value = textColor.value || textHex.value;
+          syncPaletteActive(textPalette, textHex.value);
+        });
+      }
+      if (bgHex && bgColor) {
+        bgHex.addEventListener("input", () => {
+          bgColor.value = normalizeHex(bgHex.value, bgColor.value || "#32466f");
+          syncPaletteActive(bgPalette, bgHex.value);
+        });
+      }
+      if (textHex && textColor) {
+        textHex.addEventListener("input", () => {
+          textColor.value = normalizeHex(textHex.value, textColor.value || "#ffffff");
+          syncPaletteActive(textPalette, textHex.value);
+        });
+      }
+
+      if (bgPalette) {
+        bgPalette.addEventListener("click", (event) => {
+          const btn = event.target?.closest?.("button[data-color-hex]");
+          if (!btn) return;
+          hideFeedback();
+          const hex = normalizeHex(btn.getAttribute("data-color-hex"), bgHex?.value || "#32466f");
+          if (bgColor) bgColor.value = hex;
+          if (bgHex) bgHex.value = hex;
+          syncPaletteActive(bgPalette, hex);
+        });
+      }
+      if (textPalette) {
+        textPalette.addEventListener("click", (event) => {
+          const btn = event.target?.closest?.("button[data-color-hex]");
+          if (!btn) return;
+          hideFeedback();
+          const hex = normalizeHex(btn.getAttribute("data-color-hex"), textHex?.value || "#ffffff");
+          if (textColor) textColor.value = hex;
+          if (textHex) textHex.value = hex;
+          syncPaletteActive(textPalette, hex);
+        });
+      }
+
+      if (navAddBtn) {
+        navAddBtn.addEventListener("click", () => {
+          hideFeedback();
+          navModel.push({ label: "Yeni Link", href: "#", enabled: true });
+          renderNavList();
+        });
+      }
+      if (navList) {
+        navList.addEventListener("input", (event) => {
+          const el = event.target;
+          const idx = Number(el?.getAttribute?.("data-nav-idx"));
+          const field = el?.getAttribute?.("data-nav-field");
+          if (!Number.isFinite(idx) || !field || !navModel[idx]) return;
+          if (field === "enabled") return;
+          navModel[idx][field] = String(el.value || "");
+        });
+        navList.addEventListener("change", (event) => {
+          const el = event.target;
+          const idx = Number(el?.getAttribute?.("data-nav-idx"));
+          const field = el?.getAttribute?.("data-nav-field");
+          if (!Number.isFinite(idx) || !field || !navModel[idx]) return;
+          if (field === "enabled") navModel[idx].enabled = !!el.checked;
+        });
+        navList.addEventListener("click", (event) => {
+          const btn = event.target?.closest?.("button[data-nav-remove]");
+          if (!btn) return;
+          const idx = Number(btn.getAttribute("data-nav-remove"));
+          if (!Number.isFinite(idx)) return;
+          navModel.splice(idx, 1);
+          renderNavList();
+        });
+      }
+
+      if (logoUploadBtn && logoFileInput) {
+        logoUploadBtn.addEventListener("click", () => logoFileInput.click());
+      }
+      if (logoFileInput) {
+        logoFileInput.addEventListener("change", async () => {
+          hideFeedback();
+          const file = logoFileInput.files && logoFileInput.files[0];
+          if (!file) return;
+          const allowed = ["image/png", "image/jpeg", "image/webp"];
+          if (file.type && !allowed.includes(file.type)) {
+            showFeedback("Logo için PNG, JPG veya WEBP seçin.", "error");
+            return;
+          }
+          if (file.size > 2 * 1024 * 1024) {
+            showFeedback("Logo en fazla 2MB olabilir.", "error");
+            return;
+          }
+          try {
+            const dataUrl = await readFileAsDataUrl(file);
+            const settings = loadUiSettings();
+            const next = { ...settings, logoDataUrl: dataUrl, logoFileName: file.name };
+            saveUiSettings(next);
+            applyAdminThemeFromSettings();
+            if (logoPreview) logoPreview.src = dataUrl;
+            if (logoNameEl) logoNameEl.textContent = file.name;
+            showFeedback("Logo güncellendi.", "success");
+            refreshPreview();
+          } catch (_e) {
+            showFeedback("Logo yüklenemedi.", "error");
+          } finally {
+            try { logoFileInput.value = ""; } catch (_e2) { }
+          }
+        });
+      }
+      if (logoClearBtn) {
+        logoClearBtn.addEventListener("click", () => {
+          hideFeedback();
+          const settings = loadUiSettings();
+          const next = { ...settings, logoDataUrl: "", logoFileName: "" };
+          saveUiSettings(next);
+          applyAdminThemeFromSettings();
+          if (logoPreview) logoPreview.src = "../assets/img/logo-placeholder.svg";
+          if (logoNameEl) logoNameEl.textContent = "";
+          showFeedback("Logo temizlendi.", "success");
+          refreshPreview();
+        });
+      }
+
+      saveBtn.addEventListener("click", () => {
+        hideFeedback();
+        persistHeaderSettings();
+        refreshPreview();
+      });
+      resetBtn?.addEventListener("click", () => {
+        hideFeedback();
+        const d = defaults();
+        if (bgColor) bgColor.value = d.bgHex;
+        if (bgHex) bgHex.value = d.bgHex;
+        if (textColor) textColor.value = d.textHex;
+        if (textHex) textHex.value = d.textHex;
+        if (ctaLoginText) ctaLoginText.value = d.ctas.login.text;
+        if (ctaLoginHref) ctaLoginHref.value = d.ctas.login.href;
+        if (ctaSignupText) ctaSignupText.value = d.ctas.signup.text;
+        if (ctaSignupHref) ctaSignupHref.value = d.ctas.signup.href;
+        navModel = d.navLinks.map((x) => ({ ...x }));
+        renderNavList();
+        syncPaletteActive(bgPalette, d.bgHex);
+        syncPaletteActive(textPalette, d.textHex);
+        persistHeaderSettings();
+        refreshPreview();
+      });
+
+      previewSelect?.addEventListener("change", refreshPreview);
+      previewRefreshBtn?.addEventListener("click", refreshPreview);
+
+      applyFormFromSettings();
+      refreshPreview();
+    })();
+
+    const pendingList = document.getElementById("pending-list");
+    const approvedList = document.getElementById("approved-list");
+    const approvedEmpty = document.getElementById("approved-empty");
+    const approvedCount = document.getElementById("approved-count");
+    const REQUEST_STATE_KEY = "demo_admin_request_state_v1";
+    const LESSON_REQUESTS_KEY = "demo_lesson_requests_v1";
+
+    const loadRequestState = () => {
+      try {
+        const raw = localStorage.getItem(REQUEST_STATE_KEY);
+        if (!raw) return { approved: [], rejected: [] };
+        const parsed = JSON.parse(raw);
+        return {
+          approved: Array.isArray(parsed.approved) ? parsed.approved : [],
+          rejected: Array.isArray(parsed.rejected) ? parsed.rejected : []
+        };
+      } catch (e) {
+        return { approved: [], rejected: [] };
+      }
+    };
+
+    const saveRequestState = (state) => {
+      localStorage.setItem(REQUEST_STATE_KEY, JSON.stringify(state));
+    };
+
+    const loadLessonRequests = () => {
+      try {
+        const raw = localStorage.getItem(LESSON_REQUESTS_KEY);
+        const parsed = raw ? JSON.parse(raw) : [];
+        return Array.isArray(parsed) ? parsed : [];
+      } catch (_e) {
+        return [];
+      }
+    };
+
+    const appendDynamicPendingRequests = () => {
+      if (!pendingList) return;
+      const dynamicRequests = loadLessonRequests().filter((r) => r && r.status === "pending");
+      dynamicRequests.forEach((r) => {
+        const requestId = String(r.id || `req_${Date.now()}`);
+        const alreadyExists = pendingList.querySelector(`.request-item[data-request-id="${requestId}"]`);
+        if (alreadyExists) return;
+        const topic = String(r.topic || "Ozel Ders Talebi");
+        const student = String(r.fullName || "Ogrenci");
+        const instructorName = "Egitmen Havuzu";
+        const card = document.createElement("div");
+        card.className = "request-item p-4 rounded-xl border border-slate-100 dark:border-slate-800 flex items-center justify-between group hover:border-primary transition-colors";
+        card.setAttribute("data-request-id", requestId);
+        card.innerHTML = `
+          <div class="flex items-center gap-4">
+            <div class="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white">
+              <span class="material-symbols-outlined">person_search</span>
+            </div>
+            <div>
+              <h4 class="text-sm font-bold">${topic} Talebi</h4>
+              <p class="text-xs text-slate-500 mt-1">Ogrenci: ${student} • Egitmen: ${instructorName}</p>
+            </div>
+          </div>
+          <div class="flex gap-2">
+            <button class="w-8 h-8 rounded-lg bg-red-500/10 text-red-500 flex items-center justify-center hover:bg-red-500 hover:text-white transition-colors">
+              <span class="material-symbols-outlined text-sm">close</span>
+            </button>
+            <button class="w-8 h-8 rounded-lg bg-green-500/10 text-green-500 flex items-center justify-center hover:bg-green-500 hover:text-white transition-colors">
+              <span class="material-symbols-outlined text-sm">check</span>
+            </button>
+          </div>
+        `;
+        pendingList.prepend(card);
+      });
+    };
+
+    const requestState = loadRequestState();
+    appendDynamicPendingRequests();
+
+    const refreshApprovedState = () => {
+      const count = approvedList ? approvedList.children.length : 0;
+      if (approvedCount) approvedCount.textContent = `${count} onay`;
+      if (approvedEmpty) approvedEmpty.style.display = count > 0 ? "none" : "";
+    };
+
+    const appendApproved = (title, meta, requestId) => {
+      if (!approvedList) return;
+      const alreadyExists = Array.from(approvedList.children).some(
+        (n) => n.getAttribute("data-request-id") === requestId
+      );
+      if (alreadyExists) return;
+      const item = document.createElement("div");
+      item.className = "rounded-lg border border-green-200 dark:border-green-900/40 bg-white dark:bg-slate-900 p-3";
+      item.setAttribute("data-request-id", requestId);
+      item.innerHTML = `
+        <p class="text-sm font-semibold">${title}</p>
+        <p class="text-xs text-slate-500 mt-1">${meta}</p>
+      `;
+      approvedList.prepend(item);
+      refreshApprovedState();
+    };
+
+    requestState.approved.forEach((entry) => {
+      appendApproved(entry.title, entry.meta, entry.id);
+    });
+
+    // Admin header icons: notifications/settings/messages
+    try {
+      bindModal(notifModal);
+      bindModal(settingsModal);
+
+      document.addEventListener("keydown", (e) => {
+        if (e.key !== "Escape") return;
+        closeModal(notifModal);
+        closeModal(settingsModal);
+      });
+
+      messagesBtn?.addEventListener("click", () => {
+        window.location.href = "destekadmin.html";
+      });
+
+      notifBtn?.addEventListener("click", () => {
+        syncNotifBadge();
+        renderNotifications();
+        openModal(notifModal);
+      });
+
+      notifMarkRead?.addEventListener("click", () => {
+        const list = getSupportList();
+        const next = list.map((x) => {
+          if (!x || typeof x !== "object") return x;
+          if (String(x.status || "new") !== "new") return x;
+          return { ...x, status: "read", updatedAt: new Date().toISOString() };
+        });
+        setSupportList(next);
+        syncNotifBadge();
+        renderNotifications();
+      });
+
+      settingsBtn?.addEventListener("click", () => {
+        const s = readSettings();
+        const t = normalizeTheme(s?.theme || "dark");
+        if (settingsThemeSel) settingsThemeSel.value = t;
+        if (settingsFeedback) settingsFeedback.textContent = "";
+        openModal(settingsModal);
+      });
+
+      settingsThemeSel?.addEventListener("change", () => {
+        const nextTheme = normalizeTheme(settingsThemeSel.value);
+        const s = readSettings();
+        const next = { ...s, theme: nextTheme };
+        writeSettings(next);
+        applyTheme(nextTheme);
+        if (settingsFeedback) settingsFeedback.textContent = "Tema güncellendi.";
+      });
+
+      settingsLogoutBtn?.addEventListener("click", () => {
+        window.DemoAuth?.logout?.({ redirectTo: "giris.html" });
+      });
+
+      syncNotifBadge();
+      window.addEventListener("storage", (e) => {
+        if (!e) return;
+        if (e.key === SUPPORT_KEY) syncNotifBadge();
+        if (e.key === UI_SETTINGS_KEY) {
+          const s = readSettings();
+          applyTheme(s?.theme || "dark");
+        }
+      });
+    } catch (_e) {}
+
+    if (pendingList) {
+      pendingList.querySelectorAll(".request-item").forEach((card) => {
+        const requestId = card.getAttribute("data-request-id");
+        const title = card.querySelector("h4")?.textContent?.trim() || "Ders Talebi";
+        const meta = card.querySelector("p")?.textContent?.trim() || "";
+        const buttons = card.querySelectorAll("button");
+        const rejectBtn = buttons[0];
+        const approveBtn = buttons[1];
+
+        if (!requestId) return;
+
+        if (requestState.rejected.includes(requestId)) {
+          card.remove();
+          return;
+        }
+        if (requestState.approved.some((a) => a.id === requestId)) {
+          card.remove();
+          return;
+        }
+
+        if (approveBtn) {
+          approveBtn.addEventListener("click", () => {
+            appendApproved(title, meta, requestId);
+            if (!requestState.approved.some((a) => a.id === requestId)) {
+              requestState.approved.push({ id: requestId, title, meta });
+            }
+            requestState.rejected = requestState.rejected.filter((id) => id !== requestId);
+            saveRequestState(requestState);
+            card.remove();
+          });
+        }
+        if (rejectBtn) {
+          rejectBtn.addEventListener("click", () => {
+            if (!requestState.rejected.includes(requestId)) {
+              requestState.rejected.push(requestId);
+            }
+            requestState.approved = requestState.approved.filter((a) => a.id !== requestId);
+            saveRequestState(requestState);
+            card.remove();
+          });
+        }
+      });
+    }
+    refreshApprovedState();
+  })();
+</script>
+</body></html>

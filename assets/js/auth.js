@@ -1,5 +1,7 @@
 (function () {
   const AUTH_KEY = "demo_current_user_v1";
+  const API_BASE = window.location.pathname.includes("/pages/") ? "../api/" : "api/";
+  const PAGES_BASE = window.location.pathname.includes("/pages/") ? "" : "pages/";
 
   const safeText = (v) => String(v ?? "").trim();
   const normalize = (v) => safeText(v).toLowerCase();
@@ -46,18 +48,25 @@
     try { sessionStorage.removeItem(AUTH_KEY); } catch (_e) { }
   };
 
+  const apiUrl = (path) => {
+    const p = safeText(path).replace(/^\.?\//, "");
+    if (!p) return API_BASE;
+    if (/^https?:/i.test(p) || p.startsWith("/")) return p;
+    return `${API_BASE}${p.replace(/^api\//, "")}`;
+  };
+
   const redirectForRole = (role) => {
-    if (role === "admin") return "s.adminpanel.html";
-    if (role === "instructor") return "egitmenpanel.html";
-    return "userpanel.html";
+    if (role === "admin") return `${PAGES_BASE}s.adminpanel.html`;
+    if (role === "instructor") return `${PAGES_BASE}egitmenpanel.html`;
+    return `${PAGES_BASE}userpanel.html`;
   };
 
   const buildLoginUrl = () => {
     try {
       const next = encodeURIComponent(window.location.pathname.split("/").pop() || "");
-      return `giris.html?next=${next}`;
+      return `${PAGES_BASE}giris.html?next=${next}`;
     } catch (_e) {
-      return "giris.html";
+      return `${PAGES_BASE}giris.html`;
     }
   };
 
@@ -72,7 +81,7 @@
 
   const fetchMe = async () => {
     try {
-      const resp = await fetch("./api/me.php", { method: "GET", credentials: "include" });
+      const resp = await fetch(apiUrl("me.php"), { method: "GET", credentials: "include" });
       const data = await resp.json().catch(() => ({}));
       if (!resp.ok || !data || !data.authenticated) return null;
       return mapUser(data.user || {});
@@ -112,15 +121,15 @@
     return user;
   };
 
-  const logout = async ({ redirectTo = "giris.html" } = {}) => {
+  const logout = async ({ redirectTo = `${PAGES_BASE}giris.html` } = {}) => {
     try {
-      await fetch("./api/logout.php", { method: "POST", credentials: "include", headers: { "Content-Type": "application/json" }, body: "{}" });
+      await fetch(apiUrl("logout.php"), { method: "POST", credentials: "include", headers: { "Content-Type": "application/json" }, body: "{}" });
     } catch (_e) { }
     clearUser();
     if (redirectTo) window.location.href = redirectTo;
   };
 
-  window.AngelAuth = {
+  window.DemoAuth = {
     guard,
     logout,
     getStoredUser: () => mapUser(getStoredUser()),
@@ -128,4 +137,3 @@
     storeUser,
   };
 })();
-

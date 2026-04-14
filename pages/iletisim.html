@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Iletisim - Eğitim Platformu</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: "#6d5bd0",
+            "background-light": "#f8f7f4",
+            "background-dark": "#121826"
+          },
+          fontFamily: {
+            display: ["Lexend", "sans-serif"]
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    .material-symbols-outlined {
+      font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+    }
+  </style>
+</head>
+<body class="bg-background-light text-slate-900 font-display min-h-screen">
+  <header id="site-header" class="sticky top-0 z-50 w-full bg-[#32466F]/90 backdrop-blur-md border-b border-primary/10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex h-20 items-center justify-between">
+        <div class="flex items-center gap-3 text-primary">
+          <img id="site-header-logo" alt="Site Logo" class="h-14 w-14 object-cover rounded-full" src="../assets/img/logo-placeholder.svg"/>
+          <h1 id="site-header-title" class="text-xl font-black tracking-tight text-white">Eğitim Platformu</h1>
+        </div>
+        <nav id="site-header-nav" class="hidden md:flex items-center gap-6">
+          <a class="text-sm font-semibold hover:text-primary transition-colors text-white" href="../index.html">Ana Sayfa</a>
+          <a class="text-sm font-semibold hover:text-primary transition-colors text-white" href="kurslar.html">Kurslar</a>
+          <a class="text-sm font-semibold text-primary" href="iletisim.html">Iletisim</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <section class="rounded-2xl border border-primary/15 bg-white p-6 sm:p-8 shadow-sm">
+      <h2 class="text-4xl font-black tracking-tight">Iletisim</h2>
+      <p class="text-slate-600 mt-3">Bize ulasmak icin asagidaki iletisim kanallarini kullanabilirsiniz.</p>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-8">
+        <div class="rounded-2xl border border-primary/15 bg-white p-5">
+          <p class="text-xs font-bold uppercase tracking-wider text-primary">E-posta</p>
+          <p class="mt-2 text-sm font-semibold">destek@example.com</p>
+        </div>
+        <div class="rounded-2xl border border-primary/15 bg-white p-5">
+          <p class="text-xs font-bold uppercase tracking-wider text-primary">Telefon</p>
+          <p class="mt-2 text-sm font-semibold">+90 212 000 00 00</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="rounded-2xl border border-primary/15 bg-white p-6 sm:p-8 shadow-sm mt-6">
+      <div class="flex items-start justify-between gap-4 flex-wrap">
+        <div>
+          <h3 class="text-2xl font-black tracking-tight">Destek Mesajı Gönder</h3>
+          <p class="text-slate-600 mt-2">Sorun yaşarsanız bize buradan mesaj bırakın. Yönetim paneline iletilir.</p>
+        </div>
+        <a class="inline-flex items-center gap-2 text-sm font-bold text-primary hover:underline" href="mailto:destek@example.com">
+          <span class="material-symbols-outlined text-base">mail</span> E-posta ile
+        </a>
+      </div>
+
+      <form id="support-form" class="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <label class="block">
+          <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Ad Soyad</span>
+          <input id="support-name" required class="mt-2 w-full rounded-xl border border-primary/15 bg-slate-50 px-4 py-3 text-sm font-semibold focus:ring-2 focus:ring-primary outline-none" placeholder="Adınız Soyadınız" />
+        </label>
+        <label class="block">
+          <span class="text-xs font-bold uppercase tracking-wider text-slate-500">E-posta</span>
+          <input id="support-email" required type="email" class="mt-2 w-full rounded-xl border border-primary/15 bg-slate-50 px-4 py-3 text-sm font-semibold focus:ring-2 focus:ring-primary outline-none" placeholder="ornek@mail.com" />
+        </label>
+        <label class="block sm:col-span-2">
+          <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Konu (opsiyonel)</span>
+          <input id="support-subject" class="mt-2 w-full rounded-xl border border-primary/15 bg-slate-50 px-4 py-3 text-sm font-semibold focus:ring-2 focus:ring-primary outline-none" placeholder="Örn: Ödeme sorunu / Hesaba giriş" />
+        </label>
+        <label class="block sm:col-span-2">
+          <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Mesaj</span>
+          <textarea id="support-message" required rows="5" class="mt-2 w-full rounded-xl border border-primary/15 bg-slate-50 px-4 py-3 text-sm font-semibold focus:ring-2 focus:ring-primary outline-none" placeholder="Mesajınızı yazın..."></textarea>
+        </label>
+        <div class="sm:col-span-2 flex items-center justify-between gap-4 flex-wrap">
+          <div id="support-status" class="text-sm font-semibold text-slate-600"></div>
+          <button type="submit" class="inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-5 py-3 text-sm font-extrabold text-white hover:opacity-95 transition">
+            <span class="material-symbols-outlined text-base">send</span> Gönder
+          </button>
+        </div>
+      </form>
+    </section>
+  </main>
+  <footer id="site-footer" class="border-t border-primary/10 bg-white/70 mt-10">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
+        <div class="flex items-center gap-3">
+          <img alt="Site Logo" class="h-12 w-12 object-cover rounded-full" src="../assets/img/logo-placeholder.svg"/>
+          <div>
+            <p class="text-sm font-bold">Eğitim Platformu</p>
+            <p class="text-xs text-slate-500">Destek ve İletişim</p>
+          </div>
+        </div>
+        <div class="flex flex-col gap-2 text-sm">
+          <a id="site-footer-email" class="inline-flex items-center gap-2 text-slate-700 hover:opacity-90 transition" href="mailto:destek@example.com">
+            <span class="material-symbols-outlined text-base">mail</span>
+            <span id="site-footer-email-text">destek@example.com</span>
+          </a>
+          <a id="site-footer-phone" class="inline-flex items-center gap-2 text-slate-700 hover:opacity-90 transition" href="tel:+902120000000">
+            <span class="material-symbols-outlined text-base">call</span>
+            <span id="site-footer-phone-text">+90 212 000 00 00</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <script src="../assets/js/site-header-settings.js"></script>
+  <script src="../assets/js/site-footer-settings.js"></script>
+  <script src="../assets/js/site-support.js"></script>
+ </body>
+ </html>
