@@ -1,27 +1,46 @@
 # Eğitim Platformu (Demo)
 
-Statik HTML + Tailwind arayüzü ve PHP tabanlı API uçlarıyla hazırlanmış eğitim platformu demo projesi.
+Rol bazlı (Admin/Eğitmen/Öğrenci) panelleri olan eğitim platformu demo projesi. Statik HTML + Tailwind UI ve PHP/MySQL API katmanı ile hazırlanmıştır.
 
-## Öne çıkan modüller
-- Rol bazlı paneller: **Admin / Eğitmen / Öğrenci**
-- Kurs yönetimi ve kurs satın alma akışı
-- Özel ders talep/takvim akışları
-- Ödeme altyapısı: `mock`, `paytr`, `iyzico (3DS)`, `stripe`
-- Toplu e‑posta: **Brevo**
-- Sayfa/içerik yönetimi (özel sayfalar) ve tema ayarları
+> Public repo notu: Marka/logolar ve gerçek anahtarlar repo’da yoktur. Logo için `assets/img/logo-placeholder.svg` kullanılır; gerçek değerler `.env` dosyasında tutulur ve `.gitignore` ile dışarıda bırakılır.
 
-## Klasörler
-- `assets/js`: site ve admin tarafı JS modülleri
-- `api`: PHP API uçları (auth, ödeme, e‑posta, admin kullanıcı yönetimi)
+## Neler var?
+- **Rol bazlı paneller:** Admin / Eğitmen / Öğrenci
+- **Kurs akışı:** listeleme → detay → sepete ekleme → ödeme sayfası
+- **Özel ders akışı:** talep → takvim/süreç yönetimi
+- **Ödeme iskeleti:** `mock`, `paytr`, `iyzico (3DS)`, `stripe` (sağlayıcı seçimi + doğrulama uçları)
+- **İletişim:** Brevo (e-posta) + SMS uçları (scaffold)
+- **İçerik yönetimi:** header/footer/HTML modülleri + sayfa yönetimi
+
+## Proje yapısı
+- `index.html`: Landing/ana giriş sayfası
+- `pages/`: Tüm ekranlar (giriş, paneller, ödeme, içerik yönetimi vb.)
+- `assets/js/`: Frontend modülleri (auth, sepet, ödeme, admin modülleri)
+- `assets/img/`: Placeholder görseller
+- `api/`: PHP API uçları (auth, ödeme, e‑posta, admin kullanıcı yönetimi)
 - `schema.sql`: MySQL şeması
 
-## Hızlı başlama (lokal)
+## Hızlı gezinti (ekranlar)
+- Kullanıcı: `pages/giris.html`, `pages/kayit.html`, `pages/userpanel.html`
+- Eğitmen: `pages/egitmenpanel.html`, `pages/egitmen-dersyonetimi.html`
+- Admin: `pages/s.adminpanel.html`, `pages/kursadmin.html`, `pages/kullanicimanage.html`, `pages/epostaadmin.html`
+- Ödeme: `pages/odeme_page.html`, `pages/odeme_3ds.html`, `pages/odeme_basarili.html`
+
+## Lokal kurulum (5 dk)
 1) MySQL’de `schema.sql` çalıştır.
-2) `.env.example` → `.env` kopyala ve DB/entegrasyon anahtarlarını doldur.
-3) Projeyi bir PHP/Apache ortamında çalıştır (ör. Laragon/XAMPP).
+2) `.env.example` dosyasını `.env` olarak kopyala ve değerleri doldur:
+   - DB bilgileri (host/user/pass/db)
+   - Ödeme sağlayıcısı anahtarları (kullanacaksan)
+   - Brevo anahtarı (kullanacaksan)
+3) Projeyi bir PHP/Apache ortamında çalıştır (Laragon/XAMPP/Apache + PHP).
+4) Tarayıcıdan `index.html` → ekranlara geç.
 
-DB kurmadan admin girişi gerekiyorsa:
-- `.env` içine `STATIC_ADMIN_ENABLED=true` ekleyip `api/login.php` içindeki statik admin girişini kullan.
+DB’siz hızlı demo gerekiyorsa:
+- `.env` içine `STATIC_ADMIN_ENABLED=true` ekleyip demo admin girişiyle test edebilirsin.
 
-## CV için proje anlatımı
-- `CV_PROJE_ANLATIMI.md`
+## Güvenlik / paylaşım notları
+- `.env` repoya eklenmez (anahtar/şifre yok).
+- Logo/kurumsal varlıklar repodan çıkarılmıştır.
+
+## CV
+- Detaylı proje anlatımı: `CV_PROJE_ANLATIMI.md`
