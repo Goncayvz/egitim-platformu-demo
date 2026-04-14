@@ -50,5 +50,5 @@ DB’siz hızlı demo gerekiyorsa:
 - `.env` repoya eklenmez (anahtar/şifre yok).
 - Logo/kurumsal varlıklar repodan çıkarılmıştır.
 
-## CV
+## Dokümantasyon
 - Detaylı proje anlatımı: `docs/PROJE_OZETI.md`
