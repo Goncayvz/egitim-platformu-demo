@@ -2,7 +2,11 @@
 
 Rol bazlı (Admin/Eğitmen/Öğrenci) panelleri olan eğitim platformu demo projesi. Statik HTML + Tailwind UI ve PHP/MySQL API katmanı ile hazırlanmıştır.
 
-`PHP` · `MySQL` · `Tailwind CSS` · `Vanilla JS` · `Apache`
+![PHP](https://img.shields.io/badge/PHP-777BB4?style=for-the-badge&logo=php&logoColor=white)
+![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)
+![JavaScript](https://img.shields.io/badge/Vanilla_JS-F7DF1E?style=for-the-badge&logo=javascript&logoColor=000000)
+![Apache](https://img.shields.io/badge/Apache-D22128?style=for-the-badge&logo=apache&logoColor=white)
 
 > Public repo notu: Marka/logolar ve gerçek anahtarlar repo’da yoktur. Logo için `assets/img/logo-placeholder.svg` kullanılır; gerçek değerler `.env` dosyasında tutulur ve `.gitignore` ile dışarıda bırakılır.
 
